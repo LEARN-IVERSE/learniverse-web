@@ -40,7 +40,7 @@ export type HealthHealthData = {
     body?: never;
     path?: never;
     query?: never;
-    url: '/health';
+    url: '/v1/health';
 };
 
 export type HealthHealthResponses = {
@@ -56,7 +56,7 @@ export type HealthHealthDbData = {
     body?: never;
     path?: never;
     query?: never;
-    url: '/health/db';
+    url: '/v1/health/db';
 };
 
 export type HealthHealthDbResponses = {

@@ -23,18 +23,18 @@ describe("ApiStatus", () => {
 
   it("shows OK when both API and DB return 200 through /api", async () => {
     mockFetch({
-      "/api/health": { status: 200, body: { status: "ok", service: "learniverse-api", env: "local" } },
-      "/api/health/db": { status: 200, body: { status: "ok", database: "PostgreSQL 18.7" } },
+      "/api/v1/health": { status: 200, body: { status: "ok", service: "learniverse-api", env: "local" } },
+      "/api/v1/health/db": { status: 200, body: { status: "ok", database: "PostgreSQL 18.7" } },
     });
     render(<ApiStatus />);
     await waitFor(() => expect(screen.getByText(/PostgreSQL 18.7/)).toBeTruthy());
     expect(screen.getByText(/learniverse-api \(local\)/)).toBeTruthy();
   });
 
-  it("reports a DB error when /api/health/db returns 503", async () => {
+  it("reports a DB error when /api/v1/health/db returns 503", async () => {
     mockFetch({
-      "/api/health": { status: 200, body: { status: "ok", service: "learniverse-api", env: "local" } },
-      "/api/health/db": { status: 503, body: { error: { code: "db_unavailable", message: "x" } } },
+      "/api/v1/health": { status: 200, body: { status: "ok", service: "learniverse-api", env: "local" } },
+      "/api/v1/health/db": { status: 503, body: { error: { code: "db_unavailable", message: "x" } } },
     });
     render(<ApiStatus />);
     await waitFor(() => expect(screen.getByText(/Không kết nối được cơ sở dữ liệu/)).toBeTruthy());

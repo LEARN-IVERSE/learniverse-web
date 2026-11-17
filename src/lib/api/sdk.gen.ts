@@ -21,9 +21,9 @@ export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends 
 /**
  * Health
  */
-export const healthHealth = <ThrowOnError extends boolean = false>(options?: Options<HealthHealthData, ThrowOnError>): RequestResult<HealthHealthResponses, unknown, ThrowOnError> => (options?.client ?? client).get<HealthHealthResponses, unknown, ThrowOnError>({ url: '/health', ...options });
+export const healthHealth = <ThrowOnError extends boolean = false>(options?: Options<HealthHealthData, ThrowOnError>): RequestResult<HealthHealthResponses, unknown, ThrowOnError> => (options?.client ?? client).get<HealthHealthResponses, unknown, ThrowOnError>({ url: '/v1/health', ...options });
 
 /**
  * Health Db
  */
-export const healthHealthDb = <ThrowOnError extends boolean = false>(options?: Options<HealthHealthDbData, ThrowOnError>): RequestResult<HealthHealthDbResponses, unknown, ThrowOnError> => (options?.client ?? client).get<HealthHealthDbResponses, unknown, ThrowOnError>({ url: '/health/db', ...options });
+export const healthHealthDb = <ThrowOnError extends boolean = false>(options?: Options<HealthHealthDbData, ThrowOnError>): RequestResult<HealthHealthDbResponses, unknown, ThrowOnError> => (options?.client ?? client).get<HealthHealthDbResponses, unknown, ThrowOnError>({ url: '/v1/health/db', ...options });
