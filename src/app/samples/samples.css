@@ -1,0 +1,377 @@
+/* Per-sample themes: override shadcn CSS variables inside each sample wrapper (blue + white per spec). */
+
+.sample-a {
+  --primary: oklch(0.546 0.245 262.881); /* blue-600 */
+  --primary-foreground: oklch(0.985 0 0);
+  --ring: oklch(0.623 0.214 259.815);
+  --radius: 0.625rem;
+  --sidebar: oklch(0.97 0.014 254.604); /* blue-50 */
+  --sidebar-primary: oklch(0.546 0.245 262.881);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.932 0.032 255.585); /* blue-100 */
+  --sidebar-accent-foreground: oklch(0.379 0.146 265.522);
+  --sidebar-border: oklch(0.882 0.059 254.128);
+}
+
+.sample-b {
+  --primary: oklch(0.623 0.214 259.815); /* blue-500 */
+  --primary-foreground: oklch(0.985 0 0);
+  --ring: oklch(0.707 0.165 254.624);
+  --radius: 1rem;
+  --secondary: oklch(0.951 0.026 236.824); /* sky-100 */
+  --secondary-foreground: oklch(0.391 0.09 240.876);
+}
+
+.sample-c {
+  --primary: oklch(0.488 0.243 264.376); /* blue-700 */
+  --primary-foreground: oklch(0.985 0 0);
+  --ring: oklch(0.546 0.245 262.881);
+  --radius: 0.75rem;
+  --muted: oklch(0.974 0.006 264.5);
+}
+
+/* ------------------------------------------------------------------ sample D "Quỹ đạo" */
+
+.sample-d {
+  --background: oklch(0.982 0.012 245); /* very light sky, so white cards stand out */
+  --primary: oklch(0.623 0.214 259.815); /* blue-500, the palette of sample B */
+  --primary-foreground: oklch(0.985 0 0);
+  --ring: oklch(0.707 0.165 254.624);
+  --radius: 1rem;
+  --muted: oklch(0.967 0.012 250);
+  --muted-foreground: oklch(0.52 0.03 257);
+}
+
+.font-display {
+  font-family: var(--font-display), var(--font-sans), system-ui, sans-serif;
+}
+.font-script {
+  font-family: var(--font-script), cursive;
+}
+.font-hand {
+  font-family: var(--font-hand), cursive;
+}
+
+/* SVG transforms: rotate/scale an element around its own centre, or around the SVG viewBox centre. */
+.d-svg-anim {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+.d-origin-view {
+  transform-box: view-box;
+  transform-origin: 50% 50%;
+}
+
+@keyframes d-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes d-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-7px);
+  }
+}
+@keyframes d-drift {
+  0%,
+  100% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  50% {
+    transform: translate(6px, -6px) rotate(4deg);
+  }
+}
+@keyframes d-twinkle {
+  0%,
+  100% {
+    opacity: 0.25;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+@keyframes d-rise {
+  0% {
+    transform: translateY(30px) scale(0.85);
+    opacity: 0;
+  }
+  15%,
+  80% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-150px) scale(1.05);
+    opacity: 0;
+  }
+}
+@keyframes d-fall {
+  0% {
+    transform: translateY(-20px) rotate(0deg);
+  }
+  100% {
+    transform: translateY(420px) rotate(540deg);
+  }
+}
+@keyframes d-shine {
+  0%,
+  55% {
+    transform: translateX(-150px) rotate(25deg);
+  }
+  100% {
+    transform: translateX(190px) rotate(25deg);
+  }
+}
+@keyframes d-grow {
+  from {
+    transform: scaleY(0);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
+@keyframes d-ring-draw {
+  from {
+    stroke-dashoffset: var(--ring-c);
+  }
+  to {
+    stroke-dashoffset: var(--ring-off);
+  }
+}
+@keyframes d-flicker {
+  0%,
+  100% {
+    transform: scale(1) rotate(-3deg);
+  }
+  50% {
+    transform: scale(1.12) rotate(3deg);
+  }
+}
+@keyframes d-bob {
+  0%,
+  100% {
+    transform: translateY(0) rotate(-5deg);
+  }
+  50% {
+    transform: translateY(-4px) rotate(5deg);
+  }
+}
+@keyframes d-blink {
+  0%,
+  93%,
+  100% {
+    transform: scaleY(1);
+  }
+  96% {
+    transform: scaleY(0.1);
+  }
+}
+@keyframes d-enter {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.d-spin {
+  animation: d-spin 30s linear infinite;
+}
+.d-spin-slow {
+  animation: d-spin 160s linear infinite;
+}
+.d-spin-rays {
+  animation: d-spin 50s linear infinite;
+}
+.d-float {
+  animation: d-float 6s ease-in-out infinite;
+}
+.d-drift {
+  animation: d-drift 9s ease-in-out infinite;
+}
+.d-twinkle {
+  animation: d-twinkle 2.8s ease-in-out infinite;
+}
+.d-rise {
+  animation: d-rise 7s ease-in infinite;
+}
+.d-fall {
+  animation: d-fall 7s linear infinite;
+}
+.d-shine {
+  animation: d-shine 4.5s ease-in-out infinite;
+}
+.d-grow {
+  transform-origin: bottom;
+  animation: d-grow 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+.d-ring {
+  animation: d-ring-draw 1.2s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+.d-flicker {
+  transform-origin: 50% 90%;
+  animation: d-flicker 1.6s ease-in-out infinite;
+}
+.d-bob {
+  animation: d-bob 3.2s ease-in-out infinite;
+}
+.d-blink {
+  animation: d-blink 4s ease-in-out infinite;
+}
+.d-enter {
+  animation: d-enter 0.45s ease-out both;
+}
+
+/* Subject cards: lift a little and let the cover art breathe (purposeful, no bounce). */
+.d-world {
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
+}
+.d-world:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 22px 44px -22px rgb(37 99 235 / 0.5);
+}
+.d-world .d-world-art {
+  transition: transform 0.6s ease;
+}
+.d-world:hover .d-world-art {
+  transform: scale(1.05) translateY(-3px);
+}
+
+/* Lesson activity chips: height 0 until the row is hovered, focused or tapped open. */
+.d-reveal {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition:
+    grid-template-rows 0.3s ease,
+    opacity 0.2s ease;
+}
+.d-reveal > * {
+  min-height: 0;
+  overflow: hidden;
+}
+.group:hover > .d-reveal,
+.group:focus-within > .d-reveal,
+.d-reveal[data-open="true"] {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+
+/* The "Hỏi Sao Nhí nhé!" hint greets once, then gets out of the way. */
+@keyframes d-hint {
+  0% {
+    opacity: 0;
+    transform: translateX(8px);
+  }
+  8%,
+  80% {
+    opacity: 1;
+    transform: none;
+  }
+  100% {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+.d-hint {
+  animation: d-hint 7s ease forwards;
+}
+
+/* ------------------------------------------------------------------ logo concepts */
+
+@keyframes lg-moon {
+  0%,
+  100% {
+    transform: rotate(-10deg);
+  }
+  50% {
+    transform: rotate(8deg);
+  }
+}
+@keyframes lg-dash {
+  to {
+    stroke-dashoffset: -100;
+  }
+}
+@keyframes lg-dash-short {
+  to {
+    stroke-dashoffset: -9;
+  }
+}
+@keyframes lg-rise {
+  0%,
+  100% {
+    transform: scaleY(1);
+  }
+  50% {
+    transform: scaleY(0.82);
+  }
+}
+@keyframes lg-bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-2.5px);
+  }
+}
+
+/* Comet L1: the whole comet glides a little along its climb while the stars twinkle. */
+@keyframes lg-swoop {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(1.2px, -1.2px);
+  }
+}
+.lg-swoop {
+  animation: lg-swoop 2.8s ease-in-out infinite;
+}
+
+/* Moon swings around the planet centre (27, 37) of the 64x64 logo viewBox. */
+.lg-moon {
+  transform-box: view-box;
+  transform-origin: 27px 37px;
+  animation: lg-moon 4s ease-in-out infinite;
+}
+.lg-flow {
+  animation: lg-dash 3.2s linear infinite;
+}
+.lg-flow-slow {
+  animation: lg-dash-short 1.6s linear infinite;
+}
+.lg-twinkle {
+  animation: d-twinkle 2.4s ease-in-out infinite;
+}
+.lg-rise {
+  transform-box: fill-box;
+  transform-origin: bottom;
+  animation: lg-rise 2.6s ease-in-out infinite;
+}
+.lg-bob {
+  animation: lg-bob 2.2s ease-in-out infinite;
+}
+
+/* Respect users who ask the OS to reduce motion: stop all decorative animation. */
+@media (prefers-reduced-motion: reduce) {
+  .sample-d *,
+  .sample-d *::before,
+  .sample-d *::after,
+  .logo-lab *,
+  .logo-lab *::before,
+  .logo-lab *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}

@@ -1,15 +1,15 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Be_Vietnam_Pro } from "next/font/google";
+
+import { TooltipProvider } from "@/components/ui/tooltip";
+
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+// Default app font with full Vietnamese glyph support; exposed as --font-sans for Tailwind.
+const beVietnamPro = Be_Vietnam_Pro({
+  weight: ["400", "500", "600", "700"],
+  subsets: ["latin", "vietnamese"],
+  variable: "--font-sans",
 });
 
 export const metadata: Metadata = {
@@ -19,8 +19,10 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="vi" className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}>
-      <body className="min-h-full flex flex-col">{children}</body>
+    <html lang="vi" className={`${beVietnamPro.variable} h-full antialiased`}>
+      <body className="flex min-h-full flex-col">
+        <TooltipProvider>{children}</TooltipProvider>
+      </body>
     </html>
   );
 }
