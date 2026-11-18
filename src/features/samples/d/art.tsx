@@ -2,16 +2,13 @@
 
 // Hand-made SVG artwork for sample D. Everything is deterministic (no Math.random at render)
 // so server and client markup always match. Decorative pieces are aria-hidden.
-import { useId, type CSSProperties, type ReactNode } from "react";
+import { type CSSProperties, type ReactNode } from "react";
+
+import { useSvgId } from "@/hooks/use-svg-id";
 
 import { cn } from "@/lib/utils";
 
 import type { SubjectId } from "../mock-data";
-
-/** SVG ids must be unique per page and safe inside url(#...). */
-export function useSvgId(prefix: string) {
-  return `${prefix}-${useId().replace(/[^a-zA-Z0-9_-]/g, "")}`;
-}
 
 /** Point on a circle; 0deg is 12 o'clock, angles grow clockwise. Rounded so markup is stable. */
 function polar(cx: number, cy: number, r: number, deg: number) {

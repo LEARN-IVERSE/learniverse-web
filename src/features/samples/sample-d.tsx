@@ -5,7 +5,9 @@ import { useState, useSyncExternalStore } from "react";
 
 import { cn } from "@/lib/utils";
 
-import { DrumStarMark, OrbitBackdrop, SparkleField } from "./d/art";
+import { CometLogo } from "@/components/brand/comet-logo";
+
+import { OrbitBackdrop, SparkleField } from "./d/art";
 import { AssistantFab } from "./d/assistant";
 import { ME, WORLDS } from "./d/data";
 import { baloo, dancing, hand, lexend } from "./d/fonts";
@@ -27,7 +29,7 @@ function subscribeHash(onChange: () => void) {
   return () => window.removeEventListener("hashchange", onChange);
 }
 
-/** Logo preview for the K2 logo lab: `/samples/d#logo=<id>` swaps the brand mark. */
+/** Logo lab preview: `/samples/d#logo=<id>` swaps the brand mark (default: the chosen comet L1). */
 function usePreviewLogo(): LogoId | undefined {
   const hash = useSyncExternalStore(
     subscribeHash,
@@ -39,7 +41,7 @@ function usePreviewLogo(): LogoId | undefined {
 }
 
 function BrandMark({ logo, className }: { logo?: LogoId; className?: string }) {
-  return logo ? <LogoById id={logo} className={className} /> : <DrumStarMark className={className} />;
+  return logo ? <LogoById id={logo} className={className} /> : <CometLogo className={className} />;
 }
 
 /**

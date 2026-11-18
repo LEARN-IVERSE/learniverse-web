@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 import { baloo, lexend } from "@/features/samples/d/fonts";
-import { LogoCometL1 } from "@/features/samples/logo-comet";
+import { CometLogo } from "@/components/brand/comet-logo";
 import { LOGO_CONCEPTS, LogoPorthole, Wordmark } from "@/features/samples/logos";
 
 const COMET_NOTES = [
@@ -22,10 +22,10 @@ function CometShowcase() {
     >
       <div className="grid md:grid-cols-[1.15fr_1fr]">
         <div className="grid place-items-center bg-gradient-to-br from-sky-50 to-blue-100/70 p-10">
-          <LogoCometL1 className="size-56" animated />
+          <CometLogo className="size-56" animated />
         </div>
         <div className="grid place-items-center bg-[#0b1f5c] p-10">
-          <LogoCometL1 className="size-40" animated />
+          <CometLogo className="size-40" animated />
         </div>
       </div>
 
@@ -53,11 +53,11 @@ function CometShowcase() {
 
         <div className="space-y-4">
           <div className="flex items-center gap-3 rounded-2xl bg-slate-50 p-4">
-            <LogoCometL1 className="size-12" />
+            <CometLogo className="size-12" />
             <Wordmark className="text-[2rem]" />
           </div>
           <div className="flex items-center gap-3 rounded-2xl bg-[#0b1f5c] p-4">
-            <LogoCometL1 className="size-12" />
+            <CometLogo className="size-12" />
             <Wordmark className="text-[2rem]" tone="dark" />
           </div>
 
@@ -65,7 +65,7 @@ function CometShowcase() {
             {SIZES.map((px) => (
               <span key={px} className="flex flex-col items-center gap-1 text-[11px] text-muted-foreground">
                 <span className="block" style={{ width: px, height: px }}>
-                  <LogoCometL1 className="size-full" />
+                  <CometLogo className="size-full" />
                 </span>
                 {px}px
               </span>
@@ -75,7 +75,7 @@ function CometShowcase() {
           <div aria-label="Thử trên tab trình duyệt" className="rounded-t-xl bg-slate-200 px-3 pt-2">
             <div className="flex w-fit items-center gap-2 rounded-t-lg bg-white px-3 py-1.5 text-xs text-slate-700">
               <span className="block size-4">
-                <LogoCometL1 className="size-full" />
+                <CometLogo className="size-full" />
               </span>
               LEARNIVERSE · Học tập
               <span aria-hidden className="ml-3 text-slate-400">
@@ -93,7 +93,7 @@ function CometShowcase() {
               →
             </span>
             <span className="flex flex-col items-center gap-1">
-              <LogoCometL1 className="size-16" />
+              <CometLogo className="size-16" />
               Sau
             </span>
           </div>

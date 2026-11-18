@@ -4,7 +4,7 @@
 // the chosen mark should be converted to outlined paths before production.
 import { cn } from "@/lib/utils";
 
-import { LogoCometL1 } from "./logo-comet";
+import { CometLogo } from "@/components/brand/comet-logo";
 
 const BLUE = "#2563eb";
 const NAVY = "#0b1f5c";
@@ -286,7 +286,7 @@ export type LogoId = (typeof LOGO_IDS)[number];
 export function LogoById({ id, className }: { id: LogoId; className?: string }) {
   switch (id) {
     case "comet":
-      return <LogoCometL1 className={className} />;
+      return <CometLogo className={className} />;
     case "planet":
       return <LogoPlanetSquared className={className} />;
     case "infinity":

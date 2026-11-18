@@ -1,11 +1,11 @@
 "use client";
 
-// Concept 3, "Sao chổi L1", cartoon style: a comet swoops through a porthole. Its tapering tail
+// LEARNIVERSE brand mark, "Sao chổi L1" (chosen in K2), cartoon style: a comet swoops through a porthole. Its tapering tail
 // draws the letter L, then it pulls up and away with the number 1 as its head (L1 reads as "LI",
 // short for LEARNIVERSE). Pure shapes, no font glyphs, so it renders the same everywhere.
 import { cn } from "@/lib/utils";
 
-import { useSvgId } from "./d/art";
+import { useSvgId } from "@/hooks/use-svg-id";
 
 type Pt = [number, number];
 
@@ -137,12 +137,18 @@ const sparkle = (x: number, y: number, s: number) =>
   `M${x} ${y - s} Q${x + s * 0.18} ${y - s * 0.18} ${x + s} ${y} Q${x + s * 0.18} ${y + s * 0.18} ${x} ${y + s} ` +
   `Q${x - s * 0.18} ${y + s * 0.18} ${x - s} ${y} Q${x - s * 0.18} ${y - s * 0.18} ${x} ${y - s} Z`;
 
-export function LogoCometL1({ className, animated }: { className?: string; animated?: boolean }) {
+export function CometLogo({ className, animated }: { className?: string; animated?: boolean }) {
   const clip = useSvgId("lg-window");
   const swoop = cn(animated && "lg-swoop");
 
   return (
-    <svg viewBox="0 0 64 64" className={className} role="img" aria-label="Logo LEARNIVERSE sao chổi L1">
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 64 64"
+      className={className}
+      role="img"
+      aria-label="Logo LEARNIVERSE sao chổi L1"
+    >
       <defs>
         <clipPath id={clip}>
           <circle cx={CX} cy={CY} r={WINDOW_R} />
