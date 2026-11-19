@@ -4,6 +4,7 @@ import { Be_Vietnam_Pro } from "next/font/google";
 import { TooltipProvider } from "@/components/ui/tooltip";
 
 import "./globals.css";
+import "./motion.css";
 
 // Default app font with full Vietnamese glyph support; exposed as --font-sans for Tailwind.
 const beVietnamPro = Be_Vietnam_Pro({
@@ -13,7 +14,7 @@ const beVietnamPro = Be_Vietnam_Pro({
 });
 
 export const metadata: Metadata = {
-  title: "LEARNIVERSE",
+  title: { default: "LEARNIVERSE", template: "%s · LEARNIVERSE" },
   description: "OUR UNIVERSE OF LEARNING",
 };
 
