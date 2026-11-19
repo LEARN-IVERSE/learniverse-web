@@ -1,17 +1,14 @@
 "use client";
 
-import "katex/dist/katex.min.css";
-
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import ReactMarkdown from "react-markdown";
-import rehypeKatex from "rehype-katex";
-import remarkMath from "remark-math";
 
 import { ErrorState } from "@/components/states/error-state";
 import { PageSkeleton } from "@/components/states/page-skeleton";
 import { catalogLesson } from "@/lib/api-client";
 
+import { MathText } from "./math-text";
+import { TheoryCheck } from "./theory-check";
 import { useApi } from "./use-api";
 
 /** /courses/[subject]/[code]: the theory of one lesson; math is $...$ / $$...$$ rendered by KaTeX. */
@@ -46,20 +43,29 @@ export function LessonTheory() {
       <p className="mt-1 text-sm text-muted-foreground">Lý thuyết</p>
 
       <div className="mt-6 space-y-5">
-        {lesson.sections.map((section) => (
-          <section key={section.title} className="rounded-[1.75rem] bg-white p-6 ring-1 ring-blue-100">
+        {lesson.sections.map((section, i) => (
+          <section
+            key={section.title}
+            id={`section-${i + 1}`}
+            className="scroll-mt-24 rounded-[1.75rem] bg-white p-6 ring-1 ring-blue-100"
+          >
             <h2 className="font-heading text-2xl font-bold text-slate-900">{section.title}</h2>
-            <div className="lesson-prose mt-3">
-              <ReactMarkdown remarkPlugins={[remarkMath]} rehypePlugins={[rehypeKatex]}>
-                {section.body_md}
-              </ReactMarkdown>
-            </div>
+            <MathText md={section.body_md} className="mt-3" />
           </section>
         ))}
         {lesson.sections.length === 0 && (
-          <p className="text-muted-foreground">Mục này mở thẳng bộ câu hỏi (có ở K5).</p>
+          <p className="text-muted-foreground">
+            Mục này không có phần Lý thuyết.{" "}
+            <Link
+              href={`/courses/${lesson.subject_code}/${lesson.code}/practice`}
+              className="font-semibold text-blue-700 hover:underline"
+            >
+              Mở bộ câu hỏi
+            </Link>
+          </p>
         )}
       </div>
+      {lesson.kind === "lesson" && <TheoryCheck subject={lesson.subject_code} code={lesson.code} />}
     </article>
   );
 }

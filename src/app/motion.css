@@ -106,6 +106,24 @@
   animation: d-ring-draw 1.2s cubic-bezier(0.2, 0.8, 0.2, 1) both;
 }
 
+/* A star just earned pops in once. */
+@keyframes d-star-pop {
+  0% {
+    transform: scale(0.2) rotate(-40deg);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1.35) rotate(10deg);
+    opacity: 1;
+  }
+  100% {
+    transform: none;
+  }
+}
+.d-star-pop {
+  animation: d-star-pop 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
 /* Subject "planet" card on /courses: lifts on hover while its cover art drifts up and grows. */
 .d-world {
   transition:

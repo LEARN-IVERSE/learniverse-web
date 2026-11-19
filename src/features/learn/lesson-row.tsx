@@ -1,6 +1,6 @@
 "use client";
 
-import { BookOpenText, Bot, ClipboardList, ListChecks, type LucideIcon, RefreshCw } from "lucide-react";
+import { BookOpenText, Bot, ClipboardList, ListChecks, type LucideIcon, RefreshCw, Star } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 
@@ -10,18 +10,45 @@ import { cn } from "@/lib/utils";
 
 import { StarMeter } from "./star-meter";
 
-type Action = { label: string; icon: LucideIcon; href?: string; soon: string };
+type Action = { label: string; icon: LucideIcon; href?: string; soon: string; earned: boolean };
 
 function actionsFor(subject: string, lesson: LessonRowOut): Action[] {
-  if (lesson.kind !== "lesson") {
-    return [{ label: "Làm bộ câu hỏi", icon: ListChecks, soon: "Mở ở K5" }];
+  const base = `/courses/${subject}/${lesson.code}`;
+  const has = (a: LessonRowOut["earned"][number]) => lesson.earned.includes(a);
+  const open = (a: LessonRowOut["available"][number], href: string) =>
+    lesson.available.includes(a) ? href : undefined;
+  if (lesson.kind === "periodic") {
+    return [{ label: "Làm bộ câu hỏi", icon: ListChecks, soon: "Mở ở K6", earned: false }];
   }
-  // The four functions of a lesson (spec 1.3). Only the theory exists in K4.
+  if (lesson.kind === "practice") {
+    return [
+      {
+        label: "Làm bộ câu hỏi",
+        icon: ListChecks,
+        href: open("practice", `${base}/practice`),
+        soon: "Chưa mở",
+        earned: has("practice"),
+      },
+    ];
+  }
+  // The four functions of a lesson (spec 1.3); "Chưa mở" while the question bank is incomplete.
   return [
-    { label: "Lý thuyết", icon: BookOpenText, href: `/courses/${subject}/${lesson.code}`, soon: "" },
-    { label: "Bài tập", icon: ClipboardList, soon: "Mở ở K5" },
-    { label: "Dạy AI", icon: Bot, soon: "Mở ở K10" },
-    { label: "Ôn tập", icon: RefreshCw, soon: "Mở ở K5" },
+    { label: "Lý thuyết", icon: BookOpenText, href: base, soon: "", earned: has("theory") },
+    {
+      label: "Bài tập",
+      icon: ClipboardList,
+      href: open("exercise", `${base}/exercise`),
+      soon: "Chưa mở",
+      earned: has("exercise"),
+    },
+    { label: "Dạy AI", icon: Bot, soon: "Mở ở K10", earned: has("ai_teaching") },
+    {
+      label: "Ôn tập",
+      icon: RefreshCw,
+      href: open("review", `${base}/review`),
+      soon: "Chưa mở",
+      earned: has("review"),
+    },
   ];
 }
 
@@ -62,9 +89,16 @@ export function LessonRow({
         ) : (
           <span
             aria-hidden
-            className="grid size-[52px] place-items-center rounded-full bg-amber-100 text-amber-700 ring-4 ring-white"
+            className={cn(
+              "grid size-[52px] place-items-center rounded-full ring-4 ring-white",
+              lesson.earned.includes("practice") ? "bg-amber-400 text-white" : "bg-amber-100 text-amber-700",
+            )}
           >
-            <ListChecks className="size-5" />
+            {lesson.earned.includes("practice") ? (
+              <Star className="size-5 fill-white" />
+            ) : (
+              <ListChecks className="size-5" />
+            )}
           </span>
         )}
       </div>
@@ -88,6 +122,11 @@ export function LessonRow({
             )}
           </span>
           {lesson.kind === "lesson" && <StarMeter stars={lesson.stars} completed={lesson.completed} />}
+          {lesson.kind === "practice" && lesson.earned.includes("practice") && (
+            <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-amber-100 px-2.5 py-1 text-xs font-bold text-amber-700">
+              <Star aria-hidden className="size-3.5 fill-amber-400 text-amber-400" /> Đã đạt sao
+            </span>
+          )}
         </button>
         <ul
           id={panelId}
@@ -97,7 +136,7 @@ export function LessonRow({
             open && "flex",
           )}
         >
-          {actionsFor(subject, lesson).map(({ label, icon: Icon, href, soon }) => (
+          {actionsFor(subject, lesson).map(({ label, icon: Icon, href, soon, earned }) => (
             <li key={label}>
               {href ? (
                 <Link
@@ -106,6 +145,9 @@ export function LessonRow({
                 >
                   <Icon aria-hidden className="size-4" />
                   {label}
+                  {earned && (
+                    <Star aria-label="đã có sao" className="size-3.5 fill-amber-300 text-amber-300" />
+                  )}
                 </Link>
               ) : (
                 <span
@@ -115,7 +157,7 @@ export function LessonRow({
                 >
                   <Icon aria-hidden className="size-4" />
                   {label}
-                  <span className="sr-only"> ({soon})</span>
+                  <span className="text-[11px] font-medium">· {soon}</span>
                 </span>
               )}
             </li>

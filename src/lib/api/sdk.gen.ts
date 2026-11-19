@@ -2,7 +2,7 @@
 
 import type { Client, ClientMeta, Options as Options2, RequestResult, TDataShape } from './client';
 import { client } from './client.gen';
-import type { AuthAdminPingData, AuthAdminPingResponses, AuthMeData, AuthMeResponses, AuthSignInGoogleData, AuthSignInGoogleErrors, AuthSignInGoogleResponses, AuthSignOutData, AuthSignOutResponses, CatalogLessonData, CatalogLessonErrors, CatalogLessonResponses, CatalogSearchLessonsData, CatalogSearchLessonsErrors, CatalogSearchLessonsResponses, CatalogSubjectOutlineData, CatalogSubjectOutlineErrors, CatalogSubjectOutlineResponses, CatalogSubjectsData, CatalogSubjectsResponses, HealthHealthData, HealthHealthDbData, HealthHealthDbResponses, HealthHealthResponses } from './types.gen';
+import type { ActivitiesAttemptResultData, ActivitiesAttemptResultErrors, ActivitiesAttemptResultResponses, ActivitiesLessonActivitiesData, ActivitiesLessonActivitiesErrors, ActivitiesLessonActivitiesResponses, ActivitiesReadCompleteData, ActivitiesReadCompleteErrors, ActivitiesReadCompleteResponses, ActivitiesReadStartData, ActivitiesReadStartErrors, ActivitiesReadStartResponses, ActivitiesStartAttemptData, ActivitiesStartAttemptErrors, ActivitiesStartAttemptResponses, ActivitiesSubmitData, ActivitiesSubmitErrors, ActivitiesSubmitResponses, AuthAdminPingData, AuthAdminPingResponses, AuthMeData, AuthMeResponses, AuthSignInGoogleData, AuthSignInGoogleErrors, AuthSignInGoogleResponses, AuthSignOutData, AuthSignOutResponses, CatalogLessonData, CatalogLessonErrors, CatalogLessonResponses, CatalogSearchLessonsData, CatalogSearchLessonsErrors, CatalogSearchLessonsResponses, CatalogSubjectOutlineData, CatalogSubjectOutlineErrors, CatalogSubjectOutlineResponses, CatalogSubjectsData, CatalogSubjectsResponses, HealthHealthData, HealthHealthDbData, HealthHealthDbResponses, HealthHealthResponses } from './types.gen';
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean, TResponse = unknown> = Options2<TData, ThrowOnError, TResponse> & {
     /**
@@ -76,3 +76,47 @@ export const catalogLesson = <ThrowOnError extends boolean = false>(options: Opt
  * Search Lessons
  */
 export const catalogSearchLessons = <ThrowOnError extends boolean = false>(options: Options<CatalogSearchLessonsData, ThrowOnError>): RequestResult<CatalogSearchLessonsResponses, CatalogSearchLessonsErrors, ThrowOnError> => (options.client ?? client).get<CatalogSearchLessonsResponses, CatalogSearchLessonsErrors, ThrowOnError>({ url: '/v1/lessons/search', ...options });
+
+/**
+ * Lesson Activities
+ */
+export const activitiesLessonActivities = <ThrowOnError extends boolean = false>(options: Options<ActivitiesLessonActivitiesData, ThrowOnError>): RequestResult<ActivitiesLessonActivitiesResponses, ActivitiesLessonActivitiesErrors, ThrowOnError> => (options.client ?? client).get<ActivitiesLessonActivitiesResponses, ActivitiesLessonActivitiesErrors, ThrowOnError>({ url: '/v1/subjects/{subject}/lessons/{code}/activities', ...options });
+
+/**
+ * Read Start
+ */
+export const activitiesReadStart = <ThrowOnError extends boolean = false>(options: Options<ActivitiesReadStartData, ThrowOnError>): RequestResult<ActivitiesReadStartResponses, ActivitiesReadStartErrors, ThrowOnError> => (options.client ?? client).post<ActivitiesReadStartResponses, ActivitiesReadStartErrors, ThrowOnError>({ url: '/v1/subjects/{subject}/lessons/{code}/read/start', ...options });
+
+/**
+ * Read Complete
+ */
+export const activitiesReadComplete = <ThrowOnError extends boolean = false>(options: Options<ActivitiesReadCompleteData, ThrowOnError>): RequestResult<ActivitiesReadCompleteResponses, ActivitiesReadCompleteErrors, ThrowOnError> => (options.client ?? client).post<ActivitiesReadCompleteResponses, ActivitiesReadCompleteErrors, ThrowOnError>({ url: '/v1/subjects/{subject}/lessons/{code}/read/complete', ...options });
+
+/**
+ * Start Attempt
+ */
+export const activitiesStartAttempt = <ThrowOnError extends boolean = false>(options: Options<ActivitiesStartAttemptData, ThrowOnError>): RequestResult<ActivitiesStartAttemptResponses, ActivitiesStartAttemptErrors, ThrowOnError> => (options.client ?? client).post<ActivitiesStartAttemptResponses, ActivitiesStartAttemptErrors, ThrowOnError>({
+    url: '/v1/subjects/{subject}/lessons/{code}/attempts',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+/**
+ * Submit
+ */
+export const activitiesSubmit = <ThrowOnError extends boolean = false>(options: Options<ActivitiesSubmitData, ThrowOnError>): RequestResult<ActivitiesSubmitResponses, ActivitiesSubmitErrors, ThrowOnError> => (options.client ?? client).post<ActivitiesSubmitResponses, ActivitiesSubmitErrors, ThrowOnError>({
+    url: '/v1/attempts/{attempt_id}/submit',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+/**
+ * Attempt Result
+ */
+export const activitiesAttemptResult = <ThrowOnError extends boolean = false>(options: Options<ActivitiesAttemptResultData, ThrowOnError>): RequestResult<ActivitiesAttemptResultResponses, ActivitiesAttemptResultErrors, ThrowOnError> => (options.client ?? client).get<ActivitiesAttemptResultResponses, ActivitiesAttemptResultErrors, ThrowOnError>({ url: '/v1/attempts/{attempt_id}', ...options });

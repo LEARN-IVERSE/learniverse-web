@@ -7,13 +7,15 @@ const SUBJECTS = [
   { code: "literature", name: "Ngữ văn 9", textbook: "Kết nối tri thức với cuộc sống", lesson_count: 1 },
 ];
 
-const row = (code: string, kind: string, label: string | null, title: string) => ({
+const row = (code: string, kind: string, label: string | null, title: string, available: string[] = []) => ({
   code,
   kind,
   label,
   title,
   stars: 0,
   completed: false,
+  earned: [] as string[],
+  available,
 });
 
 const MATH_OUTLINE = {
@@ -23,7 +25,11 @@ const MATH_OUTLINE = {
       code: "chapter-1",
       title: "Chương I. Phương trình và hệ hai phương trình bậc nhất hai ẩn",
       lessons: [
-        row("lesson-1", "lesson", "Bài 1", "Khái niệm phương trình và hệ hai phương trình bậc nhất hai ẩn"),
+        row("lesson-1", "lesson", "Bài 1", "Khái niệm phương trình và hệ hai phương trình bậc nhất hai ẩn", [
+          "exercise",
+          "review",
+          "theory",
+        ]),
         row("chapter-1-practice", "practice", null, "Luyện tập chung"),
       ],
     },
@@ -54,6 +60,8 @@ const MATH_LESSON = {
 
 const NOT_FOUND = { error: { code: "subject_not_found", message: "Không tìm thấy môn học này." } };
 
+export { MATH_LESSON, MATH_OUTLINE };
+
 export async function mockCatalogApi(page: Page): Promise<void> {
   await page.route("**/api/v1/subjects", (route) => route.fulfill({ json: SUBJECTS }));
   await page.route("**/api/v1/subjects/*/outline", (route) =>
@@ -63,6 +71,10 @@ export async function mockCatalogApi(page: Page): Promise<void> {
   );
   await page.route("**/api/v1/subjects/math/lessons/lesson-1", (route) =>
     route.fulfill({ json: MATH_LESSON }),
+  );
+  // The theory page records reading time (K5); by default the 5 minutes have not passed yet.
+  await page.route("**/api/v1/subjects/math/lessons/lesson-1/read/*", (route) =>
+    route.fulfill({ json: { started: true, completed: false, remaining_seconds: 299 } }),
   );
   await page.route("**/api/v1/lessons/search?**", (route) => {
     const q = new URL(route.request().url()).searchParams.get("q") ?? "";

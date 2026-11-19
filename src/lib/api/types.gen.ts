@@ -5,6 +5,85 @@ export type ClientOptions = {
 };
 
 /**
+ * ActivitiesOut
+ */
+export type ActivitiesOut = {
+    kind: LessonKind;
+    read: ReadStatusOut | null;
+    /**
+     * Activities
+     */
+    activities: Array<ActivityStateOut>;
+};
+
+/**
+ * Activity
+ */
+export type Activity = 'theory' | 'exercise' | 'ai_teaching' | 'review' | 'practice';
+
+/**
+ * ActivityStateOut
+ */
+export type ActivityStateOut = {
+    activity: Activity;
+    /**
+     * Available
+     */
+    available: boolean;
+    /**
+     * Earned
+     */
+    earned: boolean;
+    /**
+     * Best Score
+     */
+    best_score: number | null;
+    /**
+     * Open Attempt Id
+     */
+    open_attempt_id: string | null;
+};
+
+/**
+ * AnswerIn
+ */
+export type AnswerIn = {
+    /**
+     * Question Id
+     */
+    question_id: string;
+    /**
+     * Answer
+     */
+    answer?: unknown;
+};
+
+/**
+ * AttemptOut
+ */
+export type AttemptOut = {
+    /**
+     * Id
+     */
+    id: string;
+    activity: Activity;
+    status: AttemptStatus;
+    /**
+     * Total
+     */
+    total: number;
+    /**
+     * Questions
+     */
+    questions: Array<QuestionOut>;
+};
+
+/**
+ * AttemptStatus
+ */
+export type AttemptStatus = 'in_progress' | 'graded' | 'pending_review';
+
+/**
  * DbHealthOut
  */
 export type DbHealthOut = {
@@ -121,6 +200,14 @@ export type LessonRowOut = {
      * Completed
      */
     completed: boolean;
+    /**
+     * Earned
+     */
+    earned: Array<Activity>;
+    /**
+     * Available
+     */
+    available: Array<Activity>;
 };
 
 /**
@@ -159,6 +246,148 @@ export type OutlineOut = {
      * Units
      */
     units: Array<UnitOut>;
+};
+
+/**
+ * QuestionOut
+ */
+export type QuestionOut = {
+    /**
+     * Id
+     */
+    id: string;
+    type: QuestionType;
+    /**
+     * Prompt Md
+     */
+    prompt_md: string;
+    /**
+     * Options
+     */
+    options: Array<string> | null;
+};
+
+/**
+ * QuestionType
+ */
+export type QuestionType = 'single_choice' | 'true_false' | 'fill_blank' | 'essay';
+
+/**
+ * ReadStatusOut
+ */
+export type ReadStatusOut = {
+    /**
+     * Started
+     */
+    started: boolean;
+    /**
+     * Completed
+     */
+    completed: boolean;
+    /**
+     * Remaining Seconds
+     */
+    remaining_seconds: number;
+};
+
+/**
+ * ResultOut
+ */
+export type ResultOut = {
+    /**
+     * Attempt Id
+     */
+    attempt_id: string;
+    activity: Activity;
+    /**
+     * Total
+     */
+    total: number;
+    /**
+     * Correct
+     */
+    correct: number;
+    /**
+     * Wrong
+     */
+    wrong: number;
+    /**
+     * Score
+     */
+    score: number;
+    /**
+     * Passed
+     */
+    passed: boolean;
+    /**
+     * Star Awarded
+     */
+    star_awarded: boolean;
+    /**
+     * Lesson Stars
+     */
+    lesson_stars: number;
+    /**
+     * Lesson Completed
+     */
+    lesson_completed: boolean;
+    /**
+     * Questions
+     */
+    questions: Array<ReviewedQuestionOut>;
+    /**
+     * Review Topics
+     */
+    review_topics: Array<ReviewTopicOut>;
+};
+
+/**
+ * ReviewTopicOut
+ */
+export type ReviewTopicOut = {
+    /**
+     * Position
+     */
+    position: number;
+    /**
+     * Title
+     */
+    title: string;
+};
+
+/**
+ * ReviewedQuestionOut
+ */
+export type ReviewedQuestionOut = {
+    /**
+     * Id
+     */
+    id: string;
+    type: QuestionType;
+    /**
+     * Prompt Md
+     */
+    prompt_md: string;
+    /**
+     * Options
+     */
+    options: Array<string> | null;
+    /**
+     * Your Answer
+     */
+    your_answer: unknown;
+    /**
+     * Correct Answer
+     */
+    correct_answer: unknown;
+    /**
+     * Is Correct
+     */
+    is_correct: boolean | null;
+    /**
+     * Explanation Md
+     */
+    explanation_md: string;
 };
 
 /**
@@ -210,6 +439,13 @@ export type SectionOut = {
 };
 
 /**
+ * StartIn
+ */
+export type StartIn = {
+    activity: Activity;
+};
+
+/**
  * SubjectOut
  */
 export type SubjectOut = {
@@ -229,6 +465,16 @@ export type SubjectOut = {
      * Lesson Count
      */
     lesson_count: number;
+};
+
+/**
+ * SubmitIn
+ */
+export type SubmitIn = {
+    /**
+     * Answers
+     */
+    answers: Array<AnswerIn>;
 };
 
 /**
@@ -495,3 +741,199 @@ export type CatalogSearchLessonsResponses = {
 };
 
 export type CatalogSearchLessonsResponse = CatalogSearchLessonsResponses[keyof CatalogSearchLessonsResponses];
+
+export type ActivitiesLessonActivitiesData = {
+    body?: never;
+    path: {
+        /**
+         * Subject
+         */
+        subject: string;
+        /**
+         * Code
+         */
+        code: string;
+    };
+    query?: never;
+    url: '/v1/subjects/{subject}/lessons/{code}/activities';
+};
+
+export type ActivitiesLessonActivitiesErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type ActivitiesLessonActivitiesError = ActivitiesLessonActivitiesErrors[keyof ActivitiesLessonActivitiesErrors];
+
+export type ActivitiesLessonActivitiesResponses = {
+    /**
+     * Successful Response
+     */
+    200: ActivitiesOut;
+};
+
+export type ActivitiesLessonActivitiesResponse = ActivitiesLessonActivitiesResponses[keyof ActivitiesLessonActivitiesResponses];
+
+export type ActivitiesReadStartData = {
+    body?: never;
+    path: {
+        /**
+         * Subject
+         */
+        subject: string;
+        /**
+         * Code
+         */
+        code: string;
+    };
+    query?: never;
+    url: '/v1/subjects/{subject}/lessons/{code}/read/start';
+};
+
+export type ActivitiesReadStartErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type ActivitiesReadStartError = ActivitiesReadStartErrors[keyof ActivitiesReadStartErrors];
+
+export type ActivitiesReadStartResponses = {
+    /**
+     * Successful Response
+     */
+    200: ReadStatusOut;
+};
+
+export type ActivitiesReadStartResponse = ActivitiesReadStartResponses[keyof ActivitiesReadStartResponses];
+
+export type ActivitiesReadCompleteData = {
+    body?: never;
+    path: {
+        /**
+         * Subject
+         */
+        subject: string;
+        /**
+         * Code
+         */
+        code: string;
+    };
+    query?: never;
+    url: '/v1/subjects/{subject}/lessons/{code}/read/complete';
+};
+
+export type ActivitiesReadCompleteErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type ActivitiesReadCompleteError = ActivitiesReadCompleteErrors[keyof ActivitiesReadCompleteErrors];
+
+export type ActivitiesReadCompleteResponses = {
+    /**
+     * Successful Response
+     */
+    200: ReadStatusOut;
+};
+
+export type ActivitiesReadCompleteResponse = ActivitiesReadCompleteResponses[keyof ActivitiesReadCompleteResponses];
+
+export type ActivitiesStartAttemptData = {
+    body: StartIn;
+    path: {
+        /**
+         * Subject
+         */
+        subject: string;
+        /**
+         * Code
+         */
+        code: string;
+    };
+    query?: never;
+    url: '/v1/subjects/{subject}/lessons/{code}/attempts';
+};
+
+export type ActivitiesStartAttemptErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type ActivitiesStartAttemptError = ActivitiesStartAttemptErrors[keyof ActivitiesStartAttemptErrors];
+
+export type ActivitiesStartAttemptResponses = {
+    /**
+     * Successful Response
+     */
+    200: AttemptOut;
+};
+
+export type ActivitiesStartAttemptResponse = ActivitiesStartAttemptResponses[keyof ActivitiesStartAttemptResponses];
+
+export type ActivitiesSubmitData = {
+    body: SubmitIn;
+    path: {
+        /**
+         * Attempt Id
+         */
+        attempt_id: string;
+    };
+    query?: never;
+    url: '/v1/attempts/{attempt_id}/submit';
+};
+
+export type ActivitiesSubmitErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type ActivitiesSubmitError = ActivitiesSubmitErrors[keyof ActivitiesSubmitErrors];
+
+export type ActivitiesSubmitResponses = {
+    /**
+     * Successful Response
+     */
+    200: ResultOut;
+};
+
+export type ActivitiesSubmitResponse = ActivitiesSubmitResponses[keyof ActivitiesSubmitResponses];
+
+export type ActivitiesAttemptResultData = {
+    body?: never;
+    path: {
+        /**
+         * Attempt Id
+         */
+        attempt_id: string;
+    };
+    query?: never;
+    url: '/v1/attempts/{attempt_id}';
+};
+
+export type ActivitiesAttemptResultErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type ActivitiesAttemptResultError = ActivitiesAttemptResultErrors[keyof ActivitiesAttemptResultErrors];
+
+export type ActivitiesAttemptResultResponses = {
+    /**
+     * Successful Response
+     */
+    200: ResultOut;
+};
+
+export type ActivitiesAttemptResultResponse = ActivitiesAttemptResultResponses[keyof ActivitiesAttemptResultResponses];
