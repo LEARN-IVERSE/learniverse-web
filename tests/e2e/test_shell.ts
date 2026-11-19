@@ -1,7 +1,13 @@
 import { expect, test } from "@playwright/test";
 
+import { mockAccountApi, STUDENT } from "./auth-mocks";
+
 // Behaviour of the App Shell; runs in both projects (desktop rail and phone bottom tabs).
 test.describe("app shell", () => {
+  test.beforeEach(async ({ page }) => {
+    await mockAccountApi(page, { signedIn: STUDENT });
+  });
+
   test("the root URL opens the learning area", async ({ page }) => {
     await page.goto("/");
     await expect(page).toHaveURL(/\/hoc-tap$/);

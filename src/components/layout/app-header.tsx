@@ -1,17 +1,17 @@
 "use client";
 
-import { Bell, Flame, Search, UserRound } from "lucide-react";
+import { Bell, Flame, Search } from "lucide-react";
 import { usePathname } from "next/navigation";
 
 import { CometLogo } from "@/components/brand/comet-logo";
 import { Wordmark } from "@/components/brand/wordmark";
+import { AccountMenu } from "@/features/auth/account-menu";
 
 import { activeNavItem } from "./nav-items";
 
 /**
  * Top bar: brand, current area, search, streak, notifications and account.
- * K2 renders the guest frame only; data arrives in K3 (account), K4 (search), K6 (streak)
- * and K7 (notifications).
+ * The account menu is live since K3; search, streak and notifications get data in K4, K6, K7.
  */
 export function AppHeader() {
   const section = activeNavItem(usePathname())?.label;
@@ -49,13 +49,7 @@ export function AppHeader() {
         >
           <Bell aria-hidden className="size-5" />
         </button>
-        <button
-          type="button"
-          aria-label="Tài khoản"
-          className="grid size-9 place-items-center rounded-full bg-blue-100 text-blue-700 ring-2 ring-white transition hover:bg-blue-200 focus-visible:ring-4 focus-visible:ring-blue-200 focus-visible:outline-none"
-        >
-          <UserRound aria-hidden className="size-5" />
-        </button>
+        <AccountMenu />
       </div>
     </header>
   );

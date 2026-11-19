@@ -19,6 +19,26 @@ export type DbHealthOut = {
 };
 
 /**
+ * GoogleSignInIn
+ */
+export type GoogleSignInIn = {
+    /**
+     * Credential
+     */
+    credential: string;
+};
+
+/**
+ * HTTPValidationError
+ */
+export type HttpValidationError = {
+    /**
+     * Detail
+     */
+    detail?: Array<ValidationError>;
+};
+
+/**
  * HealthOut
  */
 export type HealthOut = {
@@ -34,6 +54,68 @@ export type HealthOut = {
      * Env
      */
     env: string;
+};
+
+/**
+ * MeOut
+ */
+export type MeOut = {
+    /**
+     * Id
+     */
+    id: string;
+    /**
+     * Name
+     */
+    name: string;
+    /**
+     * Email
+     */
+    email: string;
+    role: Role;
+    /**
+     * Avatar Initial
+     */
+    avatar_initial: string;
+    /**
+     * Avatar Color
+     */
+    avatar_color: number;
+};
+
+/**
+ * Role
+ *
+ * One role per user (decision K3-D1).
+ */
+export type Role = 'student' | 'teacher' | 'admin';
+
+/**
+ * ValidationError
+ */
+export type ValidationError = {
+    /**
+     * Location
+     */
+    loc: Array<string | number>;
+    /**
+     * Message
+     */
+    msg: string;
+    /**
+     * Error Type
+     */
+    type: string;
+    /**
+     * Input
+     */
+    input?: unknown;
+    /**
+     * Context
+     */
+    ctx?: {
+        [key: string]: unknown;
+    };
 };
 
 export type HealthHealthData = {
@@ -67,3 +149,76 @@ export type HealthHealthDbResponses = {
 };
 
 export type HealthHealthDbResponse = HealthHealthDbResponses[keyof HealthHealthDbResponses];
+
+export type AuthSignInGoogleData = {
+    body: GoogleSignInIn;
+    path?: never;
+    query?: never;
+    url: '/v1/auth/google';
+};
+
+export type AuthSignInGoogleErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type AuthSignInGoogleError = AuthSignInGoogleErrors[keyof AuthSignInGoogleErrors];
+
+export type AuthSignInGoogleResponses = {
+    /**
+     * Successful Response
+     */
+    200: MeOut;
+};
+
+export type AuthSignInGoogleResponse = AuthSignInGoogleResponses[keyof AuthSignInGoogleResponses];
+
+export type AuthSignOutData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/v1/auth/logout';
+};
+
+export type AuthSignOutResponses = {
+    /**
+     * Successful Response
+     */
+    204: void;
+};
+
+export type AuthSignOutResponse = AuthSignOutResponses[keyof AuthSignOutResponses];
+
+export type AuthMeData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/v1/me';
+};
+
+export type AuthMeResponses = {
+    /**
+     * Successful Response
+     */
+    200: MeOut;
+};
+
+export type AuthMeResponse = AuthMeResponses[keyof AuthMeResponses];
+
+export type AuthAdminPingData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/v1/admin/ping';
+};
+
+export type AuthAdminPingResponses = {
+    /**
+     * Successful Response
+     */
+    200: MeOut;
+};
+
+export type AuthAdminPingResponse = AuthAdminPingResponses[keyof AuthAdminPingResponses];

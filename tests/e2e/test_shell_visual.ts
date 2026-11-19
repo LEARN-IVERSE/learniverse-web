@@ -1,5 +1,7 @@
 import { expect, test } from "@playwright/test";
 
+import { mockAccountApi, STUDENT, stubGoogleIdentity } from "./auth-mocks";
+
 // K2 acceptance: the App Shell must look right on phone, tablet and desktop. The first run writes
 // reference screenshots next to this file; later runs compare pixel by pixel against them.
 // Baselines depend on OS and browser, so create and compare them on the same kind of machine.
@@ -12,6 +14,7 @@ const PAGES = [
   { name: "hoc-tap", path: "/hoc-tap" },
   { name: "mang-xa-hoi", path: "/mang-xa-hoi" },
   { name: "bang-xep-hang", path: "/bang-xep-hang" },
+  { name: "dang-nhap", path: "/dang-nhap" },
 ];
 
 for (const size of SIZES) {
@@ -23,6 +26,9 @@ for (const size of SIZES) {
         // One set of baselines is enough: sizes are set explicitly, so skip the phone project.
         test.skip(testInfo.project.name !== "desktop", "visual baselines run in the desktop project");
         await page.emulateMedia({ reducedMotion: "reduce" });
+        // Signed in as a fixed fake learner; the sign-in page shows the stub Google button.
+        await mockAccountApi(page, { signedIn: target.name === "dang-nhap" ? null : STUDENT });
+        await stubGoogleIdentity(page);
         // Wait for the scripts so React has hydrated before anything touches the DOM.
         await page.goto(target.path, { waitUntil: "networkidle" });
         await page.evaluate(() => document.fonts.ready);

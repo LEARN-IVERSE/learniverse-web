@@ -2,7 +2,7 @@
 
 import type { Client, ClientMeta, Options as Options2, RequestResult, TDataShape } from './client';
 import { client } from './client.gen';
-import type { HealthHealthData, HealthHealthDbData, HealthHealthDbResponses, HealthHealthResponses } from './types.gen';
+import type { AuthAdminPingData, AuthAdminPingResponses, AuthMeData, AuthMeResponses, AuthSignInGoogleData, AuthSignInGoogleErrors, AuthSignInGoogleResponses, AuthSignOutData, AuthSignOutResponses, HealthHealthData, HealthHealthDbData, HealthHealthDbResponses, HealthHealthResponses } from './types.gen';
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean, TResponse = unknown> = Options2<TData, ThrowOnError, TResponse> & {
     /**
@@ -27,3 +27,32 @@ export const healthHealth = <ThrowOnError extends boolean = false>(options?: Opt
  * Health Db
  */
 export const healthHealthDb = <ThrowOnError extends boolean = false>(options?: Options<HealthHealthDbData, ThrowOnError>): RequestResult<HealthHealthDbResponses, unknown, ThrowOnError> => (options?.client ?? client).get<HealthHealthDbResponses, unknown, ThrowOnError>({ url: '/v1/health/db', ...options });
+
+/**
+ * Sign In Google
+ */
+export const authSignInGoogle = <ThrowOnError extends boolean = false>(options: Options<AuthSignInGoogleData, ThrowOnError>): RequestResult<AuthSignInGoogleResponses, AuthSignInGoogleErrors, ThrowOnError> => (options.client ?? client).post<AuthSignInGoogleResponses, AuthSignInGoogleErrors, ThrowOnError>({
+    url: '/v1/auth/google',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+/**
+ * Sign Out
+ */
+export const authSignOut = <ThrowOnError extends boolean = false>(options?: Options<AuthSignOutData, ThrowOnError>): RequestResult<AuthSignOutResponses, unknown, ThrowOnError> => (options?.client ?? client).post<AuthSignOutResponses, unknown, ThrowOnError>({ url: '/v1/auth/logout', ...options });
+
+/**
+ * Me
+ */
+export const authMe = <ThrowOnError extends boolean = false>(options?: Options<AuthMeData, ThrowOnError>): RequestResult<AuthMeResponses, unknown, ThrowOnError> => (options?.client ?? client).get<AuthMeResponses, unknown, ThrowOnError>({ url: '/v1/me', ...options });
+
+/**
+ * Admin Ping
+ *
+ * Smallest admin-only endpoint; lets the FE and tests check the role gate before K11.
+ */
+export const authAdminPing = <ThrowOnError extends boolean = false>(options?: Options<AuthAdminPingData, ThrowOnError>): RequestResult<AuthAdminPingResponses, unknown, ThrowOnError> => (options?.client ?? client).get<AuthAdminPingResponses, unknown, ThrowOnError>({ url: '/v1/admin/ping', ...options });

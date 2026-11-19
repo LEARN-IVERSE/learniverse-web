@@ -15,5 +15,7 @@ export default defineConfig({
     command: `pnpm dev --port ${PORT}`,
     url: `http://localhost:${PORT}`,
     reuseExistingServer: !process.env.CI,
+    // Google's script is stubbed in E2E, so any client ID works; keeps CI independent of .env.local.
+    env: { NEXT_PUBLIC_GOOGLE_CLIENT_ID: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID ?? "e2e-client-id" },
   },
 });
