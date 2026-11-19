@@ -8,7 +8,10 @@ import { PageSkeleton } from "@/components/states/page-skeleton";
 
 import { useSession } from "./session";
 
-/** Learner pages need an account (decision K3-D2): guests are sent to /dang-nhap?next=<here>. */
+/**
+ * Learner pages need an account (decision K3-D2): guests are sent to /login?next=<here>.
+ * Used inside each page (not in the layout), so the page segment always renders.
+ */
 export function RequireSession({ children }: { children: ReactNode }) {
   const session = useSession();
   const status = session?.state.status ?? "guest";
@@ -17,7 +20,7 @@ export function RequireSession({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (status !== "guest") return;
     const here = `${window.location.pathname}${window.location.search}`;
-    router.replace(`/dang-nhap?next=${encodeURIComponent(here)}`);
+    router.replace(`/login?next=${encodeURIComponent(here)}`);
   }, [status, router]);
 
   if (status === "signed-in") return children;

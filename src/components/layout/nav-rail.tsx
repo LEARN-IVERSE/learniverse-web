@@ -15,7 +15,7 @@ export function NavRail() {
   return (
     <aside className="sticky top-0 hidden h-svh w-[5.5rem] shrink-0 flex-col items-center gap-2 border-r border-blue-100 bg-white/80 px-2 py-5 md:flex">
       <Link
-        href="/hoc-tap"
+        href="/courses"
         aria-label="LEARNIVERSE, về trang Học tập"
         className="mb-5 rounded-full focus-visible:ring-4 focus-visible:ring-blue-200 focus-visible:outline-none"
       >

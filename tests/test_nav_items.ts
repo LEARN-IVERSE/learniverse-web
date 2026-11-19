@@ -8,12 +8,12 @@ describe("activeNavItem", () => {
   });
 
   it("keeps the area active on nested pages", () => {
-    expect(activeNavItem("/hoc-tap/toan-9/bai-3")?.label).toBe("Học tập");
+    expect(activeNavItem("/courses/toan-9/bai-3")?.label).toBe("Học tập");
   });
 
   it("does not match lookalike prefixes or other pages", () => {
-    expect(activeNavItem("/hoc-tapx")).toBeUndefined();
-    expect(activeNavItem("/he-thong")).toBeUndefined();
+    expect(activeNavItem("/coursesx")).toBeUndefined();
+    expect(activeNavItem("/status")).toBeUndefined();
     expect(activeNavItem("/")).toBeUndefined();
   });
 });

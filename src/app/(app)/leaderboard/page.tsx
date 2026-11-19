@@ -3,13 +3,14 @@ import type { Metadata } from "next";
 
 import { PageIntro } from "@/components/layout/page-intro";
 import { EmptyState } from "@/components/states/empty-state";
+import { RequireSession } from "@/features/auth/require-session";
 
 export const metadata: Metadata = { title: "Bảng xếp hạng" };
 
 // K2 frame: the two TOP 10 boards are computed by the API in K8.
 export default function RankPage() {
   return (
-    <>
+    <RequireSession>
       <PageIntro
         eyebrow="Bảng xếp hạng"
         title="Những ngôi sao của LEARNIVERSE"
@@ -20,6 +21,6 @@ export default function RankPage() {
         title="Bảng xếp hạng đang trống"
         description="Học bài đều đặn và giúp đỡ bạn bè để có tên trên bảng nhé."
       />
-    </>
+    </RequireSession>
   );
 }

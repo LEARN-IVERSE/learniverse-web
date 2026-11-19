@@ -3,13 +3,14 @@ import type { Metadata } from "next";
 
 import { PageIntro } from "@/components/layout/page-intro";
 import { EmptyState } from "@/components/states/empty-state";
+import { RequireSession } from "@/features/auth/require-session";
 
 export const metadata: Metadata = { title: "Mạng xã hội" };
 
 // K2 frame: subject boxes, posts and comments arrive in K7.
 export default function SocialPage() {
   return (
-    <>
+    <RequireSession>
       <PageIntro
         eyebrow="Mạng xã hội"
         title="Góc hỏi đáp"
@@ -20,6 +21,6 @@ export default function SocialPage() {
         title="Chưa có bài viết nào"
         description="Hãy là người đầu tiên đặt câu hỏi khi Box môn học được mở."
       />
-    </>
+    </RequireSession>
   );
 }

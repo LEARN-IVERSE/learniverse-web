@@ -5,7 +5,7 @@ import { mockAccountApi, STUDENT } from "./auth-mocks";
 test.describe("brand", () => {
   test("the shell shows the comet logo", async ({ page }) => {
     await mockAccountApi(page, { signedIn: STUDENT });
-    await page.goto("/hoc-tap");
+    await page.goto("/courses");
     await expect(page.getByRole("img", { name: "Logo LEARNIVERSE sao chổi L1" }).first()).toBeVisible();
   });
 

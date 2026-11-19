@@ -48,7 +48,7 @@ export function SessionProvider({ children }: { children: ReactNode }) {
     // "?next=<this page>" redirect: the next person to sign in starts fresh.
     setState({ status: "signing-out" });
     await authSignOut();
-    router.replace("/dang-nhap");
+    router.replace("/login");
   }, [router]);
 
   const value = useMemo(() => ({ state, refresh, signOut }), [state, refresh, signOut]);

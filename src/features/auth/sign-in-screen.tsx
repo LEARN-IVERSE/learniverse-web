@@ -19,7 +19,7 @@ export function SignInScreen() {
     router.replace(safeNextPath(next));
   }, [router]);
 
-  // Already signed in (for example a bookmarked /dang-nhap): skip straight to the app.
+  // Already signed in (for example a bookmarked /login): skip straight to the app.
   useEffect(() => {
     let cancelled = false;
     void authMe().then(({ data }) => {

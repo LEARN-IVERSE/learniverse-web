@@ -11,10 +11,10 @@ const SIZES = [
   { name: "desktop", width: 1440, height: 900 },
 ];
 const PAGES = [
-  { name: "hoc-tap", path: "/hoc-tap" },
-  { name: "mang-xa-hoi", path: "/mang-xa-hoi" },
-  { name: "bang-xep-hang", path: "/bang-xep-hang" },
-  { name: "dang-nhap", path: "/dang-nhap" },
+  { name: "courses", path: "/courses" },
+  { name: "community", path: "/community" },
+  { name: "leaderboard", path: "/leaderboard" },
+  { name: "login", path: "/login" },
 ];
 
 for (const size of SIZES) {
@@ -27,7 +27,7 @@ for (const size of SIZES) {
         test.skip(testInfo.project.name !== "desktop", "visual baselines run in the desktop project");
         await page.emulateMedia({ reducedMotion: "reduce" });
         // Signed in as a fixed fake learner; the sign-in page shows the stub Google button.
-        await mockAccountApi(page, { signedIn: target.name === "dang-nhap" ? null : STUDENT });
+        await mockAccountApi(page, { signedIn: target.name === "login" ? null : STUDENT });
         await stubGoogleIdentity(page);
         // Wait for the scripts so React has hydrated before anything touches the DOM.
         await page.goto(target.path, { waitUntil: "networkidle" });

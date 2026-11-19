@@ -1,5 +1,5 @@
 const BASE = "http://learniverse.invalid";
-export const HOME_PATH = "/hoc-tap";
+export const HOME_PATH = "/courses";
 
 /**
  * "Return to" target after sign-in. Only local paths are accepted, so a crafted `?next=` link
@@ -13,6 +13,6 @@ export function safeNextPath(raw: string | null | undefined): string {
   } catch {
     return HOME_PATH;
   }
-  if (url.origin !== BASE || url.pathname.startsWith("/dang-nhap")) return HOME_PATH;
+  if (url.origin !== BASE || url.pathname.startsWith("/login")) return HOME_PATH;
   return `${url.pathname}${url.search}${url.hash}`;
 }

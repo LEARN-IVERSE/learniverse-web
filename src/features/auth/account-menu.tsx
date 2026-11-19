@@ -39,7 +39,7 @@ export function AccountMenu() {
   if (!state || state.status === "guest" || state.status === "error") {
     return (
       <Link
-        href="/dang-nhap"
+        href="/login"
         className="rounded-full bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700 focus-visible:ring-4 focus-visible:ring-blue-200 focus-visible:outline-none"
       >
         Đăng nhập

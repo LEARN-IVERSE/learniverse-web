@@ -20,7 +20,7 @@ const nextConfig: NextConfig = {
   // so the API session cookie is first-party (decision D2 in plan.md).
   // Learners land on the learning area; "/" may become a landing page for guests later (K3).
   async redirects() {
-    return [{ source: "/", destination: "/hoc-tap", permanent: false }];
+    return [{ source: "/", destination: "/courses", permanent: false }];
   },
   async rewrites() {
     return [{ source: "/api/:path*", destination: `${API_URL}/:path*` }];

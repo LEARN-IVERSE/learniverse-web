@@ -16,7 +16,7 @@ export default function NotFound() {
           description="Trang này đã bay ra khỏi vũ trụ LEARNIVERSE hoặc chưa từng tồn tại."
         >
           <Link
-            href="/hoc-tap"
+            href="/courses"
             className="rounded-full bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-blue-700 focus-visible:ring-4 focus-visible:ring-blue-200 focus-visible:outline-none"
           >
             Về trang Học tập
