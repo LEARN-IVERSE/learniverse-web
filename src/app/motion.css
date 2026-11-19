@@ -1,4 +1,4 @@
-/* Shared decorative motion (App Shell, brand marks and the K2 samples). Every animation here is
+/* Shared decorative motion of the App Shell and the brand marks. Every animation here is
    switched off when the user asks the OS to reduce motion (rule at the end of this file). */
 
 /* SVG transforms: rotate/scale an element around its own centre, or around the SVG viewBox centre. */
@@ -16,24 +16,6 @@
     transform: rotate(360deg);
   }
 }
-@keyframes d-float {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-7px);
-  }
-}
-@keyframes d-drift {
-  0%,
-  100% {
-    transform: translate(0, 0) rotate(0deg);
-  }
-  50% {
-    transform: translate(6px, -6px) rotate(4deg);
-  }
-}
 @keyframes d-twinkle {
   0%,
   100% {
@@ -41,53 +23,6 @@
   }
   50% {
     opacity: 1;
-  }
-}
-@keyframes d-rise {
-  0% {
-    transform: translateY(30px) scale(0.85);
-    opacity: 0;
-  }
-  15%,
-  80% {
-    opacity: 1;
-  }
-  100% {
-    transform: translateY(-150px) scale(1.05);
-    opacity: 0;
-  }
-}
-@keyframes d-fall {
-  0% {
-    transform: translateY(-20px) rotate(0deg);
-  }
-  100% {
-    transform: translateY(420px) rotate(540deg);
-  }
-}
-@keyframes d-shine {
-  0%,
-  55% {
-    transform: translateX(-150px) rotate(25deg);
-  }
-  100% {
-    transform: translateX(190px) rotate(25deg);
-  }
-}
-@keyframes d-grow {
-  from {
-    transform: scaleY(0);
-  }
-  to {
-    transform: scaleY(1);
-  }
-}
-@keyframes d-ring-draw {
-  from {
-    stroke-dashoffset: var(--ring-c);
-  }
-  to {
-    stroke-dashoffset: var(--ring-off);
   }
 }
 @keyframes d-flicker {
@@ -129,39 +64,11 @@
   }
 }
 
-.d-spin {
-  animation: d-spin 30s linear infinite;
-}
 .d-spin-slow {
   animation: d-spin 160s linear infinite;
 }
-.d-spin-rays {
-  animation: d-spin 50s linear infinite;
-}
-.d-float {
-  animation: d-float 6s ease-in-out infinite;
-}
-.d-drift {
-  animation: d-drift 9s ease-in-out infinite;
-}
 .d-twinkle {
   animation: d-twinkle 2.8s ease-in-out infinite;
-}
-.d-rise {
-  animation: d-rise 7s ease-in infinite;
-}
-.d-fall {
-  animation: d-fall 7s linear infinite;
-}
-.d-shine {
-  animation: d-shine 4.5s ease-in-out infinite;
-}
-.d-grow {
-  transform-origin: bottom;
-  animation: d-grow 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) both;
-}
-.d-ring {
-  animation: d-ring-draw 1.2s cubic-bezier(0.2, 0.8, 0.2, 1) both;
 }
 .d-flicker {
   transform-origin: 50% 90%;
@@ -197,45 +104,7 @@
   animation: d-hint 7s ease forwards;
 }
 
-/* ------------------------------------------------------------------ logo concepts */
-
-@keyframes lg-moon {
-  0%,
-  100% {
-    transform: rotate(-10deg);
-  }
-  50% {
-    transform: rotate(8deg);
-  }
-}
-@keyframes lg-dash {
-  to {
-    stroke-dashoffset: -100;
-  }
-}
-@keyframes lg-dash-short {
-  to {
-    stroke-dashoffset: -9;
-  }
-}
-@keyframes lg-rise {
-  0%,
-  100% {
-    transform: scaleY(1);
-  }
-  50% {
-    transform: scaleY(0.82);
-  }
-}
-@keyframes lg-bob {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-2.5px);
-  }
-}
+/* ------------------------------------------------------------------ comet logo */
 
 /* Comet L1: the whole comet glides a little along its climb while the stars twinkle. */
 @keyframes lg-swoop {
@@ -251,30 +120,9 @@
   animation: lg-swoop 2.8s ease-in-out infinite;
 }
 
-/* Moon swings around the planet centre (27, 37) of the 64x64 logo viewBox. */
-.lg-moon {
-  transform-box: view-box;
-  transform-origin: 27px 37px;
-  animation: lg-moon 4s ease-in-out infinite;
-}
-.lg-flow {
-  animation: lg-dash 3.2s linear infinite;
-}
-.lg-flow-slow {
-  animation: lg-dash-short 1.6s linear infinite;
-}
 .lg-twinkle {
   animation: d-twinkle 2.4s ease-in-out infinite;
 }
-.lg-rise {
-  transform-box: fill-box;
-  transform-origin: bottom;
-  animation: lg-rise 2.6s ease-in-out infinite;
-}
-.lg-bob {
-  animation: lg-bob 2.2s ease-in-out infinite;
-}
-
 /* Respect users who ask the OS to reduce motion: stop all decorative animation. */
 @media (prefers-reduced-motion: reduce) {
   /* Without its fade-out the greeting bubble would stay forever; skip it entirely. */
@@ -283,13 +131,7 @@
   }
   .app-shell *,
   .app-shell *::before,
-  .app-shell *::after,
-  .sample-d *,
-  .sample-d *::before,
-  .sample-d *::after,
-  .logo-lab *,
-  .logo-lab *::before,
-  .logo-lab *::after {
+  .app-shell *::after {
     animation: none !important;
     transition: none !important;
   }
