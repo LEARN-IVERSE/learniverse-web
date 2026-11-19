@@ -69,6 +69,17 @@ export const NO_PROGRESS = {
   learned_today: false,
   today_seconds: 0,
   total_seconds: 0,
+  week: [
+    "2026-11-13",
+    "2026-11-14",
+    "2026-11-15",
+    "2026-11-16",
+    "2026-11-17",
+    "2026-11-18",
+    "2026-11-19",
+  ].map((day) => ({ day, learned: false })),
+  goal_done: 0,
+  goal_target: 3,
 };
 
 export async function mockCatalogApi(page: Page, progress: object = NO_PROGRESS): Promise<void> {

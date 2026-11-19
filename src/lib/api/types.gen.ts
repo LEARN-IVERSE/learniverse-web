@@ -293,6 +293,18 @@ export type MyProgressOut = {
      * Total Seconds
      */
     total_seconds: number;
+    /**
+     * Week
+     */
+    week: Array<WeekDayOut>;
+    /**
+     * Goal Done
+     */
+    goal_done: number;
+    /**
+     * Goal Target
+     */
+    goal_target: number;
 };
 
 /**
@@ -620,6 +632,20 @@ export type ValidationError = {
     ctx?: {
         [key: string]: unknown;
     };
+};
+
+/**
+ * WeekDayOut
+ */
+export type WeekDayOut = {
+    /**
+     * Day
+     */
+    day: string;
+    /**
+     * Learned
+     */
+    learned: boolean;
 };
 
 export type HealthHealthData = {

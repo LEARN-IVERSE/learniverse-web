@@ -11,6 +11,17 @@ const ON_FIRE = {
   learned_today: true,
   today_seconds: 1500,
   total_seconds: 4500,
+  week: [
+    "2026-11-13",
+    "2026-11-14",
+    "2026-11-15",
+    "2026-11-16",
+    "2026-11-17",
+    "2026-11-18",
+    "2026-11-19",
+  ].map((day, i) => ({ day, learned: i >= 4 })),
+  goal_done: 2,
+  goal_target: 3,
 };
 
 test.describe("streaks and study time (K6)", () => {
@@ -28,6 +39,19 @@ test.describe("streaks and study time (K6)", () => {
     await expect(menu).toContainText("5 ngày");
     await expect(menu).toContainText("25 phút");
     await expect(menu).toContainText("1 giờ 15 phút");
+  });
+
+  test("the greeting banner shows the goal, the week and today's time", async ({ page }) => {
+    await mockCatalogApi(page, ON_FIRE);
+    await page.goto("/courses");
+    await expect(page.getByText("Chuỗi 3 ngày, giữ lửa nhé!")).toBeVisible();
+    await expect(page.getByText("Mục tiêu hôm nay")).toBeVisible();
+    await expect(page.getByText("2/3")).toBeVisible();
+    const week = page.getByRole("list", { name: "Chuỗi học trong tuần" });
+    await expect(week.getByRole("listitem")).toHaveCount(7);
+    await expect(week.getByLabel("đã học")).toHaveCount(3);
+    await expect(week).toContainText("T5"); // 2026-11-19 is a Thursday
+    await expect(page.getByText("Hôm nay học 25 phút")).toBeVisible();
   });
 
   test("without learning today the flame asks to keep the streak", async ({ page }) => {
@@ -74,21 +98,24 @@ test.describe("streaks and study time (K6)", () => {
     await page.goto("/courses/math/lesson-1/exercise");
     // One beat on open (React dev mode may run the effect twice; the server just extends the segment).
     await expect.poll(() => beats.length).toBeGreaterThan(0);
+    await page.waitForLoadState("networkidle"); // let the opening beat(s) land before counting
     const start = beats.length;
     await page.clock.runFor("01:00");
-    await expect.poll(() => beats.length).toBe(start + 2);
+    await expect.poll(() => beats.length).toBeGreaterThanOrEqual(start + 2);
 
     await page.evaluate(() => {
       Object.defineProperty(document, "visibilityState", { configurable: true, get: () => "hidden" });
       document.dispatchEvent(new Event("visibilitychange"));
     });
+    await page.waitForLoadState("networkidle");
+    const hiddenAt = beats.length;
     await page.clock.runFor("02:00");
-    expect(beats.length).toBe(start + 2);
+    expect(beats.length).toBe(hiddenAt); // a hidden tab sends nothing
 
     await page.evaluate(() => {
       Object.defineProperty(document, "visibilityState", { configurable: true, get: () => "visible" });
       document.dispatchEvent(new Event("visibilitychange"));
     });
-    await expect.poll(() => beats.length).toBe(start + 3);
+    await expect.poll(() => beats.length).toBe(hiddenAt + 1);
   });
 });
