@@ -2,15 +2,27 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { Suspense } from "react";
 
 import { cn } from "@/lib/utils";
 
-import { activeNavItem, NAV_ITEMS } from "./nav-items";
+import { activeNavItem, NAV_ITEMS, type NavItem } from "./nav-items";
 
 /** Bottom tab bar for phones (below md); same destinations as the rail. */
 export function BottomTabs() {
-  const active = activeNavItem(usePathname());
+  // The active tab reads the URL, so it streams in under Suspense (see nav-rail.tsx).
+  return (
+    <Suspense fallback={<Tabs active={undefined} />}>
+      <ActiveTabs />
+    </Suspense>
+  );
+}
 
+function ActiveTabs() {
+  return <Tabs active={activeNavItem(usePathname())} />;
+}
+
+function Tabs({ active }: { active: NavItem | undefined }) {
   return (
     <nav
       aria-label="Điều hướng chính"

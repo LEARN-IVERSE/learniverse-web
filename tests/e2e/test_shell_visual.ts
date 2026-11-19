@@ -1,5 +1,6 @@
 import { expect, test } from "@playwright/test";
 
+import { mockCatalogApi } from "./catalog-mocks";
 import { mockAccountApi, STUDENT, stubGoogleIdentity } from "./auth-mocks";
 
 // K2 acceptance: the App Shell must look right on phone, tablet and desktop. The first run writes
@@ -27,6 +28,7 @@ for (const size of SIZES) {
         test.skip(testInfo.project.name !== "desktop", "visual baselines run in the desktop project");
         await page.emulateMedia({ reducedMotion: "reduce" });
         // Signed in as a fixed fake learner; the sign-in page shows the stub Google button.
+        await mockCatalogApi(page);
         await mockAccountApi(page, { signedIn: target.name === "login" ? null : STUDENT });
         await stubGoogleIdentity(page);
         // Wait for the scripts so React has hydrated before anything touches the DOM.

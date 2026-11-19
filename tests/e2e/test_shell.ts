@@ -1,17 +1,22 @@
 import { expect, test } from "@playwright/test";
 
+import { mockCatalogApi } from "./catalog-mocks";
 import { mockAccountApi, STUDENT } from "./auth-mocks";
 
 // Behaviour of the App Shell; runs in both projects (desktop rail and phone bottom tabs).
 test.describe("app shell", () => {
   test.beforeEach(async ({ page }) => {
+    await mockCatalogApi(page);
     await mockAccountApi(page, { signedIn: STUDENT });
   });
 
   test("the root URL opens the learning area", async ({ page }) => {
     await page.goto("/");
     await expect(page).toHaveURL(/\/courses$/);
-    await expect(page.getByRole("heading", { level: 1, name: "Ba hành tinh môn học" })).toBeVisible();
+    await expect(
+      page.getByRole("heading", { level: 1, name: /Hôm nay mình bay tới hành tinh nào/ }),
+    ).toBeVisible();
+    await expect(page.getByRole("heading", { level: 2, name: "Ba hành tinh môn học" })).toBeVisible();
     await expect(page).toHaveTitle("Học tập · LEARNIVERSE");
   });
 

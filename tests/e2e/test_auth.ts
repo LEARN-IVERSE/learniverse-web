@@ -1,9 +1,11 @@
 import { expect, test } from "@playwright/test";
 
 import { ADMIN, mockAccountApi, STUDENT, stubGoogleIdentity } from "./auth-mocks";
+import { mockCatalogApi } from "./catalog-mocks";
 
 test.describe("sign in with Google (K3)", () => {
   test("guests are sent to sign-in, then back to the page they asked for", async ({ page }) => {
+    await mockCatalogApi(page);
     await mockAccountApi(page);
     await stubGoogleIdentity(page);
 
@@ -18,6 +20,7 @@ test.describe("sign in with Google (K3)", () => {
 
   test("a guest opening the root URL sees the sign-in card, not a stuck skeleton", async ({ page }) => {
     // Regression: the guard used to live in the (app) layout, which Next.js 16 drops from rendering.
+    await mockCatalogApi(page);
     await mockAccountApi(page);
     await stubGoogleIdentity(page);
     await page.goto("/");
@@ -27,6 +30,7 @@ test.describe("sign in with Google (K3)", () => {
   });
 
   test("a refused Google credential shows the API's message", async ({ page }) => {
+    await mockCatalogApi(page);
     await mockAccountApi(page);
     await stubGoogleIdentity(page, "expired-token");
     await page.goto("/login");
@@ -39,6 +43,7 @@ test.describe("sign in with Google (K3)", () => {
   });
 
   test("the account menu shows who is signed in and signs out", async ({ page }) => {
+    await mockCatalogApi(page);
     await mockAccountApi(page, { signedIn: STUDENT });
     await page.goto("/courses");
     await page.getByRole("button", { name: `Tài khoản: ${STUDENT.name}` }).click();
@@ -55,6 +60,7 @@ test.describe("sign in with Google (K3)", () => {
 
   for (const next of ["https://evil.example/", "//evil.example"]) {
     test(`next=${next} cannot send the learner off-site`, async ({ page }) => {
+      await mockCatalogApi(page);
       await mockAccountApi(page);
       await stubGoogleIdentity(page);
       await page.goto(`/login?next=${encodeURIComponent(next)}`);
@@ -64,17 +70,20 @@ test.describe("sign in with Google (K3)", () => {
   }
 
   test("an already signed-in learner skips the sign-in page", async ({ page }) => {
+    await mockCatalogApi(page);
     await mockAccountApi(page, { signedIn: STUDENT });
     await page.goto("/login");
     await expect(page).toHaveURL(/\/courses$/);
   });
 
   test("the admin page is only for admins", async ({ page }) => {
+    await mockCatalogApi(page);
     await mockAccountApi(page, { signedIn: STUDENT });
     await page.goto("/admin");
     await expect(page.getByRole("region", { name: "Bạn không có quyền vào trang này" })).toBeVisible();
 
     await page.unrouteAll({ behavior: "ignoreErrors" });
+    await mockCatalogApi(page);
     await mockAccountApi(page, { signedIn: ADMIN });
     await page.goto("/courses");
     await page.getByRole("button", { name: `Tài khoản: ${ADMIN.name}` }).click();

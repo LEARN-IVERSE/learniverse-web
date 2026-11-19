@@ -16,6 +16,32 @@
     transform: rotate(360deg);
   }
 }
+@keyframes d-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-7px);
+  }
+}
+@keyframes d-drift {
+  0%,
+  100% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  50% {
+    transform: translate(6px, -6px) rotate(4deg);
+  }
+}
+@keyframes d-ring-draw {
+  from {
+    stroke-dashoffset: var(--ring-c);
+  }
+  to {
+    stroke-dashoffset: var(--ring-off);
+  }
+}
 @keyframes d-twinkle {
   0%,
   100% {
@@ -64,9 +90,39 @@
   }
 }
 
+.d-spin {
+  animation: d-spin 30s linear infinite;
+}
 .d-spin-slow {
   animation: d-spin 160s linear infinite;
 }
+.d-float {
+  animation: d-float 6s ease-in-out infinite;
+}
+.d-drift {
+  animation: d-drift 9s ease-in-out infinite;
+}
+.d-ring {
+  animation: d-ring-draw 1.2s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+/* Subject "planet" card on /courses: lifts on hover while its cover art drifts up and grows. */
+.d-world {
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
+}
+.d-world:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 22px 44px -22px rgb(37 99 235 / 0.5);
+}
+.d-world .d-world-art {
+  transition: transform 0.6s ease;
+}
+.d-world:hover .d-world-art {
+  transform: scale(1.05) translateY(-3px);
+}
+
 .d-twinkle {
   animation: d-twinkle 2.8s ease-in-out infinite;
 }

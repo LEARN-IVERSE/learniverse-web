@@ -2,7 +2,7 @@
 
 import type { Client, ClientMeta, Options as Options2, RequestResult, TDataShape } from './client';
 import { client } from './client.gen';
-import type { AuthAdminPingData, AuthAdminPingResponses, AuthMeData, AuthMeResponses, AuthSignInGoogleData, AuthSignInGoogleErrors, AuthSignInGoogleResponses, AuthSignOutData, AuthSignOutResponses, HealthHealthData, HealthHealthDbData, HealthHealthDbResponses, HealthHealthResponses } from './types.gen';
+import type { AuthAdminPingData, AuthAdminPingResponses, AuthMeData, AuthMeResponses, AuthSignInGoogleData, AuthSignInGoogleErrors, AuthSignInGoogleResponses, AuthSignOutData, AuthSignOutResponses, CatalogLessonData, CatalogLessonErrors, CatalogLessonResponses, CatalogSearchLessonsData, CatalogSearchLessonsErrors, CatalogSearchLessonsResponses, CatalogSubjectOutlineData, CatalogSubjectOutlineErrors, CatalogSubjectOutlineResponses, CatalogSubjectsData, CatalogSubjectsResponses, HealthHealthData, HealthHealthDbData, HealthHealthDbResponses, HealthHealthResponses } from './types.gen';
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean, TResponse = unknown> = Options2<TData, ThrowOnError, TResponse> & {
     /**
@@ -56,3 +56,23 @@ export const authMe = <ThrowOnError extends boolean = false>(options?: Options<A
  * Smallest admin-only endpoint; lets the FE and tests check the role gate before K11.
  */
 export const authAdminPing = <ThrowOnError extends boolean = false>(options?: Options<AuthAdminPingData, ThrowOnError>): RequestResult<AuthAdminPingResponses, unknown, ThrowOnError> => (options?.client ?? client).get<AuthAdminPingResponses, unknown, ThrowOnError>({ url: '/v1/admin/ping', ...options });
+
+/**
+ * Subjects
+ */
+export const catalogSubjects = <ThrowOnError extends boolean = false>(options?: Options<CatalogSubjectsData, ThrowOnError>): RequestResult<CatalogSubjectsResponses, unknown, ThrowOnError> => (options?.client ?? client).get<CatalogSubjectsResponses, unknown, ThrowOnError>({ url: '/v1/subjects', ...options });
+
+/**
+ * Subject Outline
+ */
+export const catalogSubjectOutline = <ThrowOnError extends boolean = false>(options: Options<CatalogSubjectOutlineData, ThrowOnError>): RequestResult<CatalogSubjectOutlineResponses, CatalogSubjectOutlineErrors, ThrowOnError> => (options.client ?? client).get<CatalogSubjectOutlineResponses, CatalogSubjectOutlineErrors, ThrowOnError>({ url: '/v1/subjects/{subject}/outline', ...options });
+
+/**
+ * Lesson
+ */
+export const catalogLesson = <ThrowOnError extends boolean = false>(options: Options<CatalogLessonData, ThrowOnError>): RequestResult<CatalogLessonResponses, CatalogLessonErrors, ThrowOnError> => (options.client ?? client).get<CatalogLessonResponses, CatalogLessonErrors, ThrowOnError>({ url: '/v1/subjects/{subject}/lessons/{code}', ...options });
+
+/**
+ * Search Lessons
+ */
+export const catalogSearchLessons = <ThrowOnError extends boolean = false>(options: Options<CatalogSearchLessonsData, ThrowOnError>): RequestResult<CatalogSearchLessonsResponses, CatalogSearchLessonsErrors, ThrowOnError> => (options.client ?? client).get<CatalogSearchLessonsResponses, CatalogSearchLessonsErrors, ThrowOnError>({ url: '/v1/lessons/search', ...options });

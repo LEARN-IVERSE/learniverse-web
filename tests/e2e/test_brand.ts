@@ -1,9 +1,11 @@
 import { expect, test } from "@playwright/test";
 
+import { mockCatalogApi } from "./catalog-mocks";
 import { mockAccountApi, STUDENT } from "./auth-mocks";
 
 test.describe("brand", () => {
   test("the shell shows the comet logo", async ({ page }) => {
+    await mockCatalogApi(page);
     await mockAccountApi(page, { signedIn: STUDENT });
     await page.goto("/courses");
     await expect(page.getByRole("img", { name: "Logo LEARNIVERSE sao chổi L1" }).first()).toBeVisible();

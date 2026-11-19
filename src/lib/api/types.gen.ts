@@ -57,6 +57,73 @@ export type HealthOut = {
 };
 
 /**
+ * LessonKind
+ */
+export type LessonKind = 'lesson' | 'practice' | 'periodic';
+
+/**
+ * LessonOut
+ */
+export type LessonOut = {
+    /**
+     * Subject Code
+     */
+    subject_code: string;
+    /**
+     * Subject Name
+     */
+    subject_name: string;
+    /**
+     * Unit Title
+     */
+    unit_title: string;
+    /**
+     * Code
+     */
+    code: string;
+    kind: LessonKind;
+    /**
+     * Label
+     */
+    label: string | null;
+    /**
+     * Title
+     */
+    title: string;
+    /**
+     * Sections
+     */
+    sections: Array<SectionOut>;
+};
+
+/**
+ * LessonRowOut
+ */
+export type LessonRowOut = {
+    /**
+     * Code
+     */
+    code: string;
+    kind: LessonKind;
+    /**
+     * Label
+     */
+    label: string | null;
+    /**
+     * Title
+     */
+    title: string;
+    /**
+     * Stars
+     */
+    stars: number;
+    /**
+     * Completed
+     */
+    completed: boolean;
+};
+
+/**
  * MeOut
  */
 export type MeOut = {
@@ -84,11 +151,103 @@ export type MeOut = {
 };
 
 /**
+ * OutlineOut
+ */
+export type OutlineOut = {
+    subject: SubjectOut;
+    /**
+     * Units
+     */
+    units: Array<UnitOut>;
+};
+
+/**
  * Role
  *
  * One role per user (decision K3-D1).
  */
 export type Role = 'student' | 'teacher' | 'admin';
+
+/**
+ * SearchHitOut
+ */
+export type SearchHitOut = {
+    /**
+     * Subject Code
+     */
+    subject_code: string;
+    /**
+     * Subject Name
+     */
+    subject_name: string;
+    /**
+     * Code
+     */
+    code: string;
+    kind: LessonKind;
+    /**
+     * Label
+     */
+    label: string | null;
+    /**
+     * Title
+     */
+    title: string;
+};
+
+/**
+ * SectionOut
+ */
+export type SectionOut = {
+    /**
+     * Title
+     */
+    title: string;
+    /**
+     * Body Md
+     */
+    body_md: string;
+};
+
+/**
+ * SubjectOut
+ */
+export type SubjectOut = {
+    /**
+     * Code
+     */
+    code: string;
+    /**
+     * Name
+     */
+    name: string;
+    /**
+     * Textbook
+     */
+    textbook: string;
+    /**
+     * Lesson Count
+     */
+    lesson_count: number;
+};
+
+/**
+ * UnitOut
+ */
+export type UnitOut = {
+    /**
+     * Code
+     */
+    code: string;
+    /**
+     * Title
+     */
+    title: string;
+    /**
+     * Lessons
+     */
+    lessons: Array<LessonRowOut>;
+};
 
 /**
  * ValidationError
@@ -222,3 +381,117 @@ export type AuthAdminPingResponses = {
 };
 
 export type AuthAdminPingResponse = AuthAdminPingResponses[keyof AuthAdminPingResponses];
+
+export type CatalogSubjectsData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/v1/subjects';
+};
+
+export type CatalogSubjectsResponses = {
+    /**
+     * Response Catalog-Subjects
+     *
+     * Successful Response
+     */
+    200: Array<SubjectOut>;
+};
+
+export type CatalogSubjectsResponse = CatalogSubjectsResponses[keyof CatalogSubjectsResponses];
+
+export type CatalogSubjectOutlineData = {
+    body?: never;
+    path: {
+        /**
+         * Subject
+         */
+        subject: string;
+    };
+    query?: never;
+    url: '/v1/subjects/{subject}/outline';
+};
+
+export type CatalogSubjectOutlineErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type CatalogSubjectOutlineError = CatalogSubjectOutlineErrors[keyof CatalogSubjectOutlineErrors];
+
+export type CatalogSubjectOutlineResponses = {
+    /**
+     * Successful Response
+     */
+    200: OutlineOut;
+};
+
+export type CatalogSubjectOutlineResponse = CatalogSubjectOutlineResponses[keyof CatalogSubjectOutlineResponses];
+
+export type CatalogLessonData = {
+    body?: never;
+    path: {
+        /**
+         * Subject
+         */
+        subject: string;
+        /**
+         * Code
+         */
+        code: string;
+    };
+    query?: never;
+    url: '/v1/subjects/{subject}/lessons/{code}';
+};
+
+export type CatalogLessonErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type CatalogLessonError = CatalogLessonErrors[keyof CatalogLessonErrors];
+
+export type CatalogLessonResponses = {
+    /**
+     * Successful Response
+     */
+    200: LessonOut;
+};
+
+export type CatalogLessonResponse = CatalogLessonResponses[keyof CatalogLessonResponses];
+
+export type CatalogSearchLessonsData = {
+    body?: never;
+    path?: never;
+    query: {
+        /**
+         * Q
+         */
+        q: string;
+    };
+    url: '/v1/lessons/search';
+};
+
+export type CatalogSearchLessonsErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type CatalogSearchLessonsError = CatalogSearchLessonsErrors[keyof CatalogSearchLessonsErrors];
+
+export type CatalogSearchLessonsResponses = {
+    /**
+     * Response Catalog-Search Lessons
+     *
+     * Successful Response
+     */
+    200: Array<SearchHitOut>;
+};
+
+export type CatalogSearchLessonsResponse = CatalogSearchLessonsResponses[keyof CatalogSearchLessonsResponses];
