@@ -38,6 +38,7 @@ export async function mockActivityApi(
     route.fulfill({
       json: {
         kind: "lesson",
+        periodic: null,
         read: { started: true, completed: Boolean(readCompleted), remaining_seconds: 0 },
         activities: ["theory", "exercise", "review"].map((activity) => ({
           activity,
@@ -71,6 +72,8 @@ export async function mockActivityApi(
         status: "in_progress",
         total: QUESTIONS.length,
         questions: QUESTIONS,
+        deadline: null,
+        time_limit_seconds: null,
       },
     });
   });
@@ -104,6 +107,70 @@ export async function mockActivityApi(
         lesson_completed: false,
         questions: graded,
         review_topics: passed ? [] : [{ position: 1, title: "Phương trình bậc nhất hai ẩn" }],
+        late: false,
+        streak: passed ? { current: 3, best: 3, increased: true } : null,
+      },
+    });
+  });
+}
+
+/** A 2-minute periodic test whose submit is recorded, to check the automatic hand-in. */
+export async function mockPeriodicApi(page: Page, submitted: { body: unknown[] }): Promise<void> {
+  const base = "**/api/v1/subjects/math/lessons/midterm-1-review";
+  const lesson = {
+    subject_code: "math",
+    subject_name: "Toán 9",
+    unit_title: "Giữa học kì I",
+    code: "midterm-1-review",
+    kind: "periodic",
+    label: null,
+    title: "Ôn tập giữa kì I",
+    sections: [],
+  };
+  await page.route(base, (route) => route.fulfill({ json: lesson }));
+  await page.route(`${base}/activities`, (route) =>
+    route.fulfill({
+      json: {
+        kind: "periodic",
+        read: null,
+        periodic: { question_count: 3, time_limit_minutes: 2, pass_percent: 50 },
+        activities: [
+          { activity: "periodic", available: true, earned: false, best_score: null, open_attempt_id: null },
+        ],
+      },
+    }),
+  );
+  await page.route(`${base}/attempts`, (route) =>
+    route.fulfill({
+      json: {
+        id: "22222222-2222-4222-8222-222222222222",
+        activity: "periodic",
+        status: "in_progress",
+        total: QUESTIONS.length,
+        questions: QUESTIONS,
+        deadline: new Date(Date.now() + 120_000).toISOString(),
+        time_limit_seconds: 120,
+      },
+    }),
+  );
+  await page.route("**/api/v1/attempts/22222222-2222-4222-8222-222222222222/submit", (route) => {
+    submitted.body.push(route.request().postDataJSON());
+    return route.fulfill({
+      json: {
+        attempt_id: "22222222-2222-4222-8222-222222222222",
+        activity: "periodic",
+        total: 3,
+        correct: 0,
+        wrong: 3,
+        score: 0,
+        passed: false,
+        star_awarded: false,
+        lesson_stars: 0,
+        lesson_completed: false,
+        questions: [],
+        review_topics: [],
+        late: false,
+        streak: null,
       },
     });
   });

@@ -10,6 +10,7 @@ export type ClientOptions = {
 export type ActivitiesOut = {
     kind: LessonKind;
     read: ReadStatusOut | null;
+    periodic: PeriodicConfigOut | null;
     /**
      * Activities
      */
@@ -19,7 +20,7 @@ export type ActivitiesOut = {
 /**
  * Activity
  */
-export type Activity = 'theory' | 'exercise' | 'ai_teaching' | 'review' | 'practice';
+export type Activity = 'theory' | 'exercise' | 'ai_teaching' | 'review' | 'practice' | 'periodic';
 
 /**
  * ActivityStateOut
@@ -76,6 +77,14 @@ export type AttemptOut = {
      * Questions
      */
     questions: Array<QuestionOut>;
+    /**
+     * Deadline
+     */
+    deadline: string | null;
+    /**
+     * Time Limit Seconds
+     */
+    time_limit_seconds: number | null;
 };
 
 /**
@@ -133,6 +142,25 @@ export type HealthOut = {
      * Env
      */
     env: string;
+};
+
+/**
+ * HeartbeatIn
+ */
+export type HeartbeatIn = {
+    /**
+     * Tab Id
+     */
+    tab_id: string;
+    /**
+     * Subject
+     */
+    subject: string;
+    /**
+     * Code
+     */
+    code: string;
+    activity: Activity;
 };
 
 /**
@@ -238,6 +266,36 @@ export type MeOut = {
 };
 
 /**
+ * MyProgressOut
+ */
+export type MyProgressOut = {
+    /**
+     * Streak Current
+     */
+    streak_current: number;
+    /**
+     * Streak Best
+     */
+    streak_best: number;
+    /**
+     * Last Day
+     */
+    last_day: string | null;
+    /**
+     * Learned Today
+     */
+    learned_today: boolean;
+    /**
+     * Today Seconds
+     */
+    today_seconds: number;
+    /**
+     * Total Seconds
+     */
+    total_seconds: number;
+};
+
+/**
  * OutlineOut
  */
 export type OutlineOut = {
@@ -246,6 +304,24 @@ export type OutlineOut = {
      * Units
      */
     units: Array<UnitOut>;
+};
+
+/**
+ * PeriodicConfigOut
+ */
+export type PeriodicConfigOut = {
+    /**
+     * Question Count
+     */
+    question_count: number;
+    /**
+     * Time Limit Minutes
+     */
+    time_limit_minutes: number;
+    /**
+     * Pass Percent
+     */
+    pass_percent: number;
 };
 
 /**
@@ -339,6 +415,11 @@ export type ResultOut = {
      * Review Topics
      */
     review_topics: Array<ReviewTopicOut>;
+    /**
+     * Late
+     */
+    late: boolean;
+    streak: StreakOut | null;
 };
 
 /**
@@ -443,6 +524,24 @@ export type SectionOut = {
  */
 export type StartIn = {
     activity: Activity;
+};
+
+/**
+ * StreakOut
+ */
+export type StreakOut = {
+    /**
+     * Current
+     */
+    current: number;
+    /**
+     * Best
+     */
+    best: number;
+    /**
+     * Increased
+     */
+    increased: boolean;
 };
 
 /**
@@ -937,3 +1036,44 @@ export type ActivitiesAttemptResultResponses = {
 };
 
 export type ActivitiesAttemptResultResponse = ActivitiesAttemptResultResponses[keyof ActivitiesAttemptResultResponses];
+
+export type ProgressMyProgressData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/v1/me/progress';
+};
+
+export type ProgressMyProgressResponses = {
+    /**
+     * Successful Response
+     */
+    200: MyProgressOut;
+};
+
+export type ProgressMyProgressResponse = ProgressMyProgressResponses[keyof ProgressMyProgressResponses];
+
+export type ProgressTimeHeartbeatData = {
+    body: HeartbeatIn;
+    path?: never;
+    query?: never;
+    url: '/v1/time/heartbeat';
+};
+
+export type ProgressTimeHeartbeatErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type ProgressTimeHeartbeatError = ProgressTimeHeartbeatErrors[keyof ProgressTimeHeartbeatErrors];
+
+export type ProgressTimeHeartbeatResponses = {
+    /**
+     * Successful Response
+     */
+    204: void;
+};
+
+export type ProgressTimeHeartbeatResponse = ProgressTimeHeartbeatResponses[keyof ProgressTimeHeartbeatResponses];

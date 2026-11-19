@@ -10,11 +10,17 @@ import { PageSkeleton } from "@/components/states/page-skeleton";
 import { type Activity, activitiesLessonActivities, catalogLesson } from "@/lib/api-client";
 
 import { useApi } from "../learn/use-api";
+import { useStudyTimer } from "../progress/use-study-timer";
 import { ACTIVITY_INFO } from "./activity-info";
 import { AttemptRunner } from "./attempt-runner";
 
 // URL segment -> activity. Theory questions live on the theory page itself.
-const ROUTES: Record<string, Activity> = { exercise: "exercise", review: "review", practice: "practice" };
+const ROUTES: Record<string, Activity> = {
+  exercise: "exercise",
+  review: "review",
+  practice: "practice",
+  periodic: "periodic",
+};
 
 /** /courses/[subject]/[code]/(exercise|review|practice): rules and status, then the attempt. */
 export function ActivityPage() {
@@ -28,6 +34,7 @@ export function ActivityPage() {
     activitiesLessonActivities({ path: { subject, code } }),
   );
   const [started, setStarted] = useState(false);
+  useStudyTimer(subject, code, activity ?? "exercise", Boolean(activity));
 
   if (!activity)
     return <ErrorState title="Không tìm thấy trang" description="Chức năng này không tồn tại." />;
@@ -64,7 +71,14 @@ export function ActivityPage() {
         <AttemptRunner subject={subject} code={code} activity={activity} />
       ) : (
         <section className="rounded-[2rem] bg-white p-6 ring-1 ring-blue-100 md:p-8">
-          <p className="text-slate-700">{info.rule}</p>
+          {activity === "periodic" && status.status === "ready" && status.data.periodic ? (
+            <p className="text-slate-700">
+              {status.data.periodic.question_count} câu trong {status.data.periodic.time_limit_minutes} phút;
+              đúng từ {status.data.periodic.pass_percent}% là đạt. Hết giờ bài sẽ tự nộp.
+            </p>
+          ) : (
+            <p className="text-slate-700">{info.rule}</p>
+          )}
           {state?.earned && (
             <p className="mt-3 inline-flex items-center gap-2 rounded-full bg-amber-50 px-3 py-1.5 text-sm font-semibold text-amber-800">
               <Star aria-hidden className="size-4 fill-amber-400 text-amber-400" /> Bạn đã có sao của chức

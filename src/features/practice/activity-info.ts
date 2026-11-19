@@ -7,6 +7,10 @@ export const ACTIVITY_INFO: Record<Activity, { name: string; rule: string }> = {
   review: { name: "Ôn tập", rule: "Đúng từ 15/20 câu để nhận sao." },
   practice: { name: "Luyện tập", rule: "Đúng từ 8/10 câu để nhận sao." },
   ai_teaching: { name: "Dạy AI", rule: "Mở ở K10." },
+  periodic: {
+    name: "Ôn tập / Kiểm tra định kỳ",
+    rule: "Làm trong thời gian quy định; đạt thì mục được Hoàn thành.",
+  },
 };
 
 /** Error code from an API error body: `{ "error": { "code": ... } }`. */

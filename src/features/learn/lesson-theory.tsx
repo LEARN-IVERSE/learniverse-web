@@ -9,6 +9,7 @@ import { catalogLesson } from "@/lib/api-client";
 
 import { MathText } from "./math-text";
 import { TheoryCheck } from "./theory-check";
+import { useStudyTimer } from "../progress/use-study-timer";
 import { useApi } from "./use-api";
 
 /** /courses/[subject]/[code]: the theory of one lesson; math is $...$ / $$...$$ rendered by KaTeX. */
@@ -17,6 +18,9 @@ export function LessonTheory() {
   const [state, retry] = useApi(`lesson:${subject}/${code}`, () =>
     catalogLesson({ path: { subject, code } }),
   );
+
+  // Reading time counts only while this page is open and visible (K6-D5).
+  useStudyTimer(subject, code, "theory", state.status === "ready" && state.data.kind === "lesson");
 
   if (state.status === "loading") return <PageSkeleton />;
   if (state.status === "error")

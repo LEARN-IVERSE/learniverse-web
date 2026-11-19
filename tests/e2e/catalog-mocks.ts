@@ -36,7 +36,7 @@ const MATH_OUTLINE = {
     {
       code: "midterm-1",
       title: "Giữa học kì I",
-      lessons: [row("midterm-1-review", "periodic", null, "Ôn tập giữa kì I")],
+      lessons: [row("midterm-1-review", "periodic", null, "Ôn tập giữa kì I", ["periodic"])],
     },
   ],
 };
@@ -62,7 +62,19 @@ const NOT_FOUND = { error: { code: "subject_not_found", message: "Không tìm th
 
 export { MATH_LESSON, MATH_OUTLINE };
 
-export async function mockCatalogApi(page: Page): Promise<void> {
+export const NO_PROGRESS = {
+  streak_current: 0,
+  streak_best: 0,
+  last_day: null,
+  learned_today: false,
+  today_seconds: 0,
+  total_seconds: 0,
+};
+
+export async function mockCatalogApi(page: Page, progress: object = NO_PROGRESS): Promise<void> {
+  // K6: streak/time for the header, and heartbeats from activity pages.
+  await page.route("**/api/v1/me/progress", (route) => route.fulfill({ json: progress }));
+  await page.route("**/api/v1/time/heartbeat", (route) => route.fulfill({ status: 204 }));
   await page.route("**/api/v1/subjects", (route) => route.fulfill({ json: SUBJECTS }));
   await page.route("**/api/v1/subjects/*/outline", (route) =>
     route.request().url().includes("/subjects/math/")

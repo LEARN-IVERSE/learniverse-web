@@ -1,6 +1,6 @@
 "use client";
 
-import { Check, RotateCcw, Star, X } from "lucide-react";
+import { Check, Flame, RotateCcw, Star, X } from "lucide-react";
 import Link from "next/link";
 
 import type { ResultOut, ReviewedQuestionOut } from "@/lib/api-client";
@@ -73,12 +73,26 @@ export function ResultView({
               result.star_awarded && "d-star-pop",
             )}
           />
-          {result.star_awarded
-            ? "Tuyệt vời! Bạn vừa nhận được 1 sao."
-            : result.passed
-              ? "Đạt yêu cầu. Sao của chức năng này bạn đã có từ trước."
-              : `Chưa đạt. ${info.rule}`}
+          {result.late
+            ? "Nộp sau khi hết giờ nên lượt này không được tính hoàn thành. Bạn vẫn xem được đáp án bên dưới."
+            : result.activity === "periodic"
+              ? result.passed
+                ? "Đạt yêu cầu: mục này đã Hoàn thành."
+                : "Chưa đạt yêu cầu của đề. Bạn làm lại nhé."
+              : result.star_awarded
+                ? "Tuyệt vời! Bạn vừa nhận được 1 sao."
+                : result.passed
+                  ? "Đạt yêu cầu. Sao của chức năng này bạn đã có từ trước."
+                  : `Chưa đạt. ${info.rule}`}
         </p>
+        {result.streak?.increased && (
+          <p className="mt-3 flex items-center gap-2 rounded-2xl bg-orange-50 px-4 py-3 font-semibold text-orange-700">
+            <Flame aria-hidden className="d-star-pop size-6" />
+            {result.streak.current === 1
+              ? "Hôm nay đã được tính là ngày học. Chuỗi bắt đầu: 1 ngày!"
+              : `Chuỗi tăng lên ${result.streak.current} ngày!`}
+          </p>
+        )}
         {result.lesson_completed && (
           <p className="mt-3 font-heading text-lg font-bold text-amber-700">Hoàn thành bài học: đủ 4 sao!</p>
         )}

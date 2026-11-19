@@ -2,7 +2,7 @@
 
 import type { Client, ClientMeta, Options as Options2, RequestResult, TDataShape } from './client';
 import { client } from './client.gen';
-import type { ActivitiesAttemptResultData, ActivitiesAttemptResultErrors, ActivitiesAttemptResultResponses, ActivitiesLessonActivitiesData, ActivitiesLessonActivitiesErrors, ActivitiesLessonActivitiesResponses, ActivitiesReadCompleteData, ActivitiesReadCompleteErrors, ActivitiesReadCompleteResponses, ActivitiesReadStartData, ActivitiesReadStartErrors, ActivitiesReadStartResponses, ActivitiesStartAttemptData, ActivitiesStartAttemptErrors, ActivitiesStartAttemptResponses, ActivitiesSubmitData, ActivitiesSubmitErrors, ActivitiesSubmitResponses, AuthAdminPingData, AuthAdminPingResponses, AuthMeData, AuthMeResponses, AuthSignInGoogleData, AuthSignInGoogleErrors, AuthSignInGoogleResponses, AuthSignOutData, AuthSignOutResponses, CatalogLessonData, CatalogLessonErrors, CatalogLessonResponses, CatalogSearchLessonsData, CatalogSearchLessonsErrors, CatalogSearchLessonsResponses, CatalogSubjectOutlineData, CatalogSubjectOutlineErrors, CatalogSubjectOutlineResponses, CatalogSubjectsData, CatalogSubjectsResponses, HealthHealthData, HealthHealthDbData, HealthHealthDbResponses, HealthHealthResponses } from './types.gen';
+import type { ActivitiesAttemptResultData, ActivitiesAttemptResultErrors, ActivitiesAttemptResultResponses, ActivitiesLessonActivitiesData, ActivitiesLessonActivitiesErrors, ActivitiesLessonActivitiesResponses, ActivitiesReadCompleteData, ActivitiesReadCompleteErrors, ActivitiesReadCompleteResponses, ActivitiesReadStartData, ActivitiesReadStartErrors, ActivitiesReadStartResponses, ActivitiesStartAttemptData, ActivitiesStartAttemptErrors, ActivitiesStartAttemptResponses, ActivitiesSubmitData, ActivitiesSubmitErrors, ActivitiesSubmitResponses, AuthAdminPingData, AuthAdminPingResponses, AuthMeData, AuthMeResponses, AuthSignInGoogleData, AuthSignInGoogleErrors, AuthSignInGoogleResponses, AuthSignOutData, AuthSignOutResponses, CatalogLessonData, CatalogLessonErrors, CatalogLessonResponses, CatalogSearchLessonsData, CatalogSearchLessonsErrors, CatalogSearchLessonsResponses, CatalogSubjectOutlineData, CatalogSubjectOutlineErrors, CatalogSubjectOutlineResponses, CatalogSubjectsData, CatalogSubjectsResponses, HealthHealthData, HealthHealthDbData, HealthHealthDbResponses, HealthHealthResponses, ProgressMyProgressData, ProgressMyProgressResponses, ProgressTimeHeartbeatData, ProgressTimeHeartbeatErrors, ProgressTimeHeartbeatResponses } from './types.gen';
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean, TResponse = unknown> = Options2<TData, ThrowOnError, TResponse> & {
     /**
@@ -120,3 +120,20 @@ export const activitiesSubmit = <ThrowOnError extends boolean = false>(options: 
  * Attempt Result
  */
 export const activitiesAttemptResult = <ThrowOnError extends boolean = false>(options: Options<ActivitiesAttemptResultData, ThrowOnError>): RequestResult<ActivitiesAttemptResultResponses, ActivitiesAttemptResultErrors, ThrowOnError> => (options.client ?? client).get<ActivitiesAttemptResultResponses, ActivitiesAttemptResultErrors, ThrowOnError>({ url: '/v1/attempts/{attempt_id}', ...options });
+
+/**
+ * My Progress
+ */
+export const progressMyProgress = <ThrowOnError extends boolean = false>(options?: Options<ProgressMyProgressData, ThrowOnError>): RequestResult<ProgressMyProgressResponses, unknown, ThrowOnError> => (options?.client ?? client).get<ProgressMyProgressResponses, unknown, ThrowOnError>({ url: '/v1/me/progress', ...options });
+
+/**
+ * Time Heartbeat
+ */
+export const progressTimeHeartbeat = <ThrowOnError extends boolean = false>(options: Options<ProgressTimeHeartbeatData, ThrowOnError>): RequestResult<ProgressTimeHeartbeatResponses, ProgressTimeHeartbeatErrors, ThrowOnError> => (options.client ?? client).post<ProgressTimeHeartbeatResponses, ProgressTimeHeartbeatErrors, ThrowOnError>({
+    url: '/v1/time/heartbeat',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});

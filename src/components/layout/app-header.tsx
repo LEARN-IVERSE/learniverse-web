@@ -1,6 +1,6 @@
 "use client";
 
-import { Bell, Flame } from "lucide-react";
+import { Bell } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { Suspense } from "react";
 
@@ -8,12 +8,13 @@ import { CometLogo } from "@/components/brand/comet-logo";
 import { Wordmark } from "@/components/brand/wordmark";
 import { AccountMenu } from "@/features/auth/account-menu";
 import { LessonSearch } from "@/features/learn/lesson-search";
+import { StreakChip } from "@/features/progress/streak-chip";
 
 import { activeNavItem } from "./nav-items";
 
 /**
  * Top bar: brand, current area, search, streak, notifications and account.
- * The account menu is live since K3; search is live since K4; streak and notifications get data in K6, K7.
+ * The account menu is live since K3, search since K4, the streak since K6; notifications get data in K7.
  */
 export function AppHeader() {
   return (
@@ -29,10 +30,7 @@ export function AppHeader() {
 
         <LessonSearch />
 
-        <span className="ml-auto inline-flex items-center gap-1 rounded-full bg-orange-100 px-3 py-1.5 text-sm font-bold text-orange-600 md:ml-0">
-          <Flame aria-hidden className="d-flicker size-4" />
-          <span className="sr-only">Chuỗi ngày học:</span>0<span className="sr-only"> ngày</span>
-        </span>
+        <StreakChip />
         <button
           type="button"
           aria-label="Thông báo"

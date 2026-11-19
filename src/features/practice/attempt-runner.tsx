@@ -1,7 +1,7 @@
 "use client";
 
-import { Send } from "lucide-react";
-import { useCallback, useEffect, useState } from "react";
+import { Send, Timer } from "lucide-react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import { ErrorState } from "@/components/states/error-state";
 import { PageSkeleton } from "@/components/states/page-skeleton";
@@ -13,6 +13,7 @@ import {
   type ResultOut,
 } from "@/lib/api-client";
 
+import { announceProgressChange } from "../progress/my-progress";
 import { errorCode } from "./activity-info";
 import { type AnswerValue, QuestionField } from "./question-field";
 import { ResultView } from "./result-view";
@@ -48,6 +49,12 @@ export function AttemptRunner({
   const [confirming, setConfirming] = useState(false);
   const [sending, setSending] = useState(false);
   const [round, setRound] = useState(0);
+  const [now, setNow] = useState(() => Date.now());
+  // Latest answers for the auto-submit timer, which outlives a render.
+  const answersRef = useRef(answers);
+  useEffect(() => {
+    answersRef.current = answers;
+  }, [answers]);
 
   useEffect(() => {
     let cancelled = false;
@@ -65,6 +72,39 @@ export function AttemptRunner({
       cancelled = true;
     };
   }, [subject, code, activity, round]);
+
+  const attempt = state.step === "doing" ? state.attempt : null;
+  const send = useCallback(async () => {
+    if (!attempt) return;
+    setSending(true);
+    const given = answersRef.current;
+    const body = {
+      answers: attempt.questions.map((q) => ({ question_id: q.id, answer: given[q.id] ?? null })),
+    };
+    const { data } = await activitiesSubmit({ path: { attempt_id: attempt.id }, body });
+    setSending(false);
+    setConfirming(false);
+    if (data) {
+      setState({ step: "result", result: data });
+      announceProgressChange();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    } else setState({ step: "error" });
+  }, [attempt]);
+
+  // Timed tests: tick once a second. The deadline itself is the server's; this only displays it.
+  const deadline =
+    state.step === "doing" && state.attempt.deadline ? Date.parse(state.attempt.deadline) : null;
+  useEffect(() => {
+    if (deadline === null) return;
+    const t = window.setInterval(() => {
+      setNow(Date.now());
+      if (Date.now() >= deadline) {
+        window.clearInterval(t);
+        void send(); // time is up: hand the paper in as it is (K6-D4)
+      }
+    }, 1000);
+    return () => window.clearInterval(t);
+  }, [deadline, send]);
 
   const restart = useCallback(() => {
     setState({ step: "loading" });
@@ -86,23 +126,11 @@ export function AttemptRunner({
   if (state.step === "result")
     return <ResultView result={state.result} subject={subject} code={code} onRetry={restart} />;
 
-  const { attempt } = state;
-  const done = attempt.questions.filter((q) => answers[q.id] !== undefined && answers[q.id] !== null).length;
-  const blanks = attempt.total - done;
+  const { attempt: current } = state;
+  const done = current.questions.filter((q) => answers[q.id] !== undefined && answers[q.id] !== null).length;
+  const blanks = current.total - done;
 
-  const send = async () => {
-    setSending(true);
-    const body = {
-      answers: attempt.questions.map((q) => ({ question_id: q.id, answer: answers[q.id] ?? null })),
-    };
-    const { data } = await activitiesSubmit({ path: { attempt_id: attempt.id }, body });
-    setSending(false);
-    setConfirming(false);
-    if (data) {
-      setState({ step: "result", result: data });
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    } else setState({ step: "error" });
-  };
+  const left = deadline === null ? null : Math.max(0, Math.ceil((deadline - now) / 1000));
 
   return (
     <form
@@ -117,25 +145,37 @@ export function AttemptRunner({
       <div className="sticky top-[4.5rem] z-10 rounded-full bg-white/95 px-4 py-2 ring-1 ring-blue-100">
         <div className="flex items-center justify-between text-sm font-semibold text-slate-600">
           <span>
-            Đã làm {done}/{attempt.total} câu
+            Đã làm {done}/{current.total} câu
           </span>
+          {left !== null && (
+            <span
+              role="timer"
+              aria-label="Thời gian còn lại"
+              className={
+                left <= 60 ? "flex items-center gap-1 text-rose-600" : "flex items-center gap-1 text-blue-700"
+              }
+            >
+              <Timer aria-hidden className="size-4" />
+              {`${Math.floor(left / 60)}:${String(left % 60).padStart(2, "0")}`}
+            </span>
+          )}
         </div>
         <div
           role="progressbar"
           aria-label="Tiến độ làm bài"
           aria-valuemin={0}
-          aria-valuemax={attempt.total}
+          aria-valuemax={current.total}
           aria-valuenow={done}
           className="mt-1 h-1.5 overflow-hidden rounded-full bg-blue-100"
         >
           <div
             className="h-full bg-blue-600 transition-all"
-            style={{ width: `${(done / attempt.total) * 100}%` }}
+            style={{ width: `${(done / current.total) * 100}%` }}
           />
         </div>
       </div>
 
-      {attempt.questions.map((q, i) => (
+      {current.questions.map((q, i) => (
         <QuestionField
           key={q.id}
           index={i}

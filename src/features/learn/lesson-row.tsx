@@ -18,7 +18,15 @@ function actionsFor(subject: string, lesson: LessonRowOut): Action[] {
   const open = (a: LessonRowOut["available"][number], href: string) =>
     lesson.available.includes(a) ? href : undefined;
   if (lesson.kind === "periodic") {
-    return [{ label: "Làm bộ câu hỏi", icon: ListChecks, soon: "Mở ở K6", earned: false }];
+    return [
+      {
+        label: "Làm đề",
+        icon: ListChecks,
+        href: open("periodic", `${base}/periodic`),
+        soon: "Chưa mở",
+        earned: has("periodic"),
+      },
+    ];
   }
   if (lesson.kind === "practice") {
     return [
@@ -122,6 +130,11 @@ export function LessonRow({
             )}
           </span>
           {lesson.kind === "lesson" && <StarMeter stars={lesson.stars} completed={lesson.completed} />}
+          {lesson.kind === "periodic" && lesson.earned.includes("periodic") && (
+            <span className="shrink-0 rounded-full bg-emerald-100 px-2.5 py-1 text-xs font-bold text-emerald-700">
+              Hoàn thành
+            </span>
+          )}
           {lesson.kind === "practice" && lesson.earned.includes("practice") && (
             <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-amber-100 px-2.5 py-1 text-xs font-bold text-amber-700">
               <Star aria-hidden className="size-3.5 fill-amber-400 text-amber-400" /> Đã đạt sao

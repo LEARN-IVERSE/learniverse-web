@@ -1,9 +1,10 @@
 "use client";
 
-import { LogOut, ShieldCheck } from "lucide-react";
+import { Clock, Flame, LogOut, ShieldCheck } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
+import { formatDuration, useMyProgress } from "@/features/progress/my-progress";
 import type { MeOut } from "@/lib/api-client";
 
 import { useSession } from "./session";
@@ -36,6 +37,7 @@ export function AccountMenu() {
   }, [open]);
 
   const state = session?.state;
+  const progress = useMyProgress(open && state?.status === "signed-in");
   if (!state || state.status === "guest" || state.status === "error") {
     return (
       <Link
@@ -79,6 +81,32 @@ export function AccountMenu() {
               </p>
             </div>
           </div>
+          {progress && (
+            <dl className="grid grid-cols-2 gap-2 border-b border-slate-100 p-3 text-xs">
+              <div className="rounded-2xl bg-orange-50 p-2.5">
+                <dt className="flex items-center gap-1 font-semibold text-orange-700">
+                  <Flame aria-hidden className="size-3.5" /> Kỷ lục chuỗi
+                </dt>
+                <dd className="mt-0.5 font-heading text-lg font-bold text-slate-900">
+                  {progress.streak_best} ngày
+                </dd>
+              </div>
+              <div className="rounded-2xl bg-blue-50 p-2.5">
+                <dt className="flex items-center gap-1 font-semibold text-blue-700">
+                  <Clock aria-hidden className="size-3.5" /> Hôm nay
+                </dt>
+                <dd className="mt-0.5 font-heading text-lg font-bold text-slate-900">
+                  {formatDuration(progress.today_seconds)}
+                </dd>
+              </div>
+              <div className="col-span-2 px-1 text-slate-500">
+                <dt className="inline">Tổng thời gian học: </dt>
+                <dd className="inline font-semibold text-slate-700">
+                  {formatDuration(progress.total_seconds)}
+                </dd>
+              </div>
+            </dl>
+          )}
           <div className="p-2">
             {user.role === "admin" && (
               <Link

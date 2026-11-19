@@ -41,9 +41,12 @@ export function TheoryCheck({ subject, code }: { subject: string; code: string }
   }, []);
 
   const completed = read?.completed ?? false;
+  // Count down only while the page is visible, like the server (hidden time is not reading time).
   useEffect(() => {
     if (!read || completed || left <= 0) return;
-    const t = window.setTimeout(() => setLeft((s) => s - 1), 1000);
+    const t = window.setTimeout(() => {
+      if (document.visibilityState === "visible") setLeft((s) => s - 1);
+    }, 1000);
     return () => window.clearTimeout(t);
   }, [read, completed, left]);
 
@@ -52,7 +55,8 @@ export function TheoryCheck({ subject, code }: { subject: string; code: string }
     void activitiesReadComplete({ path: { subject, code } }).then(({ data }) => {
       if (!data) return;
       setRead(data);
-      setLeft(data.remaining_seconds); // the server may still want a few seconds
+      // The server only counts confirmed heartbeats, so it may still want a little more time.
+      setLeft(data.completed ? 0 : Math.max(data.remaining_seconds, 15));
     });
   }, [completed, reachedEnd, read, left, subject, code]);
 
