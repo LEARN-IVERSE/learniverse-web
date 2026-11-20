@@ -93,6 +93,101 @@ export type AttemptOut = {
 export type AttemptStatus = 'in_progress' | 'graded' | 'pending_review';
 
 /**
+ * AuthorOut
+ */
+export type AuthorOut = {
+    /**
+     * Id
+     */
+    id: string;
+    /**
+     * Name
+     */
+    name: string;
+    /**
+     * Avatar Initial
+     */
+    avatar_initial: string;
+    /**
+     * Avatar Color
+     */
+    avatar_color: number;
+};
+
+/**
+ * BoxOut
+ */
+export type BoxOut = {
+    /**
+     * Code
+     */
+    code: string;
+    /**
+     * Name
+     */
+    name: string;
+};
+
+/**
+ * CommentEditIn
+ */
+export type CommentEditIn = {
+    /**
+     * Body
+     */
+    body: string;
+};
+
+/**
+ * CommentIn
+ */
+export type CommentIn = {
+    /**
+     * Body
+     */
+    body: string;
+    /**
+     * Parent Id
+     */
+    parent_id?: string | null;
+};
+
+/**
+ * CommentOut
+ */
+export type CommentOut = {
+    /**
+     * Id
+     */
+    id: string;
+    /**
+     * Parent Id
+     */
+    parent_id: string | null;
+    author: AuthorOut | null;
+    /**
+     * Body Md
+     */
+    body_md: string | null;
+    /**
+     * State
+     */
+    state: 'visible' | 'deleted' | 'hidden';
+    /**
+     * Created At
+     */
+    created_at: string;
+    /**
+     * Edited
+     */
+    edited: boolean;
+    /**
+     * Mine
+     */
+    mine: boolean;
+};
+
+/**
  * DbHealthOut
  */
 export type DbHealthOut = {
@@ -266,6 +361,34 @@ export type MeOut = {
 };
 
 /**
+ * MediaKind
+ */
+export type MediaKind = 'image' | 'file';
+
+/**
+ * MediaOut
+ */
+export type MediaOut = {
+    /**
+     * Id
+     */
+    id: string;
+    kind: MediaKind;
+    /**
+     * Url
+     */
+    url: string;
+    /**
+     * File Name
+     */
+    file_name: string;
+    /**
+     * Content Type
+     */
+    content_type: string;
+};
+
+/**
  * MyProgressOut
  */
 export type MyProgressOut = {
@@ -308,6 +431,67 @@ export type MyProgressOut = {
 };
 
 /**
+ * NewCountOut
+ */
+export type NewCountOut = {
+    /**
+     * Count
+     */
+    count: number;
+};
+
+/**
+ * NotificationKind
+ */
+export type NotificationKind = 'comment_on_post' | 'reply';
+
+/**
+ * NotificationOut
+ */
+export type NotificationOut = {
+    /**
+     * Id
+     */
+    id: string;
+    kind: NotificationKind;
+    actor: AuthorOut;
+    /**
+     * Post Id
+     */
+    post_id: string;
+    /**
+     * Post Title
+     */
+    post_title: string;
+    /**
+     * Comment Id
+     */
+    comment_id: string;
+    /**
+     * Created At
+     */
+    created_at: string;
+    /**
+     * Read
+     */
+    read: boolean;
+};
+
+/**
+ * NotificationsOut
+ */
+export type NotificationsOut = {
+    /**
+     * Unread
+     */
+    unread: number;
+    /**
+     * Items
+     */
+    items: Array<NotificationOut>;
+};
+
+/**
  * OutlineOut
  */
 export type OutlineOut = {
@@ -334,6 +518,112 @@ export type PeriodicConfigOut = {
      * Pass Percent
      */
     pass_percent: number;
+};
+
+/**
+ * PostEditIn
+ */
+export type PostEditIn = {
+    /**
+     * Title
+     */
+    title: string;
+    /**
+     * Body
+     */
+    body: string;
+};
+
+/**
+ * PostIn
+ */
+export type PostIn = {
+    /**
+     * Box
+     */
+    box: string;
+    /**
+     * Title
+     */
+    title: string;
+    /**
+     * Body
+     */
+    body: string;
+    /**
+     * Media Ids
+     */
+    media_ids?: Array<string>;
+};
+
+/**
+ * PostOut
+ */
+export type PostOut = {
+    /**
+     * Id
+     */
+    id: string;
+    box: BoxOut;
+    /**
+     * Title
+     */
+    title: string;
+    /**
+     * Body Md
+     */
+    body_md: string;
+    author: AuthorOut;
+    /**
+     * Created At
+     */
+    created_at: string;
+    /**
+     * Edited
+     */
+    edited: boolean;
+    /**
+     * Hidden
+     */
+    hidden: boolean;
+    /**
+     * Comment Count
+     */
+    comment_count: number;
+    /**
+     * Media
+     */
+    media: Array<MediaOut>;
+    /**
+     * Mine
+     */
+    mine: boolean;
+};
+
+/**
+ * PostPageOut
+ */
+export type PostPageOut = {
+    /**
+     * Items
+     */
+    items: Array<PostOut>;
+    /**
+     * Page
+     */
+    page: number;
+    /**
+     * Page Size
+     */
+    page_size: number;
+    /**
+     * Total
+     */
+    total: number;
+    /**
+     * Pages
+     */
+    pages: number;
 };
 
 /**
@@ -376,6 +666,102 @@ export type ReadStatusOut = {
      * Remaining Seconds
      */
     remaining_seconds: number;
+};
+
+/**
+ * ReportAction
+ */
+export type ReportAction = 'keep' | 'hide' | 'delete';
+
+/**
+ * ReportIn
+ */
+export type ReportIn = {
+    target_type: TargetType;
+    /**
+     * Target Id
+     */
+    target_id: string;
+    reason: ReportReason;
+    /**
+     * Note
+     */
+    note?: string;
+};
+
+/**
+ * ReportOut
+ */
+export type ReportOut = {
+    /**
+     * Id
+     */
+    id: string;
+    status: ReportStatus;
+    action: ReportAction | null;
+    reason: ReportReason;
+    /**
+     * Note
+     */
+    note: string;
+    /**
+     * Created At
+     */
+    created_at: string;
+    /**
+     * Reporter Name
+     */
+    reporter_name: string;
+    target_type: TargetType;
+    /**
+     * Target Id
+     */
+    target_id: string;
+    /**
+     * Post Id
+     */
+    post_id: string | null;
+    /**
+     * Target Excerpt
+     */
+    target_excerpt: string;
+    /**
+     * Target State
+     */
+    target_state: string;
+    /**
+     * Target Author Id
+     */
+    target_author_id: string | null;
+    /**
+     * Target Author Name
+     */
+    target_author_name: string | null;
+    /**
+     * Target Author Locked
+     */
+    target_author_locked: boolean;
+    /**
+     * Report Count
+     */
+    report_count: number;
+};
+
+/**
+ * ReportReason
+ */
+export type ReportReason = 'spam' | 'abuse' | 'inappropriate' | 'other';
+
+/**
+ * ReportStatus
+ */
+export type ReportStatus = 'new' | 'reviewed' | 'resolved';
+
+/**
+ * ResolveIn
+ */
+export type ResolveIn = {
+    action: ReportAction;
 };
 
 /**
@@ -589,6 +975,11 @@ export type SubmitIn = {
 };
 
 /**
+ * TargetType
+ */
+export type TargetType = 'post' | 'comment';
+
+/**
  * UnitOut
  */
 export type UnitOut = {
@@ -604,6 +995,43 @@ export type UnitOut = {
      * Lessons
      */
     lessons: Array<LessonRowOut>;
+};
+
+/**
+ * UploadIn
+ */
+export type UploadIn = {
+    kind: MediaKind;
+    /**
+     * Content Type
+     */
+    content_type: string;
+    /**
+     * Size
+     */
+    size: number;
+    /**
+     * File Name
+     */
+    file_name: string;
+};
+
+/**
+ * UploadOut
+ */
+export type UploadOut = {
+    /**
+     * Id
+     */
+    id: string;
+    /**
+     * Upload Url
+     */
+    upload_url: string;
+    /**
+     * Content Type
+     */
+    content_type: string;
 };
 
 /**
@@ -1103,3 +1531,524 @@ export type ProgressTimeHeartbeatResponses = {
 };
 
 export type ProgressTimeHeartbeatResponse = ProgressTimeHeartbeatResponses[keyof ProgressTimeHeartbeatResponses];
+
+export type CommunityCreateUploadData = {
+    body: UploadIn;
+    path?: never;
+    query?: never;
+    url: '/v1/media/uploads';
+};
+
+export type CommunityCreateUploadErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type CommunityCreateUploadError = CommunityCreateUploadErrors[keyof CommunityCreateUploadErrors];
+
+export type CommunityCreateUploadResponses = {
+    /**
+     * Successful Response
+     */
+    200: UploadOut;
+};
+
+export type CommunityCreateUploadResponse = CommunityCreateUploadResponses[keyof CommunityCreateUploadResponses];
+
+export type CommunityListPostsData = {
+    body?: never;
+    path?: never;
+    query?: {
+        /**
+         * Page
+         */
+        page?: number;
+        /**
+         * Box
+         */
+        box?: string | null;
+        /**
+         * Q
+         */
+        q?: string | null;
+        /**
+         * Author
+         */
+        author?: string | null;
+        /**
+         * No Comments
+         */
+        no_comments?: boolean;
+    };
+    url: '/v1/posts';
+};
+
+export type CommunityListPostsErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type CommunityListPostsError = CommunityListPostsErrors[keyof CommunityListPostsErrors];
+
+export type CommunityListPostsResponses = {
+    /**
+     * Successful Response
+     */
+    200: PostPageOut;
+};
+
+export type CommunityListPostsResponse = CommunityListPostsResponses[keyof CommunityListPostsResponses];
+
+export type CommunityCreatePostData = {
+    body: PostIn;
+    path?: never;
+    query?: never;
+    url: '/v1/posts';
+};
+
+export type CommunityCreatePostErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type CommunityCreatePostError = CommunityCreatePostErrors[keyof CommunityCreatePostErrors];
+
+export type CommunityCreatePostResponses = {
+    /**
+     * Successful Response
+     */
+    201: PostOut;
+};
+
+export type CommunityCreatePostResponse = CommunityCreatePostResponses[keyof CommunityCreatePostResponses];
+
+export type CommunityNewPostsData = {
+    body?: never;
+    path?: never;
+    query: {
+        /**
+         * Since
+         */
+        since: string;
+        /**
+         * Box
+         */
+        box?: string | null;
+    };
+    url: '/v1/posts/new-count';
+};
+
+export type CommunityNewPostsErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type CommunityNewPostsError = CommunityNewPostsErrors[keyof CommunityNewPostsErrors];
+
+export type CommunityNewPostsResponses = {
+    /**
+     * Successful Response
+     */
+    200: NewCountOut;
+};
+
+export type CommunityNewPostsResponse = CommunityNewPostsResponses[keyof CommunityNewPostsResponses];
+
+export type CommunityDeletePostData = {
+    body?: never;
+    path: {
+        /**
+         * Post Id
+         */
+        post_id: string;
+    };
+    query?: never;
+    url: '/v1/posts/{post_id}';
+};
+
+export type CommunityDeletePostErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type CommunityDeletePostError = CommunityDeletePostErrors[keyof CommunityDeletePostErrors];
+
+export type CommunityDeletePostResponses = {
+    /**
+     * Successful Response
+     */
+    204: void;
+};
+
+export type CommunityDeletePostResponse = CommunityDeletePostResponses[keyof CommunityDeletePostResponses];
+
+export type CommunityGetPostData = {
+    body?: never;
+    path: {
+        /**
+         * Post Id
+         */
+        post_id: string;
+    };
+    query?: never;
+    url: '/v1/posts/{post_id}';
+};
+
+export type CommunityGetPostErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type CommunityGetPostError = CommunityGetPostErrors[keyof CommunityGetPostErrors];
+
+export type CommunityGetPostResponses = {
+    /**
+     * Successful Response
+     */
+    200: PostOut;
+};
+
+export type CommunityGetPostResponse = CommunityGetPostResponses[keyof CommunityGetPostResponses];
+
+export type CommunityEditPostData = {
+    body: PostEditIn;
+    path: {
+        /**
+         * Post Id
+         */
+        post_id: string;
+    };
+    query?: never;
+    url: '/v1/posts/{post_id}';
+};
+
+export type CommunityEditPostErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type CommunityEditPostError = CommunityEditPostErrors[keyof CommunityEditPostErrors];
+
+export type CommunityEditPostResponses = {
+    /**
+     * Successful Response
+     */
+    200: PostOut;
+};
+
+export type CommunityEditPostResponse = CommunityEditPostResponses[keyof CommunityEditPostResponses];
+
+export type CommunityListCommentsData = {
+    body?: never;
+    path: {
+        /**
+         * Post Id
+         */
+        post_id: string;
+    };
+    query?: never;
+    url: '/v1/posts/{post_id}/comments';
+};
+
+export type CommunityListCommentsErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type CommunityListCommentsError = CommunityListCommentsErrors[keyof CommunityListCommentsErrors];
+
+export type CommunityListCommentsResponses = {
+    /**
+     * Response Community-List Comments
+     *
+     * Successful Response
+     */
+    200: Array<CommentOut>;
+};
+
+export type CommunityListCommentsResponse = CommunityListCommentsResponses[keyof CommunityListCommentsResponses];
+
+export type CommunityAddCommentData = {
+    body: CommentIn;
+    path: {
+        /**
+         * Post Id
+         */
+        post_id: string;
+    };
+    query?: never;
+    url: '/v1/posts/{post_id}/comments';
+};
+
+export type CommunityAddCommentErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type CommunityAddCommentError = CommunityAddCommentErrors[keyof CommunityAddCommentErrors];
+
+export type CommunityAddCommentResponses = {
+    /**
+     * Successful Response
+     */
+    201: CommentOut;
+};
+
+export type CommunityAddCommentResponse = CommunityAddCommentResponses[keyof CommunityAddCommentResponses];
+
+export type CommunityDeleteCommentData = {
+    body?: never;
+    path: {
+        /**
+         * Comment Id
+         */
+        comment_id: string;
+    };
+    query?: never;
+    url: '/v1/comments/{comment_id}';
+};
+
+export type CommunityDeleteCommentErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type CommunityDeleteCommentError = CommunityDeleteCommentErrors[keyof CommunityDeleteCommentErrors];
+
+export type CommunityDeleteCommentResponses = {
+    /**
+     * Successful Response
+     */
+    204: void;
+};
+
+export type CommunityDeleteCommentResponse = CommunityDeleteCommentResponses[keyof CommunityDeleteCommentResponses];
+
+export type CommunityEditCommentData = {
+    body: CommentEditIn;
+    path: {
+        /**
+         * Comment Id
+         */
+        comment_id: string;
+    };
+    query?: never;
+    url: '/v1/comments/{comment_id}';
+};
+
+export type CommunityEditCommentErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type CommunityEditCommentError = CommunityEditCommentErrors[keyof CommunityEditCommentErrors];
+
+export type CommunityEditCommentResponses = {
+    /**
+     * Successful Response
+     */
+    200: CommentOut;
+};
+
+export type CommunityEditCommentResponse = CommunityEditCommentResponses[keyof CommunityEditCommentResponses];
+
+export type CommunityMyNotificationsData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/v1/notifications';
+};
+
+export type CommunityMyNotificationsResponses = {
+    /**
+     * Successful Response
+     */
+    200: NotificationsOut;
+};
+
+export type CommunityMyNotificationsResponse = CommunityMyNotificationsResponses[keyof CommunityMyNotificationsResponses];
+
+export type CommunityReadNotificationsData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/v1/notifications/read';
+};
+
+export type CommunityReadNotificationsResponses = {
+    /**
+     * Successful Response
+     */
+    204: void;
+};
+
+export type CommunityReadNotificationsResponse = CommunityReadNotificationsResponses[keyof CommunityReadNotificationsResponses];
+
+export type ModerationReportContentData = {
+    body: ReportIn;
+    path?: never;
+    query?: never;
+    url: '/v1/reports';
+};
+
+export type ModerationReportContentErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type ModerationReportContentError = ModerationReportContentErrors[keyof ModerationReportContentErrors];
+
+export type ModerationReportContentResponses = {
+    /**
+     * Successful Response
+     */
+    204: void;
+};
+
+export type ModerationReportContentResponse = ModerationReportContentResponses[keyof ModerationReportContentResponses];
+
+export type ModerationAdminReportsData = {
+    body?: never;
+    path?: never;
+    query?: {
+        /**
+         * Status
+         */
+        status?: ReportStatus | null;
+    };
+    url: '/v1/admin/reports';
+};
+
+export type ModerationAdminReportsErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type ModerationAdminReportsError = ModerationAdminReportsErrors[keyof ModerationAdminReportsErrors];
+
+export type ModerationAdminReportsResponses = {
+    /**
+     * Response Moderation-Admin Reports
+     *
+     * Successful Response
+     */
+    200: Array<ReportOut>;
+};
+
+export type ModerationAdminReportsResponse = ModerationAdminReportsResponses[keyof ModerationAdminReportsResponses];
+
+export type ModerationAdminReviewData = {
+    body?: never;
+    path: {
+        /**
+         * Report Id
+         */
+        report_id: string;
+    };
+    query?: never;
+    url: '/v1/admin/reports/{report_id}/review';
+};
+
+export type ModerationAdminReviewErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type ModerationAdminReviewError = ModerationAdminReviewErrors[keyof ModerationAdminReviewErrors];
+
+export type ModerationAdminReviewResponses = {
+    /**
+     * Successful Response
+     */
+    204: void;
+};
+
+export type ModerationAdminReviewResponse = ModerationAdminReviewResponses[keyof ModerationAdminReviewResponses];
+
+export type ModerationAdminResolveData = {
+    body: ResolveIn;
+    path: {
+        /**
+         * Report Id
+         */
+        report_id: string;
+    };
+    query?: never;
+    url: '/v1/admin/reports/{report_id}/resolve';
+};
+
+export type ModerationAdminResolveErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type ModerationAdminResolveError = ModerationAdminResolveErrors[keyof ModerationAdminResolveErrors];
+
+export type ModerationAdminResolveResponses = {
+    /**
+     * Successful Response
+     */
+    204: void;
+};
+
+export type ModerationAdminResolveResponse = ModerationAdminResolveResponses[keyof ModerationAdminResolveResponses];
+
+export type ModerationAdminLockUserData = {
+    body?: never;
+    path: {
+        /**
+         * User Id
+         */
+        user_id: string;
+    };
+    query?: never;
+    url: '/v1/admin/users/{user_id}/lock';
+};
+
+export type ModerationAdminLockUserErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type ModerationAdminLockUserError = ModerationAdminLockUserErrors[keyof ModerationAdminLockUserErrors];
+
+export type ModerationAdminLockUserResponses = {
+    /**
+     * Successful Response
+     */
+    204: void;
+};
+
+export type ModerationAdminLockUserResponse = ModerationAdminLockUserResponses[keyof ModerationAdminLockUserResponses];

@@ -209,7 +209,7 @@ export function MathScene({ className }: { className?: string }) {
 }
 
 /** Speech bubble with a small tail; the tail seam is covered so it reads as one shape. */
-function Bubble({
+export function Bubble({
   x,
   y,
   w,

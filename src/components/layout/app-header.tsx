@@ -1,12 +1,12 @@
 "use client";
 
-import { Bell } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { Suspense } from "react";
 
 import { CometLogo } from "@/components/brand/comet-logo";
 import { Wordmark } from "@/components/brand/wordmark";
 import { AccountMenu } from "@/features/auth/account-menu";
+import { NotificationBell } from "@/features/community/notification-bell";
 import { LessonSearch } from "@/features/learn/lesson-search";
 import { StreakChip } from "@/features/progress/streak-chip";
 
@@ -14,7 +14,7 @@ import { activeNavItem } from "./nav-items";
 
 /**
  * Top bar: brand, current area, search, streak, notifications and account.
- * The account menu is live since K3, search since K4, the streak since K6; notifications get data in K7.
+ * The account menu is live since K3, search since K4, the streak since K6; the bell since K7.
  */
 export function AppHeader() {
   return (
@@ -31,13 +31,7 @@ export function AppHeader() {
         <LessonSearch />
 
         <StreakChip />
-        <button
-          type="button"
-          aria-label="Thông báo"
-          className="rounded-full p-2 transition hover:bg-white focus-visible:ring-4 focus-visible:ring-blue-200 focus-visible:outline-none"
-        >
-          <Bell aria-hidden className="size-5" />
-        </button>
+        <NotificationBell />
         <AccountMenu />
       </div>
     </header>

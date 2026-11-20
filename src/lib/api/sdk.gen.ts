@@ -2,7 +2,7 @@
 
 import type { Client, ClientMeta, Options as Options2, RequestResult, TDataShape } from './client';
 import { client } from './client.gen';
-import type { ActivitiesAttemptResultData, ActivitiesAttemptResultErrors, ActivitiesAttemptResultResponses, ActivitiesLessonActivitiesData, ActivitiesLessonActivitiesErrors, ActivitiesLessonActivitiesResponses, ActivitiesReadCompleteData, ActivitiesReadCompleteErrors, ActivitiesReadCompleteResponses, ActivitiesReadStartData, ActivitiesReadStartErrors, ActivitiesReadStartResponses, ActivitiesStartAttemptData, ActivitiesStartAttemptErrors, ActivitiesStartAttemptResponses, ActivitiesSubmitData, ActivitiesSubmitErrors, ActivitiesSubmitResponses, AuthAdminPingData, AuthAdminPingResponses, AuthMeData, AuthMeResponses, AuthSignInGoogleData, AuthSignInGoogleErrors, AuthSignInGoogleResponses, AuthSignOutData, AuthSignOutResponses, CatalogLessonData, CatalogLessonErrors, CatalogLessonResponses, CatalogSearchLessonsData, CatalogSearchLessonsErrors, CatalogSearchLessonsResponses, CatalogSubjectOutlineData, CatalogSubjectOutlineErrors, CatalogSubjectOutlineResponses, CatalogSubjectsData, CatalogSubjectsResponses, HealthHealthData, HealthHealthDbData, HealthHealthDbResponses, HealthHealthResponses, ProgressMyProgressData, ProgressMyProgressResponses, ProgressTimeHeartbeatData, ProgressTimeHeartbeatErrors, ProgressTimeHeartbeatResponses } from './types.gen';
+import type { ActivitiesAttemptResultData, ActivitiesAttemptResultErrors, ActivitiesAttemptResultResponses, ActivitiesLessonActivitiesData, ActivitiesLessonActivitiesErrors, ActivitiesLessonActivitiesResponses, ActivitiesReadCompleteData, ActivitiesReadCompleteErrors, ActivitiesReadCompleteResponses, ActivitiesReadStartData, ActivitiesReadStartErrors, ActivitiesReadStartResponses, ActivitiesStartAttemptData, ActivitiesStartAttemptErrors, ActivitiesStartAttemptResponses, ActivitiesSubmitData, ActivitiesSubmitErrors, ActivitiesSubmitResponses, AuthAdminPingData, AuthAdminPingResponses, AuthMeData, AuthMeResponses, AuthSignInGoogleData, AuthSignInGoogleErrors, AuthSignInGoogleResponses, AuthSignOutData, AuthSignOutResponses, CatalogLessonData, CatalogLessonErrors, CatalogLessonResponses, CatalogSearchLessonsData, CatalogSearchLessonsErrors, CatalogSearchLessonsResponses, CatalogSubjectOutlineData, CatalogSubjectOutlineErrors, CatalogSubjectOutlineResponses, CatalogSubjectsData, CatalogSubjectsResponses, CommunityAddCommentData, CommunityAddCommentErrors, CommunityAddCommentResponses, CommunityCreatePostData, CommunityCreatePostErrors, CommunityCreatePostResponses, CommunityCreateUploadData, CommunityCreateUploadErrors, CommunityCreateUploadResponses, CommunityDeleteCommentData, CommunityDeleteCommentErrors, CommunityDeleteCommentResponses, CommunityDeletePostData, CommunityDeletePostErrors, CommunityDeletePostResponses, CommunityEditCommentData, CommunityEditCommentErrors, CommunityEditCommentResponses, CommunityEditPostData, CommunityEditPostErrors, CommunityEditPostResponses, CommunityGetPostData, CommunityGetPostErrors, CommunityGetPostResponses, CommunityListCommentsData, CommunityListCommentsErrors, CommunityListCommentsResponses, CommunityListPostsData, CommunityListPostsErrors, CommunityListPostsResponses, CommunityMyNotificationsData, CommunityMyNotificationsResponses, CommunityNewPostsData, CommunityNewPostsErrors, CommunityNewPostsResponses, CommunityReadNotificationsData, CommunityReadNotificationsResponses, HealthHealthData, HealthHealthDbData, HealthHealthDbResponses, HealthHealthResponses, ModerationAdminLockUserData, ModerationAdminLockUserErrors, ModerationAdminLockUserResponses, ModerationAdminReportsData, ModerationAdminReportsErrors, ModerationAdminReportsResponses, ModerationAdminResolveData, ModerationAdminResolveErrors, ModerationAdminResolveResponses, ModerationAdminReviewData, ModerationAdminReviewErrors, ModerationAdminReviewResponses, ModerationReportContentData, ModerationReportContentErrors, ModerationReportContentResponses, ProgressMyProgressData, ProgressMyProgressResponses, ProgressTimeHeartbeatData, ProgressTimeHeartbeatErrors, ProgressTimeHeartbeatResponses } from './types.gen';
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean, TResponse = unknown> = Options2<TData, ThrowOnError, TResponse> & {
     /**
@@ -137,3 +137,142 @@ export const progressTimeHeartbeat = <ThrowOnError extends boolean = false>(opti
         ...options.headers
     }
 });
+
+/**
+ * Create Upload
+ */
+export const communityCreateUpload = <ThrowOnError extends boolean = false>(options: Options<CommunityCreateUploadData, ThrowOnError>): RequestResult<CommunityCreateUploadResponses, CommunityCreateUploadErrors, ThrowOnError> => (options.client ?? client).post<CommunityCreateUploadResponses, CommunityCreateUploadErrors, ThrowOnError>({
+    url: '/v1/media/uploads',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+/**
+ * List Posts
+ */
+export const communityListPosts = <ThrowOnError extends boolean = false>(options?: Options<CommunityListPostsData, ThrowOnError>): RequestResult<CommunityListPostsResponses, CommunityListPostsErrors, ThrowOnError> => (options?.client ?? client).get<CommunityListPostsResponses, CommunityListPostsErrors, ThrowOnError>({ url: '/v1/posts', ...options });
+
+/**
+ * Create Post
+ */
+export const communityCreatePost = <ThrowOnError extends boolean = false>(options: Options<CommunityCreatePostData, ThrowOnError>): RequestResult<CommunityCreatePostResponses, CommunityCreatePostErrors, ThrowOnError> => (options.client ?? client).post<CommunityCreatePostResponses, CommunityCreatePostErrors, ThrowOnError>({
+    url: '/v1/posts',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+/**
+ * New Posts
+ */
+export const communityNewPosts = <ThrowOnError extends boolean = false>(options: Options<CommunityNewPostsData, ThrowOnError>): RequestResult<CommunityNewPostsResponses, CommunityNewPostsErrors, ThrowOnError> => (options.client ?? client).get<CommunityNewPostsResponses, CommunityNewPostsErrors, ThrowOnError>({ url: '/v1/posts/new-count', ...options });
+
+/**
+ * Delete Post
+ */
+export const communityDeletePost = <ThrowOnError extends boolean = false>(options: Options<CommunityDeletePostData, ThrowOnError>): RequestResult<CommunityDeletePostResponses, CommunityDeletePostErrors, ThrowOnError> => (options.client ?? client).delete<CommunityDeletePostResponses, CommunityDeletePostErrors, ThrowOnError>({ url: '/v1/posts/{post_id}', ...options });
+
+/**
+ * Get Post
+ */
+export const communityGetPost = <ThrowOnError extends boolean = false>(options: Options<CommunityGetPostData, ThrowOnError>): RequestResult<CommunityGetPostResponses, CommunityGetPostErrors, ThrowOnError> => (options.client ?? client).get<CommunityGetPostResponses, CommunityGetPostErrors, ThrowOnError>({ url: '/v1/posts/{post_id}', ...options });
+
+/**
+ * Edit Post
+ */
+export const communityEditPost = <ThrowOnError extends boolean = false>(options: Options<CommunityEditPostData, ThrowOnError>): RequestResult<CommunityEditPostResponses, CommunityEditPostErrors, ThrowOnError> => (options.client ?? client).patch<CommunityEditPostResponses, CommunityEditPostErrors, ThrowOnError>({
+    url: '/v1/posts/{post_id}',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+/**
+ * List Comments
+ */
+export const communityListComments = <ThrowOnError extends boolean = false>(options: Options<CommunityListCommentsData, ThrowOnError>): RequestResult<CommunityListCommentsResponses, CommunityListCommentsErrors, ThrowOnError> => (options.client ?? client).get<CommunityListCommentsResponses, CommunityListCommentsErrors, ThrowOnError>({ url: '/v1/posts/{post_id}/comments', ...options });
+
+/**
+ * Add Comment
+ */
+export const communityAddComment = <ThrowOnError extends boolean = false>(options: Options<CommunityAddCommentData, ThrowOnError>): RequestResult<CommunityAddCommentResponses, CommunityAddCommentErrors, ThrowOnError> => (options.client ?? client).post<CommunityAddCommentResponses, CommunityAddCommentErrors, ThrowOnError>({
+    url: '/v1/posts/{post_id}/comments',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+/**
+ * Delete Comment
+ */
+export const communityDeleteComment = <ThrowOnError extends boolean = false>(options: Options<CommunityDeleteCommentData, ThrowOnError>): RequestResult<CommunityDeleteCommentResponses, CommunityDeleteCommentErrors, ThrowOnError> => (options.client ?? client).delete<CommunityDeleteCommentResponses, CommunityDeleteCommentErrors, ThrowOnError>({ url: '/v1/comments/{comment_id}', ...options });
+
+/**
+ * Edit Comment
+ */
+export const communityEditComment = <ThrowOnError extends boolean = false>(options: Options<CommunityEditCommentData, ThrowOnError>): RequestResult<CommunityEditCommentResponses, CommunityEditCommentErrors, ThrowOnError> => (options.client ?? client).patch<CommunityEditCommentResponses, CommunityEditCommentErrors, ThrowOnError>({
+    url: '/v1/comments/{comment_id}',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+/**
+ * My Notifications
+ */
+export const communityMyNotifications = <ThrowOnError extends boolean = false>(options?: Options<CommunityMyNotificationsData, ThrowOnError>): RequestResult<CommunityMyNotificationsResponses, unknown, ThrowOnError> => (options?.client ?? client).get<CommunityMyNotificationsResponses, unknown, ThrowOnError>({ url: '/v1/notifications', ...options });
+
+/**
+ * Read Notifications
+ */
+export const communityReadNotifications = <ThrowOnError extends boolean = false>(options?: Options<CommunityReadNotificationsData, ThrowOnError>): RequestResult<CommunityReadNotificationsResponses, unknown, ThrowOnError> => (options?.client ?? client).post<CommunityReadNotificationsResponses, unknown, ThrowOnError>({ url: '/v1/notifications/read', ...options });
+
+/**
+ * Report Content
+ */
+export const moderationReportContent = <ThrowOnError extends boolean = false>(options: Options<ModerationReportContentData, ThrowOnError>): RequestResult<ModerationReportContentResponses, ModerationReportContentErrors, ThrowOnError> => (options.client ?? client).post<ModerationReportContentResponses, ModerationReportContentErrors, ThrowOnError>({
+    url: '/v1/reports',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+/**
+ * Admin Reports
+ */
+export const moderationAdminReports = <ThrowOnError extends boolean = false>(options?: Options<ModerationAdminReportsData, ThrowOnError>): RequestResult<ModerationAdminReportsResponses, ModerationAdminReportsErrors, ThrowOnError> => (options?.client ?? client).get<ModerationAdminReportsResponses, ModerationAdminReportsErrors, ThrowOnError>({ url: '/v1/admin/reports', ...options });
+
+/**
+ * Admin Review
+ */
+export const moderationAdminReview = <ThrowOnError extends boolean = false>(options: Options<ModerationAdminReviewData, ThrowOnError>): RequestResult<ModerationAdminReviewResponses, ModerationAdminReviewErrors, ThrowOnError> => (options.client ?? client).post<ModerationAdminReviewResponses, ModerationAdminReviewErrors, ThrowOnError>({ url: '/v1/admin/reports/{report_id}/review', ...options });
+
+/**
+ * Admin Resolve
+ */
+export const moderationAdminResolve = <ThrowOnError extends boolean = false>(options: Options<ModerationAdminResolveData, ThrowOnError>): RequestResult<ModerationAdminResolveResponses, ModerationAdminResolveErrors, ThrowOnError> => (options.client ?? client).post<ModerationAdminResolveResponses, ModerationAdminResolveErrors, ThrowOnError>({
+    url: '/v1/admin/reports/{report_id}/resolve',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+/**
+ * Admin Lock User
+ */
+export const moderationAdminLockUser = <ThrowOnError extends boolean = false>(options: Options<ModerationAdminLockUserData, ThrowOnError>): RequestResult<ModerationAdminLockUserResponses, ModerationAdminLockUserErrors, ThrowOnError> => (options.client ?? client).post<ModerationAdminLockUserResponses, ModerationAdminLockUserErrors, ThrowOnError>({ url: '/v1/admin/users/{user_id}/lock', ...options });

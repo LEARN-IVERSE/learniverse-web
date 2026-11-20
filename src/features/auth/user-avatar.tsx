@@ -18,7 +18,13 @@ export function avatarColorClass(index: number): string {
 }
 
 /** Initial-letter avatar (product spec: first letter of the name, fixed colour). */
-export function UserAvatar({ user, className }: { user: MeOut; className?: string }) {
+export function UserAvatar({
+  user,
+  className,
+}: {
+  user: Pick<MeOut, "avatar_initial" | "avatar_color">;
+  className?: string;
+}) {
   return (
     <span
       aria-hidden

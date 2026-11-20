@@ -1,5 +1,7 @@
 import type { Page } from "@playwright/test";
 
+import { mockCommunityApi } from "./community-mocks";
+
 // Fake catalog API for FE-only E2E tests, shaped like learniverse-api's K4 responses.
 const SUBJECTS = [
   { code: "math", name: "Toán 9", textbook: "Kết nối tri thức với cuộc sống", lesson_count: 3 },
@@ -86,6 +88,8 @@ export async function mockCatalogApi(page: Page, progress: object = NO_PROGRESS)
   // K6: streak/time for the header, and heartbeats from activity pages.
   await page.route("**/api/v1/me/progress", (route) => route.fulfill({ json: progress }));
   await page.route("**/api/v1/time/heartbeat", (route) => route.fulfill({ status: 204 }));
+  // K7: the header bell and /community call the API on every visit; start with an empty community.
+  await mockCommunityApi(page);
   await page.route("**/api/v1/subjects", (route) => route.fulfill({ json: SUBJECTS }));
   await page.route("**/api/v1/subjects/*/outline", (route) =>
     route.request().url().includes("/subjects/math/")
