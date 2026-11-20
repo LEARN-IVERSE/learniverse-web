@@ -9,6 +9,7 @@ import {
   communityReadNotifications,
   type NotificationsOut,
 } from "@/lib/api-client";
+import { useVisibleInterval } from "@/lib/use-visible-interval";
 import { cn } from "@/lib/utils";
 
 import { useSession } from "../auth/session";
@@ -29,11 +30,9 @@ export function NotificationBell() {
   }, []);
 
   useEffect(() => {
-    if (!signedIn) return;
-    load();
-    const t = window.setInterval(load, POLL_MS);
-    return () => window.clearInterval(t);
+    if (signedIn) load();
   }, [signedIn, load]);
+  useVisibleInterval(load, POLL_MS, signedIn);
 
   useEffect(() => {
     if (!open) return;

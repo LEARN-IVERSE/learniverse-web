@@ -8,6 +8,7 @@ import { EmptyState } from "@/components/states/empty-state";
 import { ErrorState } from "@/components/states/error-state";
 import { PageSkeleton } from "@/components/states/page-skeleton";
 import { communityListPosts, communityNewPosts } from "@/lib/api-client";
+import { useVisibleInterval } from "@/lib/use-visible-interval";
 import { cn } from "@/lib/utils";
 
 import { useSession } from "../auth/session";
@@ -102,16 +103,11 @@ export function CommunityPage() {
   });
 
   // New posts never jump into the list being read: count them and let the learner reload (K7-D5).
-  useEffect(() => {
-    const t = window.setInterval(() => {
-      void communityNewPosts({ query: { since: loadedAt.current, box: box ?? undefined } }).then(
-        ({ data }) => {
-          if (data) setNewPosts({ scope: `${box}:${version}`, count: data.count });
-        },
-      );
-    }, NEW_POSTS_POLL_MS);
-    return () => window.clearInterval(t);
-  }, [box, version]);
+  useVisibleInterval(() => {
+    void communityNewPosts({ query: { since: loadedAt.current, box: box ?? undefined } }).then(({ data }) => {
+      if (data) setNewPosts({ scope: `${box}:${version}`, count: data.count });
+    });
+  }, NEW_POSTS_POLL_MS);
 
   const reload = () => {
     setPage(1);

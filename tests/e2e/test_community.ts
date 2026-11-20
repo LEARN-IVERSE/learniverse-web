@@ -280,3 +280,35 @@ test.describe("admin reports (K7)", () => {
     expect(state.calls).toContain("POST /admin/reports/r1/resolve");
   });
 });
+
+test.describe("background polling (K9 prep: shared demo)", () => {
+  test("a hidden tab makes no polling requests; a visible one resumes", async ({ page }) => {
+    await mockAccountApi(page, { signedIn: STUDENT });
+    await page.clock.install();
+    await mockCatalogApi(page);
+    const state = await mockCommunityApi(page, { posts: [] });
+    const polls = () => state.calls.filter((c) => c === "GET /notifications").length;
+    await page.goto("/courses");
+    await expect.poll(polls).toBeGreaterThan(0);
+    await page.waitForLoadState("networkidle");
+
+    const visible = polls();
+    await page.clock.runFor("01:05");
+    await expect.poll(polls).toBe(visible + 1);
+
+    await page.evaluate(() => {
+      Object.defineProperty(document, "visibilityState", { configurable: true, get: () => "hidden" });
+      document.dispatchEvent(new Event("visibilitychange"));
+    });
+    const hidden = polls();
+    await page.clock.runFor("10:00");
+    expect(polls()).toBe(hidden); // ten minutes in the background: nothing sent
+
+    await page.evaluate(() => {
+      Object.defineProperty(document, "visibilityState", { configurable: true, get: () => "visible" });
+      document.dispatchEvent(new Event("visibilitychange"));
+    });
+    await page.clock.runFor("01:05");
+    await expect.poll(polls).toBeGreaterThan(hidden);
+  });
+});

@@ -2,7 +2,7 @@
 
 import { Clock, Crown, Users, type LucideIcon } from "lucide-react";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import { BigMedal, Confetti, RingsDecor, Sunburst } from "@/components/art/rank-art";
 import { EmptyState } from "@/components/states/empty-state";
@@ -15,6 +15,7 @@ import {
   type MyRankOut,
   type TimeRowOut,
 } from "@/lib/api-client";
+import { useVisibleInterval } from "@/lib/use-visible-interval";
 import { cn } from "@/lib/utils";
 
 import { useSession } from "../auth/session";
@@ -52,10 +53,7 @@ export function RankPage() {
   const [version, setVersion] = useState(0);
 
   // The server recomputes the boards on request; ask again every minute (K8-D5).
-  useEffect(() => {
-    const t = window.setInterval(() => setVersion((v) => v + 1), REFRESH_MS);
-    return () => window.clearInterval(t);
-  }, []);
+  useVisibleInterval(() => setVersion((v) => v + 1), REFRESH_MS);
 
   const [contrib, retryContrib] = useApi(`contrib:${version}`, () => leaderboardContributions());
   const [time, retryTime] = useApi(`time:${version}`, () => leaderboardStudyTime());
