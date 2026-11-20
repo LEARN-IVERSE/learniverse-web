@@ -88,6 +88,9 @@ export async function mockCatalogApi(page: Page, progress: object = NO_PROGRESS)
   // K6: streak/time for the header, and heartbeats from activity pages.
   await page.route("**/api/v1/me/progress", (route) => route.fulfill({ json: progress }));
   await page.route("**/api/v1/time/heartbeat", (route) => route.fulfill({ status: 204 }));
+  // K8: boards start empty; a test that needs data registers its own route afterwards.
+  const emptyBoard = () => ({ items: [], me: null, updated_at: new Date().toISOString() });
+  await page.route("**/api/v1/leaderboard/*", (route) => route.fulfill({ json: emptyBoard() }));
   // K7: the header bell and /community call the API on every visit; start with an empty community.
   await mockCommunityApi(page);
   await page.route("**/api/v1/subjects", (route) => route.fulfill({ json: SUBJECTS }));

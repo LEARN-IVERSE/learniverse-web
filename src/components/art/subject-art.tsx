@@ -15,13 +15,13 @@ export function useSvgId(prefix: string) {
 }
 
 /** Point on a circle; 0deg is 12 o'clock, angles grow clockwise. Rounded so markup is stable. */
-function polar(cx: number, cy: number, r: number, deg: number) {
+export function polar(cx: number, cy: number, r: number, deg: number) {
   const a = ((deg - 90) * Math.PI) / 180;
   return { x: +(cx + r * Math.cos(a)).toFixed(2), y: +(cy + r * Math.sin(a)).toFixed(2) };
 }
 
 /** Small deterministic PRNG (mulberry32) for scattering decorations. */
-function seeded(seed: number) {
+export function seeded(seed: number) {
   let s = seed >>> 0;
   return () => {
     s = (s + 0x6d2b79f5) >>> 0;
@@ -33,7 +33,7 @@ function seeded(seed: number) {
 }
 
 /** Star polygon with n tips, the brand motif (inspired by the star at the center of a Dong Son drum). */
-function starPoints(cx: number, cy: number, n: number, outer: number, inner: number) {
+export function starPoints(cx: number, cy: number, n: number, outer: number, inner: number) {
   return Array.from({ length: n * 2 }, (_, i) => {
     const p = polar(cx, cy, i % 2 === 0 ? outer : inner, (180 / n) * i);
     return `${p.x},${p.y}`;
@@ -208,7 +208,11 @@ export function MathScene({ className }: { className?: string }) {
   );
 }
 
-/** Speech bubble with a small tail; the tail seam is covered so it reads as one shape. */
+/**
+ * Speech bubble with a small tail. Body and tail are ONE closed path, so the outline is a single
+ * continuous stroke (no seam to cover). The corner radius shrinks on narrow bubbles so the tail
+ * always sits on the straight part of the bottom edge.
+ */
 export function Bubble({
   x,
   y,
@@ -228,19 +232,30 @@ export function Bubble({
   tail?: "left" | "right";
   children?: ReactNode;
 }) {
-  const tx = tail === "left" ? x + 14 : x + w - 30;
-  const tip = tail === "left" ? x + 8 : x + w - 8;
+  const base = 12; // width of the tail where it meets the body
+  const r = Math.min(h / 2, (w - base) / 2 - 3);
+  const bottom = y + h;
+  const start = tail === "left" ? x + r + 3 : x + w - r - 3 - base;
+  const end = start + base;
+  const tipX = tail === "left" ? start - 5 : end + 5;
+  const d = [
+    `M${x + r} ${y}`,
+    `H${x + w - r}`,
+    `A${r} ${r} 0 0 1 ${x + w} ${y + r}`,
+    `V${bottom - r}`,
+    `A${r} ${r} 0 0 1 ${x + w - r} ${bottom}`,
+    `H${end}`,
+    `L${tipX} ${bottom + 10}`,
+    `L${start} ${bottom}`,
+    `H${x + r}`,
+    `A${r} ${r} 0 0 1 ${x} ${bottom - r}`,
+    `V${y + r}`,
+    `A${r} ${r} 0 0 1 ${x + r} ${y}`,
+    "Z",
+  ].join(" ");
   return (
     <>
-      <polygon
-        points={`${tx},${y + h - 2} ${tip},${y + h + 10} ${tx + 16},${y + h - 2}`}
-        fill={fill}
-        stroke={stroke}
-        strokeWidth="2"
-        strokeLinejoin="round"
-      />
-      <rect x={x} y={y} width={w} height={h} rx={h / 2} fill={fill} stroke={stroke} strokeWidth="2" />
-      <rect x={tx + 2} y={y + h - 3} width="12" height="4" fill={fill} />
+      <path d={d} fill={fill} stroke={stroke} strokeWidth="2" strokeLinejoin="round" />
       {children}
     </>
   );

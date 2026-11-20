@@ -188,6 +188,48 @@ export type CommentOut = {
 };
 
 /**
+ * ContributionBoardOut
+ */
+export type ContributionBoardOut = {
+    /**
+     * Items
+     */
+    items: Array<ContributionRowOut>;
+    me: MyRankOut | null;
+    /**
+     * Updated At
+     */
+    updated_at: string;
+};
+
+/**
+ * ContributionRowOut
+ */
+export type ContributionRowOut = {
+    /**
+     * Rank
+     */
+    rank: number;
+    /**
+     * Tied
+     */
+    tied: boolean;
+    user: AuthorOut;
+    /**
+     * Points
+     */
+    points: number;
+    /**
+     * Posts
+     */
+    posts: number;
+    /**
+     * Comments
+     */
+    comments: number;
+};
+
+/**
  * DbHealthOut
  */
 export type DbHealthOut = {
@@ -428,6 +470,20 @@ export type MyProgressOut = {
      * Goal Target
      */
     goal_target: number;
+};
+
+/**
+ * MyRankOut
+ */
+export type MyRankOut = {
+    /**
+     * Rank
+     */
+    rank: number;
+    /**
+     * Value
+     */
+    value: number;
 };
 
 /**
@@ -978,6 +1034,40 @@ export type SubmitIn = {
  * TargetType
  */
 export type TargetType = 'post' | 'comment';
+
+/**
+ * TimeBoardOut
+ */
+export type TimeBoardOut = {
+    /**
+     * Items
+     */
+    items: Array<TimeRowOut>;
+    me: MyRankOut | null;
+    /**
+     * Updated At
+     */
+    updated_at: string;
+};
+
+/**
+ * TimeRowOut
+ */
+export type TimeRowOut = {
+    /**
+     * Rank
+     */
+    rank: number;
+    /**
+     * Tied
+     */
+    tied: boolean;
+    user: AuthorOut;
+    /**
+     * Seconds
+     */
+    seconds: number;
+};
 
 /**
  * UnitOut
@@ -2052,3 +2142,35 @@ export type ModerationAdminLockUserResponses = {
 };
 
 export type ModerationAdminLockUserResponse = ModerationAdminLockUserResponses[keyof ModerationAdminLockUserResponses];
+
+export type LeaderboardContributionsData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/v1/leaderboard/contributions';
+};
+
+export type LeaderboardContributionsResponses = {
+    /**
+     * Successful Response
+     */
+    200: ContributionBoardOut;
+};
+
+export type LeaderboardContributionsResponse = LeaderboardContributionsResponses[keyof LeaderboardContributionsResponses];
+
+export type LeaderboardStudyTimeData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/v1/leaderboard/study-time';
+};
+
+export type LeaderboardStudyTimeResponses = {
+    /**
+     * Successful Response
+     */
+    200: TimeBoardOut;
+};
+
+export type LeaderboardStudyTimeResponse = LeaderboardStudyTimeResponses[keyof LeaderboardStudyTimeResponses];

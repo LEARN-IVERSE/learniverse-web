@@ -42,6 +42,45 @@
     stroke-dashoffset: var(--ring-off);
   }
 }
+@keyframes d-rise {
+  0% {
+    transform: translateY(30px) scale(0.85);
+    opacity: 0;
+  }
+  15%,
+  80% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-150px) scale(1.05);
+    opacity: 0;
+  }
+}
+@keyframes d-fall {
+  0% {
+    transform: translateY(-20px) rotate(0deg);
+  }
+  100% {
+    transform: translateY(420px) rotate(540deg);
+  }
+}
+@keyframes d-shine {
+  0%,
+  55% {
+    transform: translateX(-150px) rotate(25deg);
+  }
+  100% {
+    transform: translateX(190px) rotate(25deg);
+  }
+}
+@keyframes d-grow {
+  from {
+    transform: scaleY(0);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
 @keyframes d-twinkle {
   0%,
   100% {
@@ -92,6 +131,22 @@
 
 .d-spin {
   animation: d-spin 30s linear infinite;
+}
+.d-spin-rays {
+  animation: d-spin 50s linear infinite;
+}
+.d-rise {
+  animation: d-rise 7s ease-in infinite;
+}
+.d-fall {
+  animation: d-fall 7s linear infinite;
+}
+.d-shine {
+  animation: d-shine 4.5s ease-in-out infinite;
+}
+.d-grow {
+  transform-origin: bottom;
+  animation: d-grow 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) both;
 }
 .d-spin-slow {
   animation: d-spin 160s linear infinite;
