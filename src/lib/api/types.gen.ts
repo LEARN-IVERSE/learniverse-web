@@ -435,6 +435,96 @@ export type CommentOut = {
 };
 
 /**
+ * CommunityItemOut
+ */
+export type CommunityItemOut = {
+    /**
+     * Id
+     */
+    id: string;
+    kind: TargetType;
+    /**
+     * Post Id
+     */
+    post_id: string;
+    /**
+     * Box Code
+     */
+    box_code: string;
+    /**
+     * Box Name
+     */
+    box_name: string;
+    /**
+     * Title
+     */
+    title: string;
+    /**
+     * Excerpt
+     */
+    excerpt: string;
+    /**
+     * Author Id
+     */
+    author_id: string;
+    /**
+     * Author Name
+     */
+    author_name: string;
+    /**
+     * Created At
+     */
+    created_at: string;
+    /**
+     * State
+     */
+    state: 'visible' | 'hidden' | 'deleted';
+    /**
+     * Open Reports
+     */
+    open_reports: number;
+};
+
+/**
+ * CommunityPageOut
+ */
+export type CommunityPageOut = {
+    /**
+     * Items
+     */
+    items: Array<CommunityItemOut>;
+    /**
+     * Total
+     */
+    total: number;
+    /**
+     * Page
+     */
+    page: number;
+    /**
+     * Pages
+     */
+    pages: number;
+    /**
+     * Boxes
+     */
+    boxes: Array<[
+        string,
+        string
+    ]>;
+};
+
+/**
+ * CommunityResultOut
+ */
+export type CommunityResultOut = {
+    /**
+     * State
+     */
+    state: 'visible' | 'hidden' | 'deleted';
+};
+
+/**
  * ContentLessonOut
  */
 export type ContentLessonOut = {
@@ -1415,6 +1505,89 @@ export type PermissionOut = {
      * Subject
      */
     subject: string | null;
+};
+
+/**
+ * PointsOut
+ */
+export type PointsOut = {
+    /**
+     * Users
+     */
+    users: Array<PointsUserOut>;
+    selected: PointsUserOut | null;
+    /**
+     * Rows
+     */
+    rows: Array<PointsRowOut>;
+};
+
+/**
+ * PointsRowOut
+ */
+export type PointsRowOut = {
+    /**
+     * Id
+     */
+    id: string;
+    /**
+     * Kind
+     */
+    kind: 'grant' | 'revoke';
+    /**
+     * Delta
+     */
+    delta: number;
+    /**
+     * Reason
+     */
+    reason: string;
+    /**
+     * Reason Text
+     */
+    reason_text: string;
+    /**
+     * Target Type
+     */
+    target_type: 'post' | 'comment';
+    /**
+     * Target Id
+     */
+    target_id: string;
+    /**
+     * Post Id
+     */
+    post_id: string | null;
+    /**
+     * Excerpt
+     */
+    excerpt: string | null;
+    /**
+     * Created At
+     */
+    created_at: string;
+};
+
+/**
+ * PointsUserOut
+ */
+export type PointsUserOut = {
+    /**
+     * Id
+     */
+    id: string;
+    /**
+     * Name
+     */
+    name: string;
+    /**
+     * Email
+     */
+    email: string;
+    /**
+     * Total
+     */
+    total: number;
 };
 
 /**
@@ -3957,6 +4130,122 @@ export type AdminAuditResponses = {
 };
 
 export type AdminAuditResponse = AdminAuditResponses[keyof AdminAuditResponses];
+
+export type AdminCommunityCommunityItemsData = {
+    body?: never;
+    path?: never;
+    query?: {
+        kind?: TargetType;
+        /**
+         * Box
+         */
+        box?: string | null;
+        /**
+         * State
+         */
+        state?: 'visible' | 'hidden' | 'deleted' | null;
+        /**
+         * Reported
+         */
+        reported?: boolean;
+        /**
+         * Q
+         */
+        q?: string;
+        /**
+         * Page
+         */
+        page?: number;
+    };
+    url: '/v1/admin/community';
+};
+
+export type AdminCommunityCommunityItemsErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type AdminCommunityCommunityItemsError = AdminCommunityCommunityItemsErrors[keyof AdminCommunityCommunityItemsErrors];
+
+export type AdminCommunityCommunityItemsResponses = {
+    /**
+     * Successful Response
+     */
+    200: CommunityPageOut;
+};
+
+export type AdminCommunityCommunityItemsResponse = AdminCommunityCommunityItemsResponses[keyof AdminCommunityCommunityItemsResponses];
+
+export type AdminCommunityCommunityActData = {
+    body?: never;
+    path: {
+        kind: TargetType;
+        /**
+         * Target Id
+         */
+        target_id: string;
+        /**
+         * Action
+         */
+        action: 'hide' | 'unhide' | 'delete';
+    };
+    query?: never;
+    url: '/v1/admin/community/{kind}/{target_id}/{action}';
+};
+
+export type AdminCommunityCommunityActErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type AdminCommunityCommunityActError = AdminCommunityCommunityActErrors[keyof AdminCommunityCommunityActErrors];
+
+export type AdminCommunityCommunityActResponses = {
+    /**
+     * Successful Response
+     */
+    200: CommunityResultOut;
+};
+
+export type AdminCommunityCommunityActResponse = AdminCommunityCommunityActResponses[keyof AdminCommunityCommunityActResponses];
+
+export type AdminCommunityPointsData = {
+    body?: never;
+    path?: never;
+    query?: {
+        /**
+         * Q
+         */
+        q?: string;
+        /**
+         * User Id
+         */
+        user_id?: string | null;
+    };
+    url: '/v1/admin/points';
+};
+
+export type AdminCommunityPointsErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type AdminCommunityPointsError = AdminCommunityPointsErrors[keyof AdminCommunityPointsErrors];
+
+export type AdminCommunityPointsResponses = {
+    /**
+     * Successful Response
+     */
+    200: PointsOut;
+};
+
+export type AdminCommunityPointsResponse = AdminCommunityPointsResponses[keyof AdminCommunityPointsResponses];
 
 export type AdminContentEditableSubjectsData = {
     body?: never;

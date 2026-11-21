@@ -17,6 +17,7 @@ import {
 } from "@/lib/api-client";
 import { cn } from "@/lib/utils";
 
+import { useSession } from "../auth/session";
 import { useApi } from "../learn/use-api";
 import { timeAgo } from "./time-ago";
 
@@ -42,6 +43,9 @@ function ReportCard({ report, onChanged }: { report: ReportOut; onChanged: () =>
   const btn =
     "inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-sm font-semibold transition disabled:opacity-50";
   const done = report.status === "resolved";
+  // Locking an account is an admin-only power (K11-D2); a moderating teacher only handles content.
+  const state = useSession()?.state;
+  const isAdmin = state?.status === "signed-in" && state.user.role === "admin";
 
   return (
     <li className="rounded-[1.5rem] bg-white p-5 ring-1 ring-black/5">
@@ -124,7 +128,7 @@ function ReportCard({ report, onChanged }: { report: ReportOut; onChanged: () =>
             </button>
           </>
         )}
-        {report.target_author_id && !report.target_author_locked && (
+        {isAdmin && report.target_author_id && !report.target_author_locked && (
           <button
             type="button"
             disabled={busy}

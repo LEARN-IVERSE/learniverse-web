@@ -1,0 +1,17 @@
+import type { Metadata } from "next";
+
+import { AdminPoints } from "@/features/admin/admin-pages";
+import { RequireRole } from "@/features/auth/require-role";
+import { RequireSession } from "@/features/auth/require-session";
+
+export const metadata: Metadata = { title: "Điểm đóng góp" };
+
+export default function Page() {
+  return (
+    <RequireSession>
+      <RequireRole roles={["admin", "teacher"]}>
+        <AdminPoints />
+      </RequireRole>
+    </RequireSession>
+  );
+}

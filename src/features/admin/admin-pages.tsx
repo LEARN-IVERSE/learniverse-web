@@ -8,10 +8,12 @@ import { ReportsPage } from "@/features/community/reports-page";
 import { AdminShell, adminItems } from "./admin-shell";
 import { AuditAdmin } from "./audit-admin";
 import { MyChanges, ReviewQueue } from "./change-requests";
+import { CommunityAdmin } from "./community-admin";
 import { ContentAdmin } from "./content-admin";
 import { EssayQueue } from "./essay-queue";
 import { ImportWizard } from "./import-wizard";
 import { LessonEditor, NewLesson } from "./lesson-editor";
+import { PointsAdmin } from "./points-admin";
 import { UsersAdmin } from "./users-admin";
 
 /** /admin: entry cards for the sections this account may open. */
@@ -154,6 +156,30 @@ export function AdminEssays() {
       description="Bài tự luận của học sinh trong các môn bạn được chấm. Chấm Đạt hoặc Chưa đạt, kèm nhận xét."
     >
       {() => <EssayQueue />}
+    </AdminShell>
+  );
+}
+
+export function AdminCommunity() {
+  return (
+    <AdminShell
+      active="community"
+      title="Cộng đồng"
+      description="Bài đăng và bình luận của học sinh. Ẩn hoặc xóa thì điểm đóng góp bị thu lại; hiện lại thì không trả điểm."
+    >
+      {() => <CommunityAdmin />}
+    </AdminShell>
+  );
+}
+
+export function AdminPoints() {
+  return (
+    <AdminShell
+      active="points"
+      title="Điểm đóng góp"
+      description="Tra từng dòng cộng/trừ điểm của một tài khoản."
+    >
+      {() => <PointsAdmin />}
     </AdminShell>
   );
 }
