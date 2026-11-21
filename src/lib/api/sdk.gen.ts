@@ -2,7 +2,7 @@
 
 import type { Client, ClientMeta, Options as Options2, RequestResult, TDataShape } from './client';
 import { client } from './client.gen';
-import type { ActivitiesAttemptResultData, ActivitiesAttemptResultErrors, ActivitiesAttemptResultResponses, ActivitiesLessonActivitiesData, ActivitiesLessonActivitiesErrors, ActivitiesLessonActivitiesResponses, ActivitiesReadCompleteData, ActivitiesReadCompleteErrors, ActivitiesReadCompleteResponses, ActivitiesReadStartData, ActivitiesReadStartErrors, ActivitiesReadStartResponses, ActivitiesStartAttemptData, ActivitiesStartAttemptErrors, ActivitiesStartAttemptResponses, ActivitiesSubmitData, ActivitiesSubmitErrors, ActivitiesSubmitResponses, AuthAdminPingData, AuthAdminPingResponses, AuthMeData, AuthMeResponses, AuthSignInGoogleData, AuthSignInGoogleErrors, AuthSignInGoogleResponses, AuthSignOutData, AuthSignOutResponses, CatalogLessonData, CatalogLessonErrors, CatalogLessonResponses, CatalogSearchLessonsData, CatalogSearchLessonsErrors, CatalogSearchLessonsResponses, CatalogSubjectOutlineData, CatalogSubjectOutlineErrors, CatalogSubjectOutlineResponses, CatalogSubjectsData, CatalogSubjectsResponses, CommunityAddCommentData, CommunityAddCommentErrors, CommunityAddCommentResponses, CommunityCreatePostData, CommunityCreatePostErrors, CommunityCreatePostResponses, CommunityCreateUploadData, CommunityCreateUploadErrors, CommunityCreateUploadResponses, CommunityDeleteCommentData, CommunityDeleteCommentErrors, CommunityDeleteCommentResponses, CommunityDeletePostData, CommunityDeletePostErrors, CommunityDeletePostResponses, CommunityEditCommentData, CommunityEditCommentErrors, CommunityEditCommentResponses, CommunityEditPostData, CommunityEditPostErrors, CommunityEditPostResponses, CommunityGetPostData, CommunityGetPostErrors, CommunityGetPostResponses, CommunityListCommentsData, CommunityListCommentsErrors, CommunityListCommentsResponses, CommunityListPostsData, CommunityListPostsErrors, CommunityListPostsResponses, CommunityMyNotificationsData, CommunityMyNotificationsResponses, CommunityNewPostsData, CommunityNewPostsErrors, CommunityNewPostsResponses, CommunityReadNotificationsData, CommunityReadNotificationsResponses, HealthHealthData, HealthHealthDbData, HealthHealthDbResponses, HealthHealthResponses, LeaderboardContributionsData, LeaderboardContributionsResponses, LeaderboardStudyTimeData, LeaderboardStudyTimeResponses, ModerationAdminLockUserData, ModerationAdminLockUserErrors, ModerationAdminLockUserResponses, ModerationAdminReportsData, ModerationAdminReportsErrors, ModerationAdminReportsResponses, ModerationAdminResolveData, ModerationAdminResolveErrors, ModerationAdminResolveResponses, ModerationAdminReviewData, ModerationAdminReviewErrors, ModerationAdminReviewResponses, ModerationReportContentData, ModerationReportContentErrors, ModerationReportContentResponses, ProgressMyProgressData, ProgressMyProgressResponses, ProgressTimeHeartbeatData, ProgressTimeHeartbeatErrors, ProgressTimeHeartbeatResponses } from './types.gen';
+import type { ActivitiesAttemptResultData, ActivitiesAttemptResultErrors, ActivitiesAttemptResultResponses, ActivitiesLessonActivitiesData, ActivitiesLessonActivitiesErrors, ActivitiesLessonActivitiesResponses, ActivitiesReadCompleteData, ActivitiesReadCompleteErrors, ActivitiesReadCompleteResponses, ActivitiesReadStartData, ActivitiesReadStartErrors, ActivitiesReadStartResponses, ActivitiesStartAttemptData, ActivitiesStartAttemptErrors, ActivitiesStartAttemptResponses, ActivitiesSubmitData, ActivitiesSubmitErrors, ActivitiesSubmitResponses, AiCreateConversationData, AiCreateConversationErrors, AiCreateConversationResponses, AiDeleteConversationData, AiDeleteConversationErrors, AiDeleteConversationResponses, AiGetConversationData, AiGetConversationErrors, AiGetConversationResponses, AiGetQuotaData, AiGetQuotaResponses, AiListConversationsData, AiListConversationsResponses, AiSendMessageData, AiSendMessageErrors, AiSendMessageResponses, AuthAdminPingData, AuthAdminPingResponses, AuthMeData, AuthMeResponses, AuthSignInGoogleData, AuthSignInGoogleErrors, AuthSignInGoogleResponses, AuthSignOutData, AuthSignOutResponses, CatalogLessonData, CatalogLessonErrors, CatalogLessonResponses, CatalogSearchLessonsData, CatalogSearchLessonsErrors, CatalogSearchLessonsResponses, CatalogSubjectOutlineData, CatalogSubjectOutlineErrors, CatalogSubjectOutlineResponses, CatalogSubjectsData, CatalogSubjectsResponses, CommunityAddCommentData, CommunityAddCommentErrors, CommunityAddCommentResponses, CommunityCreatePostData, CommunityCreatePostErrors, CommunityCreatePostResponses, CommunityCreateUploadData, CommunityCreateUploadErrors, CommunityCreateUploadResponses, CommunityDeleteCommentData, CommunityDeleteCommentErrors, CommunityDeleteCommentResponses, CommunityDeletePostData, CommunityDeletePostErrors, CommunityDeletePostResponses, CommunityEditCommentData, CommunityEditCommentErrors, CommunityEditCommentResponses, CommunityEditPostData, CommunityEditPostErrors, CommunityEditPostResponses, CommunityGetPostData, CommunityGetPostErrors, CommunityGetPostResponses, CommunityListCommentsData, CommunityListCommentsErrors, CommunityListCommentsResponses, CommunityListPostsData, CommunityListPostsErrors, CommunityListPostsResponses, CommunityMyNotificationsData, CommunityMyNotificationsResponses, CommunityNewPostsData, CommunityNewPostsErrors, CommunityNewPostsResponses, CommunityReadNotificationsData, CommunityReadNotificationsResponses, HealthHealthData, HealthHealthDbData, HealthHealthDbResponses, HealthHealthResponses, HealthHealthStreamData, HealthHealthStreamErrors, HealthHealthStreamResponses, LeaderboardContributionsData, LeaderboardContributionsResponses, LeaderboardStudyTimeData, LeaderboardStudyTimeResponses, ModerationAdminLockUserData, ModerationAdminLockUserErrors, ModerationAdminLockUserResponses, ModerationAdminReportsData, ModerationAdminReportsErrors, ModerationAdminReportsResponses, ModerationAdminResolveData, ModerationAdminResolveErrors, ModerationAdminResolveResponses, ModerationAdminReviewData, ModerationAdminReviewErrors, ModerationAdminReviewResponses, ModerationReportContentData, ModerationReportContentErrors, ModerationReportContentResponses, ProgressMyProgressData, ProgressMyProgressResponses, ProgressTimeHeartbeatData, ProgressTimeHeartbeatErrors, ProgressTimeHeartbeatResponses } from './types.gen';
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean, TResponse = unknown> = Options2<TData, ThrowOnError, TResponse> & {
     /**
@@ -22,6 +22,16 @@ export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends 
  * Health
  */
 export const healthHealth = <ThrowOnError extends boolean = false>(options?: Options<HealthHealthData, ThrowOnError>): RequestResult<HealthHealthResponses, unknown, ThrowOnError> => (options?.client ?? client).get<HealthHealthResponses, unknown, ThrowOnError>({ url: '/v1/health', ...options });
+
+/**
+ * Health Stream
+ *
+ * Temporary K9 spike: emit `count` SSE events, one per `interval` seconds.
+ *
+ * Used to check that events arrive one by one through the Next.js proxy and the
+ * ngrok tunnel instead of being buffered into a single chunk.
+ */
+export const healthHealthStream = <ThrowOnError extends boolean = false>(options?: Options<HealthHealthStreamData, ThrowOnError>): RequestResult<HealthHealthStreamResponses, HealthHealthStreamErrors, ThrowOnError> => (options?.client ?? client).get<HealthHealthStreamResponses, HealthHealthStreamErrors, ThrowOnError>({ url: '/v1/health/stream', ...options });
 
 /**
  * Health Db
@@ -286,3 +296,49 @@ export const leaderboardContributions = <ThrowOnError extends boolean = false>(o
  * Study Time
  */
 export const leaderboardStudyTime = <ThrowOnError extends boolean = false>(options?: Options<LeaderboardStudyTimeData, ThrowOnError>): RequestResult<LeaderboardStudyTimeResponses, unknown, ThrowOnError> => (options?.client ?? client).get<LeaderboardStudyTimeResponses, unknown, ThrowOnError>({ url: '/v1/leaderboard/study-time', ...options });
+
+/**
+ * Get Quota
+ */
+export const aiGetQuota = <ThrowOnError extends boolean = false>(options?: Options<AiGetQuotaData, ThrowOnError>): RequestResult<AiGetQuotaResponses, unknown, ThrowOnError> => (options?.client ?? client).get<AiGetQuotaResponses, unknown, ThrowOnError>({ url: '/v1/ai/quota', ...options });
+
+/**
+ * List Conversations
+ */
+export const aiListConversations = <ThrowOnError extends boolean = false>(options?: Options<AiListConversationsData, ThrowOnError>): RequestResult<AiListConversationsResponses, unknown, ThrowOnError> => (options?.client ?? client).get<AiListConversationsResponses, unknown, ThrowOnError>({ url: '/v1/ai/conversations', ...options });
+
+/**
+ * Create Conversation
+ */
+export const aiCreateConversation = <ThrowOnError extends boolean = false>(options: Options<AiCreateConversationData, ThrowOnError>): RequestResult<AiCreateConversationResponses, AiCreateConversationErrors, ThrowOnError> => (options.client ?? client).post<AiCreateConversationResponses, AiCreateConversationErrors, ThrowOnError>({
+    url: '/v1/ai/conversations',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+/**
+ * Delete Conversation
+ */
+export const aiDeleteConversation = <ThrowOnError extends boolean = false>(options: Options<AiDeleteConversationData, ThrowOnError>): RequestResult<AiDeleteConversationResponses, AiDeleteConversationErrors, ThrowOnError> => (options.client ?? client).delete<AiDeleteConversationResponses, AiDeleteConversationErrors, ThrowOnError>({ url: '/v1/ai/conversations/{conversation_id}', ...options });
+
+/**
+ * Get Conversation
+ */
+export const aiGetConversation = <ThrowOnError extends boolean = false>(options: Options<AiGetConversationData, ThrowOnError>): RequestResult<AiGetConversationResponses, AiGetConversationErrors, ThrowOnError> => (options.client ?? client).get<AiGetConversationResponses, AiGetConversationErrors, ThrowOnError>({ url: '/v1/ai/conversations/{conversation_id}', ...options });
+
+/**
+ * Send Message
+ *
+ * Errors found before the model is called (quota, bad image) come back as plain JSON errors.
+ */
+export const aiSendMessage = <ThrowOnError extends boolean = false>(options: Options<AiSendMessageData, ThrowOnError>): RequestResult<AiSendMessageResponses, AiSendMessageErrors, ThrowOnError> => (options.client ?? client).post<AiSendMessageResponses, AiSendMessageErrors, ThrowOnError>({
+    url: '/v1/ai/conversations/{conversation_id}/messages',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
