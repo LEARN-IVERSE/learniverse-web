@@ -46,7 +46,7 @@ const ITEMS: Item[] = [
   { key: "essays", label: "Chấm tự luận", icon: ClipboardCheck, href: "/admin/essays" },
   { key: "community", label: "Cộng đồng", icon: MessagesSquare, href: "/admin/community" },
   { key: "points", label: "Điểm đóng góp", icon: Trophy, href: "/admin/points" },
-  { key: "ai", label: "Cấu hình AI", icon: Bot },
+  { key: "ai", label: "Cấu hình AI", icon: Bot, href: "/admin/ai" },
   { key: "audit", label: "Nhật ký quản trị", icon: ScrollText, href: "/admin/audit" },
 ];
 

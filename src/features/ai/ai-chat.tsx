@@ -274,7 +274,8 @@ export function AiChat({
   }
 
   const left = quota?.messages_left;
-  const outOfMessages = left === 0;
+  const paused = quota?.enabled === false; // an admin switched AI off (K11c-3)
+  const outOfMessages = left === 0 || paused;
   const box = large ? "h-[min(48rem,85svh)]" : "max-h-[min(32rem,70svh)]";
   const text = large ? "text-base" : "text-sm";
 
@@ -486,9 +487,11 @@ export function AiChat({
           <textarea
             aria-label="Câu hỏi cho trợ lý AI"
             placeholder={
-              outOfMessages
-                ? "Hôm nay bạn đã hết lượt hỏi, mai quay lại nhé!"
-                : "Hỏi Sao Nhí điều bạn chưa hiểu…"
+              paused
+                ? "AI đang tạm nghỉ. Bạn quay lại sau nhé!"
+                : outOfMessages
+                  ? "Hôm nay bạn đã hết lượt hỏi, mai quay lại nhé!"
+                  : "Hỏi Sao Nhí điều bạn chưa hiểu…"
             }
             value={draft}
             maxLength={4000}

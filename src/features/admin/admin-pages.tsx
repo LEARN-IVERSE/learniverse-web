@@ -6,6 +6,7 @@ import { useSession } from "@/features/auth/session";
 import { ReportsPage } from "@/features/community/reports-page";
 
 import { AdminShell, adminItems } from "./admin-shell";
+import { AiSettingsAdmin } from "./ai-settings-admin";
 import { AuditAdmin } from "./audit-admin";
 import { MyChanges, ReviewQueue } from "./change-requests";
 import { CommunityAdmin } from "./community-admin";
@@ -180,6 +181,18 @@ export function AdminPoints() {
       description="Tra từng dòng cộng/trừ điểm của một tài khoản."
     >
       {() => <PointsAdmin />}
+    </AdminShell>
+  );
+}
+
+export function AdminAi() {
+  return (
+    <AdminShell
+      active="ai"
+      title="Cấu hình AI"
+      description="Model, số lượt mỗi ngày, giá token và nút tắt AI tạm thời. Thay đổi có hiệu lực ngay."
+    >
+      {() => <AiSettingsAdmin />}
     </AdminShell>
   );
 }

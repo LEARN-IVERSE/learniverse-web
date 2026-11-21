@@ -63,6 +63,101 @@ export type AdminMeOut = {
 };
 
 /**
+ * AiFieldOut
+ */
+export type AiFieldOut = {
+    /**
+     * Value
+     */
+    value: string | number | number | null;
+    /**
+     * Default
+     */
+    default: string | number | number | null;
+    /**
+     * Custom
+     */
+    custom: boolean;
+};
+
+/**
+ * AiSettingsIn
+ *
+ * Every field is optional: null means "use the value from .env".
+ */
+export type AiSettingsIn = {
+    /**
+     * Chat Model
+     */
+    chat_model?: string | null;
+    /**
+     * Grader Model
+     */
+    grader_model?: string | null;
+    /**
+     * Daily Messages
+     */
+    daily_messages?: number | null;
+    /**
+     * Daily Images
+     */
+    daily_images?: number | null;
+    /**
+     * Daily Teach Sessions
+     */
+    daily_teach_sessions?: number | null;
+    /**
+     * Price Input Per M
+     */
+    price_input_per_m?: number | null;
+    /**
+     * Price Output Per M
+     */
+    price_output_per_m?: number | null;
+    /**
+     * Enabled
+     */
+    enabled?: boolean;
+};
+
+/**
+ * AiSettingsOut
+ */
+export type AiSettingsOut = {
+    /**
+     * Enabled
+     */
+    enabled: boolean;
+    /**
+     * Env Enabled
+     */
+    env_enabled: boolean;
+    /**
+     * Provider
+     */
+    provider: string;
+    /**
+     * Key Configured
+     */
+    key_configured: boolean;
+    chat_model: AiFieldOut;
+    grader_model: AiFieldOut;
+    daily_messages: AiFieldOut;
+    daily_images: AiFieldOut;
+    daily_teach_sessions: AiFieldOut;
+    price_input_per_m: AiFieldOut;
+    price_output_per_m: AiFieldOut;
+    /**
+     * Updated At
+     */
+    updated_at: string | null;
+    /**
+     * Updated By
+     */
+    updated_by: string | null;
+};
+
+/**
  * AnswerIn
  */
 export type AnswerIn = {
@@ -1776,6 +1871,10 @@ export type QuotaOut = {
      * Daily Images
      */
     daily_images: number;
+    /**
+     * Enabled
+     */
+    enabled?: boolean;
 };
 
 /**
@@ -2273,6 +2372,10 @@ export type TeachOverviewOut = {
      * Daily Sessions
      */
     daily_sessions: number;
+    /**
+     * Enabled
+     */
+    enabled?: boolean;
 };
 
 /**
@@ -4130,6 +4233,47 @@ export type AdminAuditResponses = {
 };
 
 export type AdminAuditResponse = AdminAuditResponses[keyof AdminAuditResponses];
+
+export type AdminAiGetAiSettingsData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/v1/admin/ai-settings';
+};
+
+export type AdminAiGetAiSettingsResponses = {
+    /**
+     * Successful Response
+     */
+    200: AiSettingsOut;
+};
+
+export type AdminAiGetAiSettingsResponse = AdminAiGetAiSettingsResponses[keyof AdminAiGetAiSettingsResponses];
+
+export type AdminAiPutAiSettingsData = {
+    body: AiSettingsIn;
+    path?: never;
+    query?: never;
+    url: '/v1/admin/ai-settings';
+};
+
+export type AdminAiPutAiSettingsErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type AdminAiPutAiSettingsError = AdminAiPutAiSettingsErrors[keyof AdminAiPutAiSettingsErrors];
+
+export type AdminAiPutAiSettingsResponses = {
+    /**
+     * Successful Response
+     */
+    200: AiSettingsOut;
+};
+
+export type AdminAiPutAiSettingsResponse = AdminAiPutAiSettingsResponses[keyof AdminAiPutAiSettingsResponses];
 
 export type AdminCommunityCommunityItemsData = {
     body?: never;
