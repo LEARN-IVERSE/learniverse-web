@@ -1,6 +1,6 @@
 "use client";
 
-import { History, ImagePlus, Plus, Send, Square, Trash2, X } from "lucide-react";
+import { History, ImagePlus, MessageCircle, Plus, Send, Square, Trash2, X } from "lucide-react";
 import { type FormEvent, useEffect, useRef, useState } from "react";
 
 import { SafeMarkdown } from "@/features/community/safe-markdown";
@@ -66,7 +66,16 @@ async function errorMessage(res: Response): Promise<string> {
 }
 
 /** The chat inside the floating panel: one conversation at a time, plus the list of past ones. */
-export function AiChat({ lesson, onClearLesson }: { lesson: LessonAsk | null; onClearLesson: () => void }) {
+export function AiChat({
+  lesson,
+  onClearLesson,
+  large = false,
+}: {
+  lesson: LessonAsk | null;
+  onClearLesson: () => void;
+  /** Bigger panel and text, for easier reading. */
+  large?: boolean;
+}) {
   const [view, setView] = useState<"chat" | "history">("chat");
   const [chatId, setChatId] = useState<string | null>(null);
   const [chatLesson, setChatLesson] = useState<LessonAsk | null>(null);
@@ -266,10 +275,12 @@ export function AiChat({ lesson, onClearLesson }: { lesson: LessonAsk | null; on
 
   const left = quota?.messages_left;
   const outOfMessages = left === 0;
+  const box = large ? "h-[min(48rem,85svh)]" : "max-h-[min(32rem,70svh)]";
+  const text = large ? "text-base" : "text-sm";
 
   if (view === "history")
     return (
-      <div className="flex max-h-[min(32rem,70svh)] flex-col">
+      <div className={`flex ${box} flex-col`}>
         <div className="flex items-center justify-between border-b px-4 py-2">
           <p className="font-semibold">Lịch sử trò chuyện</p>
           <button
@@ -280,21 +291,30 @@ export function AiChat({ lesson, onClearLesson }: { lesson: LessonAsk | null; on
             Quay lại
           </button>
         </div>
-        <ul aria-label="Các cuộc trò chuyện" className="flex-1 space-y-1 overflow-y-auto p-2">
+        <ul aria-label="Các cuộc trò chuyện" className="flex-1 space-y-2 overflow-y-auto bg-slate-50 p-3">
           {history === null && <li className="p-3 text-sm text-muted-foreground">Đang tải…</li>}
           {history?.length === 0 && (
             <li className="p-3 text-sm text-muted-foreground">Chưa có cuộc trò chuyện nào.</li>
           )}
           {history?.map((c) => (
-            <li key={c.id} className="flex items-center gap-2 rounded-xl px-2 py-1 hover:bg-blue-50">
+            <li
+              key={c.id}
+              className="flex items-center gap-2 rounded-2xl bg-white px-3 py-2 shadow-sm ring-1 ring-blue-100 transition hover:bg-blue-50 hover:ring-blue-300"
+            >
+              <span
+                aria-hidden
+                className="grid size-9 shrink-0 place-items-center rounded-full bg-blue-100 text-blue-700"
+              >
+                <MessageCircle className="size-4" />
+              </span>
               <button
                 type="button"
                 onClick={() => void openChat(c)}
                 className="min-w-0 flex-1 py-1 text-left"
               >
-                <span className="block truncate text-sm font-semibold">{c.title}</span>
+                <span className={`block truncate font-semibold text-slate-900 ${text}`}>{c.title}</span>
                 {c.lesson && (
-                  <span className="block truncate text-xs text-muted-foreground">{c.lesson.title}</span>
+                  <span className="block truncate text-xs text-blue-700">Bài: {c.lesson.title}</span>
                 )}
               </button>
               {confirmDelete === c.id ? (
@@ -322,19 +342,19 @@ export function AiChat({ lesson, onClearLesson }: { lesson: LessonAsk | null; on
     );
 
   return (
-    <div className="flex max-h-[min(32rem,70svh)] flex-col">
+    <div className={`flex ${box} flex-col`}>
       <div className="flex items-center gap-2 border-b px-3 py-1.5 text-xs">
         <button
           type="button"
           onClick={startNew}
-          className="flex items-center gap-1 rounded-full px-2 py-1 font-semibold text-blue-700 hover:bg-blue-50"
+          className="flex items-center gap-1.5 rounded-full bg-blue-50/25 px-3 py-1.5 font-semibold text-blue-700 ring-1 ring-blue-100 transition hover:bg-blue-50/60 hover:ring-blue-400 focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:outline-none"
         >
-          <Plus aria-hidden className="size-3.5" /> Cuộc mới
+          <Plus aria-hidden className="size-3.5" /> Trò chuyện mới
         </button>
         <button
           type="button"
           onClick={() => void openHistory()}
-          className="flex items-center gap-1 rounded-full px-2 py-1 font-semibold text-blue-700 hover:bg-blue-50"
+          className="flex items-center gap-1.5 rounded-full bg-blue-50/25 px-3 py-1.5 font-semibold text-blue-700 ring-1 ring-blue-100 transition hover:bg-blue-50/60 hover:ring-blue-400 focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:outline-none"
         >
           <History aria-hidden className="size-3.5" /> Lịch sử
         </button>
@@ -358,7 +378,7 @@ export function AiChat({ lesson, onClearLesson }: { lesson: LessonAsk | null; on
         )}
         {messages.length === 0 && (
           <>
-            <p className="rounded-2xl rounded-tl-sm bg-blue-50 p-3 text-sm">
+            <p className={`rounded-2xl rounded-tl-sm bg-blue-50 p-3 ${text}`}>
               Chào bạn! Mình là Sao Nhí. Mình sẽ giải thích từng bước, không chỉ đưa đáp án đâu nhé.
             </p>
             <div className="flex flex-wrap gap-2">
@@ -387,17 +407,19 @@ export function AiChat({ lesson, onClearLesson }: { lesson: LessonAsk | null; on
                   ))}
                 </div>
               )}
-              <p className="rounded-2xl rounded-tr-sm bg-blue-600 p-3 text-sm whitespace-pre-wrap text-white">
+              <p
+                className={`rounded-2xl rounded-tr-sm bg-blue-600 p-3 whitespace-pre-wrap text-white ${text}`}
+              >
                 {m.text}
               </p>
             </div>
           ) : (
             <div
               key={m.id}
-              className="mr-6 rounded-2xl rounded-tl-sm bg-slate-50 p-3 text-sm ring-1 ring-slate-100"
+              className={`mr-6 rounded-2xl rounded-tl-sm bg-slate-50 p-3 ring-1 ring-slate-100 ${text}`}
             >
               {m.text ? (
-                <SafeMarkdown md={m.text} className="text-sm" />
+                <SafeMarkdown md={m.text} className={text} />
               ) : (
                 m.status === "streaming" && <p className="text-muted-foreground">Sao Nhí đang suy nghĩ…</p>
               )}
@@ -479,7 +501,7 @@ export function AiChat({ lesson, onClearLesson }: { lesson: LessonAsk | null; on
                 void send(draft);
               }
             }}
-            className="max-h-28 min-h-10 flex-1 resize-none rounded-2xl bg-muted px-4 py-2.5 text-sm outline-none focus-visible:ring-2 focus-visible:ring-blue-300 disabled:cursor-not-allowed"
+            className={`max-h-28 min-h-10 flex-1 resize-none rounded-2xl bg-muted px-4 py-2.5 outline-none ${text} focus-visible:ring-2 focus-visible:ring-blue-300 disabled:cursor-not-allowed`}
           />
           {streaming ? (
             <button
@@ -501,9 +523,9 @@ export function AiChat({ lesson, onClearLesson }: { lesson: LessonAsk | null; on
             </button>
           )}
         </div>
-        <p className="text-[11px] text-muted-foreground">
-          Câu hỏi và ảnh được gửi tới Google Gemini để trả lời; không gửi tên hay email của bạn. Câu trả lời
-          của AI chỉ để tham khảo và có thể chưa chính xác.
+        <p className={`leading-relaxed text-slate-600 ${large ? "text-sm" : "text-xs"}`}>
+          Để bảo vệ dữ liệu cá nhân, bạn đừng gửi tên, email, ảnh cá nhân hay bạn bè cho Sao Nhí nhé. Câu trả
+          lời của AI chỉ để tham khảo.
         </p>
       </form>
     </div>

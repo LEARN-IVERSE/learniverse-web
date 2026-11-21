@@ -1,6 +1,6 @@
 "use client";
 
-import { X } from "lucide-react";
+import { Maximize2, Minimize2, X } from "lucide-react";
 import { useEffect, useState } from "react";
 
 import { Mascot } from "@/components/brand/mascot";
@@ -17,6 +17,7 @@ export function AiFab() {
   // drop an answer that is still being written.
   const [started, setStarted] = useState(false);
   const [lesson, setLesson] = useState<LessonAsk | null>(null);
+  const [large, setLarge] = useState(false);
 
   const show = (value: boolean) => {
     setOpen(value);
@@ -45,7 +46,7 @@ export function AiFab() {
       <section
         aria-label="Trợ lý AI Sao Nhí"
         hidden={!open}
-        className="d-enter w-[24rem] max-w-[calc(100vw-2rem)] overflow-hidden rounded-[1.75rem] bg-white shadow-2xl ring-1 ring-black/5"
+        className={`d-enter ${large ? "w-[44rem]" : "w-[24rem]"} max-w-[calc(100vw-2rem)] overflow-hidden rounded-[1.75rem] bg-white shadow-2xl ring-1 ring-black/5`}
       >
         <header className="flex items-center gap-3 bg-blue-600 px-4 py-3 text-white">
           <Mascot className="size-10" />
@@ -55,6 +56,19 @@ export function AiFab() {
           </div>
           <button
             type="button"
+            aria-label={large ? "Thu nhỏ khung chat" : "Phóng to khung chat"}
+            aria-pressed={large}
+            onClick={() => setLarge((v) => !v)}
+            className="rounded-full p-1.5 hover:bg-white/15 focus-visible:ring-2 focus-visible:ring-white focus-visible:outline-none"
+          >
+            {large ? (
+              <Minimize2 aria-hidden className="size-5" />
+            ) : (
+              <Maximize2 aria-hidden className="size-5" />
+            )}
+          </button>
+          <button
+            type="button"
             aria-label="Đóng trợ lý"
             onClick={() => show(false)}
             className="rounded-full p-1.5 hover:bg-white/15 focus-visible:ring-2 focus-visible:ring-white focus-visible:outline-none"
@@ -62,7 +76,7 @@ export function AiFab() {
             <X aria-hidden className="size-5" />
           </button>
         </header>
-        {started && <AiChat lesson={lesson} onClearLesson={() => setLesson(null)} />}
+        {started && <AiChat lesson={lesson} onClearLesson={() => setLesson(null)} large={large} />}
       </section>
       <div className="flex items-center gap-2">
         {!open && (

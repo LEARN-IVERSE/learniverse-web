@@ -181,4 +181,21 @@ test.describe("AI assistant (K9)", () => {
     await panel.getByRole("button", { name: "Xác nhận xóa" }).click();
     await expect(panel.getByText("Chưa có cuộc trò chuyện nào.")).toBeVisible();
   });
+
+  test("the panel can be enlarged for easier reading and the history stands out", async ({ page }) => {
+    await mockAiApi(page);
+    await page.goto("/courses");
+    const panel = await openChat(page);
+    const before = (await panel.boundingBox())!.width;
+    await panel.getByRole("button", { name: "Phóng to khung chat" }).click();
+    await expect(panel.getByRole("button", { name: "Thu nhỏ khung chat" })).toHaveAttribute(
+      "aria-pressed",
+      "true",
+    );
+    const after = (await panel.boundingBox())!.width;
+    expect(after).toBeGreaterThanOrEqual(before);
+    await expect(panel.getByLabel("Câu hỏi cho trợ lý AI")).toHaveClass(/text-base/);
+    await expect(panel.getByText(/Google|Gemini/)).toHaveCount(0);
+    await expect(panel.getByRole("button", { name: "Trò chuyện mới" })).toBeVisible();
+  });
 });
