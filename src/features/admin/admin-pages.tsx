@@ -9,6 +9,7 @@ import { AdminShell, adminItems } from "./admin-shell";
 import { AuditAdmin } from "./audit-admin";
 import { MyChanges, ReviewQueue } from "./change-requests";
 import { ContentAdmin } from "./content-admin";
+import { ImportWizard } from "./import-wizard";
 import { LessonEditor, NewLesson } from "./lesson-editor";
 import { UsersAdmin } from "./users-admin";
 
@@ -104,6 +105,18 @@ export function AdminNewLesson({ subject, unit }: { subject: string; unit: strin
   return (
     <AdminShell active="content" title="Thêm bài">
       {(me) => <NewLesson subject={subject} unit={unit} isAdmin={me.role === "admin"} />}
+    </AdminShell>
+  );
+}
+
+export function AdminImport({ subject }: { subject: string }) {
+  return (
+    <AdminShell
+      active="content"
+      title="Nạp câu hỏi hàng loạt"
+      description="Tải file hoặc dán bảng, kiểm tra từng dòng và xem trước. Chưa lưu gì cho tới khi bạn bấm Gửi."
+    >
+      {(me) => <ImportWizard subject={subject} isAdmin={me.role === "admin"} />}
     </AdminShell>
   );
 }

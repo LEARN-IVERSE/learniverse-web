@@ -210,9 +210,30 @@ export type BoxOut = {
 };
 
 /**
+ * BulkData
+ */
+export type BulkData = {
+    /**
+     * Items
+     */
+    items: Array<BulkItem>;
+};
+
+/**
+ * BulkItem
+ */
+export type BulkItem = {
+    /**
+     * Lesson Code
+     */
+    lesson_code: string;
+    question: QuestionData;
+};
+
+/**
  * ChangeAction
  */
-export type ChangeAction = 'lesson.create' | 'lesson.update' | 'lesson.delete' | 'question.create' | 'question.update' | 'question.delete';
+export type ChangeAction = 'lesson.create' | 'lesson.update' | 'lesson.delete' | 'question.create' | 'question.update' | 'question.delete' | 'question.bulk_create' | 'lesson.move';
 
 /**
  * ChangeIn
@@ -237,6 +258,8 @@ export type ChangeIn = {
     base_version?: number | null;
     lesson?: LessonData | null;
     question?: QuestionData | null;
+    bulk?: BulkData | null;
+    move?: MoveData | null;
 };
 
 /**
@@ -327,6 +350,32 @@ export type ChangePageOut = {
 export type ChangeStatus = 'pending' | 'approved' | 'rejected' | 'withdrawn';
 
 /**
+ * CheckIn
+ */
+export type CheckIn = {
+    /**
+     * Subject
+     */
+    subject: string;
+    /**
+     * Rows
+     */
+    rows: Array<{
+        [key: string]: string;
+    }>;
+};
+
+/**
+ * CheckOut
+ */
+export type CheckOut = {
+    /**
+     * Rows
+     */
+    rows: Array<RowOut>;
+};
+
+/**
  * CommentEditIn
  */
 export type CommentEditIn = {
@@ -407,6 +456,10 @@ export type ContentLessonOut = {
      */
     title: string;
     status: LessonStatus;
+    /**
+     * Version
+     */
+    version: number;
     /**
      * Counts
      */
@@ -965,6 +1018,22 @@ export type MessageOut = {
      * Created At
      */
     created_at: string;
+};
+
+/**
+ * MoveData
+ *
+ * Where a lesson goes: a chapter and its 0-based place among that chapter's lessons.
+ */
+export type MoveData = {
+    /**
+     * Unit Code
+     */
+    unit_code: string;
+    /**
+     * Index
+     */
+    index: number;
 };
 
 /**
@@ -1598,6 +1667,33 @@ export type RoleIn = {
 };
 
 /**
+ * RowOut
+ */
+export type RowOut = {
+    /**
+     * Status
+     */
+    status: 'ok' | 'duplicate' | 'error';
+    /**
+     * Messages
+     */
+    messages: Array<string>;
+    /**
+     * Lesson Code
+     */
+    lesson_code: string;
+    /**
+     * Lesson Id
+     */
+    lesson_id: string | null;
+    /**
+     * Lesson Title
+     */
+    lesson_title: string | null;
+    question: QuestionData | null;
+};
+
+/**
  * SearchHitOut
  */
 export type SearchHitOut = {
@@ -1650,6 +1746,38 @@ export type SectionOut = {
      * Body Md
      */
     body_md: string;
+};
+
+/**
+ * SheetIn
+ *
+ * A file (base64, .xlsx or .csv) or pasted cells (`text`, tab separated).
+ */
+export type SheetIn = {
+    /**
+     * File Name
+     */
+    file_name?: string | null;
+    /**
+     * Content Base64
+     */
+    content_base64?: string | null;
+    /**
+     * Text
+     */
+    text?: string | null;
+};
+
+/**
+ * SheetOut
+ */
+export type SheetOut = {
+    /**
+     * Rows
+     */
+    rows: Array<{
+        [key: string]: string;
+    }>;
 };
 
 /**
@@ -3649,6 +3777,70 @@ export type AdminContentLessonForEditResponses = {
 };
 
 export type AdminContentLessonForEditResponse = AdminContentLessonForEditResponses[keyof AdminContentLessonForEditResponses];
+
+export type AdminContentImportTemplateData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/v1/admin/content/import/template';
+};
+
+export type AdminContentImportTemplateResponses = {
+    /**
+     * Successful Response
+     */
+    200: unknown;
+};
+
+export type AdminContentImportReadData = {
+    body: SheetIn;
+    path?: never;
+    query?: never;
+    url: '/v1/admin/content/import/read';
+};
+
+export type AdminContentImportReadErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type AdminContentImportReadError = AdminContentImportReadErrors[keyof AdminContentImportReadErrors];
+
+export type AdminContentImportReadResponses = {
+    /**
+     * Successful Response
+     */
+    200: SheetOut;
+};
+
+export type AdminContentImportReadResponse = AdminContentImportReadResponses[keyof AdminContentImportReadResponses];
+
+export type AdminContentImportCheckData = {
+    body: CheckIn;
+    path?: never;
+    query?: never;
+    url: '/v1/admin/content/import/check';
+};
+
+export type AdminContentImportCheckErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type AdminContentImportCheckError = AdminContentImportCheckErrors[keyof AdminContentImportCheckErrors];
+
+export type AdminContentImportCheckResponses = {
+    /**
+     * Successful Response
+     */
+    200: CheckOut;
+};
+
+export type AdminContentImportCheckResponse = AdminContentImportCheckResponses[keyof AdminContentImportCheckResponses];
 
 export type AdminContentSubmitChangeData = {
     body: ChangeIn;

@@ -58,6 +58,44 @@ const pending = {
   reviewed_at: null,
 };
 
+const bulkPending = {
+  ...pending,
+  id: "r2",
+  action: "question.bulk_create",
+  lesson_id: null,
+  summary: "Nạp 2 câu hỏi vào 1 bài",
+  before: null,
+  after: {
+    items: [
+      { lesson_code: "lesson-1", question: question.data },
+      { lesson_code: "lesson-1", question: { ...question.data, prompt: "Câu nạp thứ hai" } },
+    ],
+  },
+};
+
+/** What the fake checker says about a pasted row, keyed by a word in its prompt. */
+function checkRow(row: Record<string, string>) {
+  const q = { ...question.data, prompt: row.prompt };
+  if (row.prompt.includes("lỗi"))
+    return {
+      status: "error",
+      messages: ["Đáp án phải là một chữ cái"],
+      lesson_code: row.lesson,
+      lesson_id: null,
+      lesson_title: null,
+      question: null,
+    };
+  const status = row.prompt.includes("trùng") ? "duplicate" : "ok";
+  return {
+    status,
+    messages: status === "duplicate" ? ["Đề bài này đã có trong bài"] : [],
+    lesson_code: row.lesson,
+    lesson_id: LESSON_ID,
+    lesson_title: "Bài 1 Phương trình bậc nhất hai ẩn",
+    question: q,
+  };
+}
+
 /** Fake content API. Returns the bodies the page sent. */
 async function mockContentApi(page: Page, who: FakeUser) {
   const sent: { path: string; body: unknown }[] = [];
@@ -75,6 +113,23 @@ async function mockContentApi(page: Page, who: FakeUser) {
   await page.route("**/api/v1/admin/content/**", (route) => {
     const req = route.request();
     const path = new URL(req.url()).pathname.replace("/api/v1/admin", "");
+    if (path === "/content/import/read") {
+      const text = (req.postDataJSON() as { text: string }).text;
+      const rows = text
+        .trim()
+        .split("\n")
+        .slice(1)
+        .map((line) => {
+          const [lesson, activity, type, prompt, answer] = line.split("\t");
+          return { lesson, activity, type, prompt, answer };
+        });
+      return route.fulfill({ json: { rows } });
+    }
+    if (path === "/content/import/check") {
+      const body = req.postDataJSON() as { rows: Record<string, string>[] };
+      sent.push({ path, body });
+      return route.fulfill({ json: { rows: body.rows.map(checkRow) } });
+    }
     if (path === "/content/subjects") return route.fulfill({ json: [{ code: "math", name: "Toán 9" }] });
     if (path === "/content/subjects/math")
       return route.fulfill({
@@ -93,12 +148,14 @@ async function mockContentApi(page: Page, who: FakeUser) {
                   label: "Bài 1",
                   title: "Phương trình bậc nhất hai ẩn",
                   status: "published",
+                  version: 3,
                   counts: { theory: 5, exercise: 12 },
                   needed: { theory: 5, exercise: 20, review: 20 },
                   pending: 1,
                 },
               ],
             },
+            { code: "chapter-2", title: "Chương II. Phương trình và bất phương trình bậc nhất", lessons: [] },
           ],
         },
       });
@@ -126,17 +183,18 @@ async function mockContentApi(page: Page, who: FakeUser) {
     const path = new URL(req.url()).pathname.replace("/api/v1/admin", "");
     if (req.method() === "GET") {
       const status = new URL(req.url()).searchParams.get("status");
-      const items = !status || status === "pending" ? [pending] : [];
+      const items = !status || status === "pending" ? [pending, bulkPending] : [];
       return route.fulfill({ json: { items, total: items.length } });
     }
     sent.push({ path, body: req.postDataJSON() });
+    if (req.method() === "PUT") return route.fulfill({ json: pending });
     const done = path.endsWith("/approve") ? "approved" : path.endsWith("/reject") ? "rejected" : "withdrawn";
     return route.fulfill({ json: { ...pending, status: done } });
   });
   return sent;
 }
 
-test.describe("content management (K11b-1)", () => {
+test.describe("content management (K11b)", () => {
   test.beforeEach(async ({ page }) => {
     await mockCatalogApi(page);
   });
@@ -231,5 +289,81 @@ test.describe("content management (K11b-1)", () => {
     await page.goto(`/admin/content/lessons/${LESSON_ID}`);
     await page.getByRole("button", { name: "Lưu", exact: true }).click();
     await expect(page.getByRole("status")).toHaveText("Đã lưu. Học sinh thấy ngay thay đổi.");
+  });
+
+  test("a teacher imports pasted rows: check, fix, preview, then one request", async ({ page }) => {
+    await mockAccountApi(page, { signedIn: TEACHER });
+    const sent = await mockContentApi(page, TEACHER);
+    await page.goto("/admin/content");
+    await page.getByRole("link", { name: "Nạp câu hỏi hàng loạt" }).click();
+    await expect(page).toHaveURL(/\/admin\/content\/import\?subject=math/);
+    const header = "Mã bài\tHoạt động\tLoại câu\tĐề bài\tĐáp án";
+    const lines = [
+      "lesson-1\tBài tập\tĐúng sai\tCâu tốt\tĐúng",
+      "lesson-1\tBài tập\tĐúng sai\tCâu trùng\tĐúng",
+      "lesson-1\tBài tập\tMột đáp án\tCâu lỗi\tE",
+    ];
+    await page.getByLabel("Bảng dán vào").fill([header, ...lines].join("\n"));
+    await page.getByRole("button", { name: "Đọc bảng" }).click();
+    await expect(page.getByText("1 hợp lệ")).toBeVisible();
+    await expect(page.getByText("1 trùng")).toBeVisible();
+    await expect(page.getByText("1 lỗi")).toBeVisible();
+    await expect(page.getByText("Đáp án phải là một chữ cái")).toBeVisible();
+
+    // fixing a cell asks for a new check before going on
+    await page.getByLabel("Dòng 4 Đề bài").fill("Câu đã sửa");
+    await expect(page.getByRole("button", { name: /Tiếp: Xem trước/ })).toBeDisabled();
+    await page.getByRole("button", { name: "Kiểm tra lại" }).click();
+    await expect(page.getByText("2 hợp lệ")).toBeVisible();
+    expect((sent.at(-1)?.body as { rows: { prompt: string }[] }).rows[2].prompt).toBe("Câu đã sửa");
+
+    await page.getByLabel("Vẫn thêm dòng 3").check();
+    await page.getByRole("button", { name: "Tiếp: Xem trước (3 câu)" }).click();
+    await expect(page.getByText("Cả đợt sẽ thành một yêu cầu")).toBeVisible();
+    await expect(page.getByRole("list", { name: "Xem trước câu hỏi" }).getByRole("listitem")).toHaveCount(3);
+    await page.getByRole("button", { name: "Gửi duyệt 3 câu" }).click();
+    await expect(page.getByRole("status")).toContainText("Đã gửi yêu cầu");
+    const body = sent.at(-1)?.body as { action: string; subject: string; bulk: { items: unknown[] } };
+    expect([body.action, body.subject, body.bulk.items.length]).toEqual(["question.bulk_create", "math", 3]);
+  });
+
+  test("an admin moves a lesson to another chapter", async ({ page }) => {
+    await mockAccountApi(page, { signedIn: ADMIN });
+    const sent = await mockContentApi(page, ADMIN);
+    await page.goto("/admin/content");
+    await expect(page.getByRole("button", { name: /Đưa Bài 1: .* lên/ })).toBeDisabled();
+    await page.getByLabel(/Chuyển Bài 1: .* sang chương/).selectOption("chapter-2");
+    await expect(page.getByRole("status")).toHaveText("Đã chuyển bài.");
+    expect(sent.at(-1)?.body).toMatchObject({
+      action: "lesson.move",
+      lesson_id: LESSON_ID,
+      base_version: 3,
+      move: { unit_code: "chapter-2" },
+    });
+  });
+
+  test("the review queue lists every question of an import", async ({ page }) => {
+    await mockAccountApi(page, { signedIn: ADMIN });
+    await mockContentApi(page, ADMIN);
+    await page.goto("/admin/reviews");
+    await page.getByRole("button", { name: /Nạp hàng loạt/ }).click();
+    const items = page.getByRole("list", { name: "Câu hỏi trong đợt nạp" }).getByRole("listitem");
+    await expect(items).toHaveCount(2);
+    await expect(items.nth(1)).toContainText("Câu nạp thứ hai");
+  });
+
+  test("a teacher edits a pending request", async ({ page }) => {
+    await mockAccountApi(page, { signedIn: TEACHER });
+    const sent = await mockContentApi(page, TEACHER);
+    await page.goto("/admin/my-changes");
+    await page.getByRole("button", { name: /Sửa bài/ }).click();
+    await page.getByRole("button", { name: "Sửa yêu cầu" }).click();
+    await page.getByLabel("Tên bài").fill("Tên mới hơn");
+    await page.getByRole("button", { name: "Gửi duyệt" }).click();
+    await expect(page.getByRole("status")).toHaveText("Đã cập nhật yêu cầu. Quản trị viên sẽ thấy bản mới.");
+    expect(sent.at(-1)).toMatchObject({
+      path: "/change-requests/r1",
+      body: { action: "lesson.update", lesson: { title: "Tên mới hơn" } },
+    });
   });
 });

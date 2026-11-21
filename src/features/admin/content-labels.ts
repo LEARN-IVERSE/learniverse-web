@@ -1,4 +1,4 @@
-// Vietnamese labels and small helpers shared by the content editor and the review pages (K11b-1).
+// Vietnamese labels and small helpers shared by the content editor and the review pages (K11b).
 
 export const STATUS_LABEL: Record<string, string> = {
   draft: "Nháp",
@@ -53,6 +53,8 @@ export const ACTION_LABEL: Record<string, string> = {
   "question.create": "Thêm câu hỏi",
   "question.update": "Sửa câu hỏi",
   "question.delete": "Xóa câu hỏi",
+  "question.bulk_create": "Nạp hàng loạt",
+  "lesson.move": "Chuyển bài",
 };
 
 export const REQUEST_STATUS_LABEL: Record<string, string> = {

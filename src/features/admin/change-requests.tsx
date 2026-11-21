@@ -1,6 +1,6 @@
 "use client";
 
-import { AlertTriangle, Check, Eye, Undo2, X } from "lucide-react";
+import { AlertTriangle, Check, Eye, Pencil, Undo2, X } from "lucide-react";
 import { useState } from "react";
 
 import { ErrorState } from "@/components/states/error-state";
@@ -11,9 +11,13 @@ import {
   adminContentApproveRequest,
   adminContentListRequests,
   adminContentRejectRequest,
+  adminContentReviseRequest,
   adminContentWithdrawRequest,
+  type BulkItem,
+  type ChangeIn,
   type ChangeOut,
   type ChangeStatus,
+  type LessonData,
   type QuestionData,
 } from "@/lib/api-client";
 import { cn } from "@/lib/utils";
@@ -28,7 +32,8 @@ import {
   STATUS_LABEL,
   TYPE_LABEL,
 } from "./content-labels";
-import { QuestionPreview } from "./question-form";
+import { LessonForm } from "./lesson-editor";
+import { QuestionForm, QuestionPreview } from "./question-form";
 
 type Data = Record<string, unknown>;
 
@@ -49,6 +54,7 @@ const FIELD_LABEL: Record<string, string> = {
   explanation: "Giải thích",
   section: "Mục Lý thuyết liên quan",
   level: "Mức độ",
+  index: "Vị trí trong chương",
 };
 
 function show(key: string, v: unknown): string {
@@ -57,6 +63,7 @@ function show(key: string, v: unknown): string {
   if (key === "activity") return ACTIVITY_LABEL[String(v)] ?? String(v);
   if (key === "type") return TYPE_LABEL[String(v)] ?? String(v);
   if (key === "level") return LEVEL_LABEL[String(v)] ?? String(v);
+  if (key === "index" && typeof v === "number") return v > 999 ? "Cuối chương" : `Thứ ${v + 1}`;
   if (key === "answer" && typeof v === "boolean") return v ? "Đúng" : "Sai";
   if (key === "periodic" && typeof v === "object") {
     const p = v as { question_count: number; time_limit_minutes: number; pass_percent: number };
@@ -89,7 +96,30 @@ function rows(before: Data | null, after: Data | null): Row[] {
   return out;
 }
 
+/** A bulk import: every question with its lesson, as learners will see it. */
+function BulkList({ items }: { items: BulkItem[] }) {
+  return (
+    <ol aria-label="Câu hỏi trong đợt nạp" className="max-h-[32rem] space-y-2 overflow-auto">
+      {items.map((it, i) => (
+        <li key={i} className="rounded-2xl bg-slate-50 p-3 ring-1 ring-slate-100">
+          <p className="mb-1 text-xs font-bold text-slate-500">
+            Câu {i + 1} · bài {it.lesson_code} · {ACTIVITY_LABEL[it.question.activity]} ·{" "}
+            {TYPE_LABEL[it.question.type]}
+          </p>
+          <QuestionPreview q={it.question} />
+        </li>
+      ))}
+    </ol>
+  );
+}
+
 export function ChangeDiff({ change }: { change: ChangeOut }) {
+  if (change.action === "question.bulk_create" && change.after)
+    return <BulkList items={(change.after as { items: BulkItem[] }).items} />;
+  return <FieldDiff change={change} />;
+}
+
+function FieldDiff({ change }: { change: ChangeOut }) {
   const [onlyChanged, setOnlyChanged] = useState(true);
   const [preview, setPreview] = useState(false);
   const deleting = change.action.endsWith(".delete");
@@ -107,7 +137,7 @@ export function ChangeDiff({ change }: { change: ChangeOut }) {
             Chỉ hiện phần thay đổi
           </label>
         )}
-        {after && (
+        {after && change.action !== "lesson.move" && (
           <button
             type="button"
             onClick={() => setPreview((p) => !p)}
@@ -343,7 +373,25 @@ export function ReviewQueue() {
 export function MyChanges() {
   const [list, retry] = useApi("admin:my-changes", () => adminContentListRequests({ query: { mine: true } }));
   const [open, setOpen] = useState<string | null>(null);
+  const [editing, setEditing] = useState<string | null>(null);
   const [error, setError] = useState("");
+  const [saved, setSaved] = useState("");
+  const [busy, setBusy] = useState(false);
+
+  async function revise(c: ChangeOut, patch: Partial<ChangeIn>) {
+    setBusy(true);
+    setError("");
+    const { data, error: e } = await adminContentReviseRequest({
+      path: { request_id: c.id },
+      body: { action: c.action, ...patch },
+    });
+    setBusy(false);
+    if (!data) return setError(errorText(e));
+    setEditing(null);
+    setSaved("Đã cập nhật yêu cầu. Quản trị viên sẽ thấy bản mới.");
+    retry();
+  }
+
   if (list.status === "error") return <ErrorState onRetry={retry} />;
   if (list.status === "loading") return <p className="text-sm text-muted-foreground">Đang tải…</p>;
   if (list.data.items.length === 0)
@@ -357,6 +405,11 @@ export function MyChanges() {
       {error && (
         <p role="alert" className="text-sm text-rose-700">
           {error}
+        </p>
+      )}
+      {saved && (
+        <p role="status" className="text-sm text-emerald-700">
+          {saved}
         </p>
       )}
       <ul aria-label="Yêu cầu của tôi" className="space-y-2">
@@ -382,8 +435,22 @@ export function MyChanges() {
             )}
             {open === c.id && (
               <div className="mt-3 space-y-3 border-t border-slate-100 pt-3">
-                <ChangeDiff change={c} />
-                {c.status === "pending" && (
+                {editing === c.id ? (
+                  <ReviseForm
+                    c={c}
+                    busy={busy}
+                    onSave={(patch) => void revise(c, patch)}
+                    onCancel={() => setEditing(null)}
+                  />
+                ) : (
+                  <ChangeDiff change={c} />
+                )}
+                {c.status === "pending" && editing !== c.id && EDITABLE.has(c.action) && (
+                  <Button type="button" className="mr-2" onClick={() => setEditing(c.id)}>
+                    <Pencil aria-hidden className="size-4" /> Sửa yêu cầu
+                  </Button>
+                )}
+                {c.status === "pending" && editing !== c.id && (
                   <Button
                     type="button"
                     variant="outline"
@@ -404,5 +471,50 @@ export function MyChanges() {
         ))}
       </ul>
     </div>
+  );
+}
+
+const EDITABLE = new Set(["lesson.create", "lesson.update", "question.create", "question.update"]);
+
+/** Edit what a pending request proposes; its target stays the same. */
+function ReviseForm({
+  c,
+  busy,
+  onSave,
+  onCancel,
+}: {
+  c: ChangeOut;
+  busy: boolean;
+  onSave: (patch: Partial<ChangeIn>) => void;
+  onCancel: () => void;
+}) {
+  if (c.action.startsWith("lesson.")) {
+    const lesson = c.after as unknown as LessonData;
+    return (
+      <div className="space-y-2">
+        <LessonForm
+          initial={lesson}
+          creating={c.action === "lesson.create"}
+          isAdmin={false}
+          busy={busy}
+          onSubmit={(data) => onSave({ lesson: data })}
+        />
+        <Button type="button" variant="outline" onClick={onCancel}>
+          Hủy sửa
+        </Button>
+      </div>
+    );
+  }
+  const q = c.after as unknown as QuestionData;
+  return (
+    <QuestionForm
+      initial={q}
+      activities={[q.activity]}
+      sectionCount={Math.max(q.section ?? 0, 10)}
+      submitLabel="Lưu yêu cầu"
+      busy={busy}
+      onSubmit={(data) => onSave({ question: data })}
+      onCancel={onCancel}
+    />
   );
 }

@@ -34,10 +34,10 @@ import { blankQuestion, QuestionForm, QuestionPreview } from "./question-form";
 const field =
   "w-full rounded-xl bg-white px-3 py-2 text-sm ring-1 ring-slate-200 focus:ring-2 focus:ring-blue-400";
 
-type Notice = { ok: boolean; text: string } | null;
+export type Notice = { ok: boolean; text: string } | null;
 
 /** Send one change. Admins see it live at once; teachers get a pending request (K11-D9). */
-function useSubmit(isAdmin: boolean, onDone: () => void, setNotice: (n: Notice) => void) {
+export function useSubmit(isAdmin: boolean, onDone: () => void, setNotice: (n: Notice) => void) {
   const [busy, setBusy] = useState(false);
   async function send(body: ChangeIn, okAdmin = "Đã lưu. Học sinh thấy ngay thay đổi.") {
     setBusy(true);
@@ -58,7 +58,7 @@ function useSubmit(isAdmin: boolean, onDone: () => void, setNotice: (n: Notice) 
   return { busy, send };
 }
 
-function NoticeBar({ notice }: { notice: Notice }) {
+export function NoticeBar({ notice }: { notice: Notice }) {
   if (!notice) return null;
   return (
     <p
@@ -219,7 +219,7 @@ function LessonInfo({
 }
 
 /** Lesson fields and theory sections; each section has a live preview. */
-function LessonForm({
+export function LessonForm({
   initial,
   creating = false,
   isAdmin,
