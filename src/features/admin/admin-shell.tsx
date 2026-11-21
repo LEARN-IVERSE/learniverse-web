@@ -44,7 +44,7 @@ const ITEMS: Item[] = [
   { key: "content", label: "Nội dung", icon: BookOpen, href: "/admin/content" },
   { key: "reviews", label: "Chờ duyệt", icon: FileCheck2, href: "/admin/reviews" },
   { key: "my_changes", label: "Yêu cầu của tôi", icon: Send, href: "/admin/my-changes" },
-  { key: "essays", label: "Chấm tự luận", icon: ClipboardCheck },
+  { key: "essays", label: "Chấm tự luận", icon: ClipboardCheck, href: "/admin/essays" },
   { key: "community", label: "Cộng đồng", icon: MessagesSquare },
   { key: "reports", label: "Báo cáo vi phạm", icon: Flag, href: "/admin/reports" },
   { key: "points", label: "Điểm đóng góp", icon: Trophy },

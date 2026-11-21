@@ -635,6 +635,177 @@ export type EditableSubjectOut = {
 };
 
 /**
+ * EssayAnswerOut
+ */
+export type EssayAnswerOut = {
+    /**
+     * Id
+     */
+    id: string;
+    /**
+     * Body Md
+     */
+    body_md: string;
+    status: EssayStatus;
+    /**
+     * Comment
+     */
+    comment: string | null;
+    /**
+     * Grader Name
+     */
+    grader_name: string | null;
+    /**
+     * Submitted At
+     */
+    submitted_at: string;
+    /**
+     * Graded At
+     */
+    graded_at: string | null;
+};
+
+/**
+ * EssayIn
+ */
+export type EssayIn = {
+    /**
+     * Body
+     */
+    body: string;
+};
+
+/**
+ * EssayNoteOut
+ *
+ * What an "essay graded" notification needs to link back to the lesson.
+ */
+export type EssayNoteOut = {
+    status: EssayStatus;
+    /**
+     * Lesson Title
+     */
+    lesson_title: string;
+    /**
+     * Subject Code
+     */
+    subject_code: string;
+    /**
+     * Lesson Code
+     */
+    lesson_code: string;
+};
+
+/**
+ * EssayQuestionOut
+ */
+export type EssayQuestionOut = {
+    /**
+     * Id
+     */
+    id: string;
+    /**
+     * Prompt Md
+     */
+    prompt_md: string;
+    /**
+     * Can Submit
+     */
+    can_submit: boolean;
+    /**
+     * Answers
+     */
+    answers: Array<EssayAnswerOut>;
+};
+
+/**
+ * EssayQueueOut
+ */
+export type EssayQueueOut = {
+    /**
+     * Items
+     */
+    items: Array<EssayRowOut>;
+    /**
+     * Subjects
+     */
+    subjects: Array<[
+        string,
+        string
+    ]>;
+};
+
+/**
+ * EssayRowOut
+ */
+export type EssayRowOut = {
+    /**
+     * Id
+     */
+    id: string;
+    status: EssayStatus;
+    /**
+     * Subject Code
+     */
+    subject_code: string;
+    /**
+     * Subject Name
+     */
+    subject_name: string;
+    /**
+     * Lesson Label
+     */
+    lesson_label: string | null;
+    /**
+     * Lesson Title
+     */
+    lesson_title: string;
+    /**
+     * Prompt Md
+     */
+    prompt_md: string;
+    /**
+     * Body Md
+     */
+    body_md: string;
+    /**
+     * Student Name
+     */
+    student_name: string;
+    /**
+     * Submitted At
+     */
+    submitted_at: string;
+    /**
+     * Comment
+     */
+    comment: string | null;
+    /**
+     * Grader Name
+     */
+    grader_name: string | null;
+    /**
+     * Graded At
+     */
+    graded_at: string | null;
+};
+
+/**
+ * EssayStatus
+ */
+export type EssayStatus = 'pending' | 'passed' | 'failed';
+
+/**
+ * EssaysOut
+ */
+export type EssaysOut = {
+    /**
+     * Items
+     */
+    items: Array<EssayQuestionOut>;
+};
+
+/**
  * GoogleSignInIn
  */
 export type GoogleSignInIn = {
@@ -642,6 +813,20 @@ export type GoogleSignInIn = {
      * Credential
      */
     credential: string;
+};
+
+/**
+ * GradeIn
+ */
+export type GradeIn = {
+    /**
+     * Passed
+     */
+    passed: boolean;
+    /**
+     * Comment
+     */
+    comment?: string;
 };
 
 /**
@@ -1105,7 +1290,7 @@ export type NewCountOut = {
 /**
  * NotificationKind
  */
-export type NotificationKind = 'comment_on_post' | 'reply';
+export type NotificationKind = 'comment_on_post' | 'reply' | 'essay_graded';
 
 /**
  * NotificationOut
@@ -1120,15 +1305,16 @@ export type NotificationOut = {
     /**
      * Post Id
      */
-    post_id: string;
+    post_id: string | null;
     /**
      * Post Title
      */
-    post_title: string;
+    post_title: string | null;
     /**
      * Comment Id
      */
-    comment_id: string;
+    comment_id: string | null;
+    essay: EssayNoteOut | null;
     /**
      * Created At
      */
@@ -2604,6 +2790,78 @@ export type ActivitiesAttemptResultResponses = {
 
 export type ActivitiesAttemptResultResponse = ActivitiesAttemptResultResponses[keyof ActivitiesAttemptResultResponses];
 
+export type ActivitiesLessonEssaysData = {
+    body?: never;
+    path: {
+        /**
+         * Subject
+         */
+        subject: string;
+        /**
+         * Code
+         */
+        code: string;
+    };
+    query?: never;
+    url: '/v1/subjects/{subject}/lessons/{code}/essays';
+};
+
+export type ActivitiesLessonEssaysErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type ActivitiesLessonEssaysError = ActivitiesLessonEssaysErrors[keyof ActivitiesLessonEssaysErrors];
+
+export type ActivitiesLessonEssaysResponses = {
+    /**
+     * Successful Response
+     */
+    200: EssaysOut;
+};
+
+export type ActivitiesLessonEssaysResponse = ActivitiesLessonEssaysResponses[keyof ActivitiesLessonEssaysResponses];
+
+export type ActivitiesSubmitEssayData = {
+    body: EssayIn;
+    path: {
+        /**
+         * Subject
+         */
+        subject: string;
+        /**
+         * Code
+         */
+        code: string;
+        /**
+         * Question Id
+         */
+        question_id: string;
+    };
+    query?: never;
+    url: '/v1/subjects/{subject}/lessons/{code}/essays/{question_id}';
+};
+
+export type ActivitiesSubmitEssayErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type ActivitiesSubmitEssayError = ActivitiesSubmitEssayErrors[keyof ActivitiesSubmitEssayErrors];
+
+export type ActivitiesSubmitEssayResponses = {
+    /**
+     * Successful Response
+     */
+    200: EssayAnswerOut;
+};
+
+export type ActivitiesSubmitEssayResponse = ActivitiesSubmitEssayResponses[keyof ActivitiesSubmitEssayResponses];
+
 export type ProgressMyProgressData = {
     body?: never;
     path?: never;
@@ -4050,3 +4308,64 @@ export type AdminContentRejectRequestResponses = {
 };
 
 export type AdminContentRejectRequestResponse = AdminContentRejectRequestResponses[keyof AdminContentRejectRequestResponses];
+
+export type AdminEssaysEssayQueueData = {
+    body?: never;
+    path?: never;
+    query?: {
+        status?: EssayStatus;
+        /**
+         * Subject
+         */
+        subject?: string | null;
+    };
+    url: '/v1/admin/essays';
+};
+
+export type AdminEssaysEssayQueueErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type AdminEssaysEssayQueueError = AdminEssaysEssayQueueErrors[keyof AdminEssaysEssayQueueErrors];
+
+export type AdminEssaysEssayQueueResponses = {
+    /**
+     * Successful Response
+     */
+    200: EssayQueueOut;
+};
+
+export type AdminEssaysEssayQueueResponse = AdminEssaysEssayQueueResponses[keyof AdminEssaysEssayQueueResponses];
+
+export type AdminEssaysGradeEssayData = {
+    body: GradeIn;
+    path: {
+        /**
+         * Essay Id
+         */
+        essay_id: string;
+    };
+    query?: never;
+    url: '/v1/admin/essays/{essay_id}/grade';
+};
+
+export type AdminEssaysGradeEssayErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type AdminEssaysGradeEssayError = AdminEssaysGradeEssayErrors[keyof AdminEssaysGradeEssayErrors];
+
+export type AdminEssaysGradeEssayResponses = {
+    /**
+     * Successful Response
+     */
+    200: EssayRowOut;
+};
+
+export type AdminEssaysGradeEssayResponse = AdminEssaysGradeEssayResponses[keyof AdminEssaysGradeEssayResponses];

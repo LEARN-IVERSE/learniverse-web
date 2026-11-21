@@ -9,6 +9,7 @@ import { AdminShell, adminItems } from "./admin-shell";
 import { AuditAdmin } from "./audit-admin";
 import { MyChanges, ReviewQueue } from "./change-requests";
 import { ContentAdmin } from "./content-admin";
+import { EssayQueue } from "./essay-queue";
 import { ImportWizard } from "./import-wizard";
 import { LessonEditor, NewLesson } from "./lesson-editor";
 import { UsersAdmin } from "./users-admin";
@@ -141,6 +142,18 @@ export function AdminMyChanges() {
       description="Các thay đổi bạn đã gửi và kết quả duyệt."
     >
       {() => <MyChanges />}
+    </AdminShell>
+  );
+}
+
+export function AdminEssays() {
+  return (
+    <AdminShell
+      active="essays"
+      title="Chấm tự luận"
+      description="Bài tự luận của học sinh trong các môn bạn được chấm. Chấm Đạt hoặc Chưa đạt, kèm nhận xét."
+    >
+      {() => <EssayQueue />}
     </AdminShell>
   );
 }
