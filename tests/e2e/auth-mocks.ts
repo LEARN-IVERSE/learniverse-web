@@ -57,7 +57,7 @@ export async function mockAccountApi(
             sections: [
               "users",
               "content",
-              "questions",
+              "reviews",
               "essays",
               "community",
               "reports",

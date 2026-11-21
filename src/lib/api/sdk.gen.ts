@@ -2,7 +2,7 @@
 
 import type { Client, ClientMeta, Options as Options2, RequestResult, TDataShape } from './client';
 import { client } from './client.gen';
-import type { ActivitiesAttemptResultData, ActivitiesAttemptResultErrors, ActivitiesAttemptResultResponses, ActivitiesLessonActivitiesData, ActivitiesLessonActivitiesErrors, ActivitiesLessonActivitiesResponses, ActivitiesReadCompleteData, ActivitiesReadCompleteErrors, ActivitiesReadCompleteResponses, ActivitiesReadStartData, ActivitiesReadStartErrors, ActivitiesReadStartResponses, ActivitiesStartAttemptData, ActivitiesStartAttemptErrors, ActivitiesStartAttemptResponses, ActivitiesSubmitData, ActivitiesSubmitErrors, ActivitiesSubmitResponses, AdminAdminMeData, AdminAdminMeResponses, AdminAuditData, AdminAuditErrors, AdminAuditResponses, AdminGetUserData, AdminGetUserErrors, AdminGetUserResponses, AdminListUsersData, AdminListUsersErrors, AdminListUsersResponses, AdminLockUserData, AdminLockUserErrors, AdminLockUserResponses, AdminSetRoleData, AdminSetRoleErrors, AdminSetRoleResponses, AdminUnlockUserData, AdminUnlockUserErrors, AdminUnlockUserResponses, AiCreateConversationData, AiCreateConversationErrors, AiCreateConversationResponses, AiDeleteConversationData, AiDeleteConversationErrors, AiDeleteConversationResponses, AiGetConversationData, AiGetConversationErrors, AiGetConversationResponses, AiGetQuotaData, AiGetQuotaResponses, AiListConversationsData, AiListConversationsResponses, AiSendMessageData, AiSendMessageErrors, AiSendMessageResponses, AiTeachingAnswerData, AiTeachingAnswerErrors, AiTeachingAnswerResponses, AiTeachingGetData, AiTeachingGetErrors, AiTeachingGetResponses, AiTeachingGradeData, AiTeachingGradeErrors, AiTeachingGradeResponses, AiTeachingOverviewData, AiTeachingOverviewErrors, AiTeachingOverviewResponses, AiTeachingQuestionData, AiTeachingQuestionErrors, AiTeachingQuestionResponses, AiTeachingStartData, AiTeachingStartErrors, AiTeachingStartResponses, AuthAdminPingData, AuthAdminPingResponses, AuthMeData, AuthMeResponses, AuthSignInGoogleData, AuthSignInGoogleErrors, AuthSignInGoogleResponses, AuthSignOutData, AuthSignOutResponses, CatalogLessonData, CatalogLessonErrors, CatalogLessonResponses, CatalogSearchLessonsData, CatalogSearchLessonsErrors, CatalogSearchLessonsResponses, CatalogSubjectOutlineData, CatalogSubjectOutlineErrors, CatalogSubjectOutlineResponses, CatalogSubjectsData, CatalogSubjectsResponses, CommunityAddCommentData, CommunityAddCommentErrors, CommunityAddCommentResponses, CommunityCreatePostData, CommunityCreatePostErrors, CommunityCreatePostResponses, CommunityCreateUploadData, CommunityCreateUploadErrors, CommunityCreateUploadResponses, CommunityDeleteCommentData, CommunityDeleteCommentErrors, CommunityDeleteCommentResponses, CommunityDeletePostData, CommunityDeletePostErrors, CommunityDeletePostResponses, CommunityEditCommentData, CommunityEditCommentErrors, CommunityEditCommentResponses, CommunityEditPostData, CommunityEditPostErrors, CommunityEditPostResponses, CommunityGetPostData, CommunityGetPostErrors, CommunityGetPostResponses, CommunityListCommentsData, CommunityListCommentsErrors, CommunityListCommentsResponses, CommunityListPostsData, CommunityListPostsErrors, CommunityListPostsResponses, CommunityMyNotificationsData, CommunityMyNotificationsResponses, CommunityNewPostsData, CommunityNewPostsErrors, CommunityNewPostsResponses, CommunityReadNotificationsData, CommunityReadNotificationsResponses, HealthHealthData, HealthHealthDbData, HealthHealthDbResponses, HealthHealthResponses, LeaderboardContributionsData, LeaderboardContributionsResponses, LeaderboardStudyTimeData, LeaderboardStudyTimeResponses, ModerationAdminReportsData, ModerationAdminReportsErrors, ModerationAdminReportsResponses, ModerationAdminResolveData, ModerationAdminResolveErrors, ModerationAdminResolveResponses, ModerationAdminReviewData, ModerationAdminReviewErrors, ModerationAdminReviewResponses, ModerationReportContentData, ModerationReportContentErrors, ModerationReportContentResponses, ProgressMyProgressData, ProgressMyProgressResponses, ProgressTimeHeartbeatData, ProgressTimeHeartbeatErrors, ProgressTimeHeartbeatResponses } from './types.gen';
+import type { ActivitiesAttemptResultData, ActivitiesAttemptResultErrors, ActivitiesAttemptResultResponses, ActivitiesLessonActivitiesData, ActivitiesLessonActivitiesErrors, ActivitiesLessonActivitiesResponses, ActivitiesReadCompleteData, ActivitiesReadCompleteErrors, ActivitiesReadCompleteResponses, ActivitiesReadStartData, ActivitiesReadStartErrors, ActivitiesReadStartResponses, ActivitiesStartAttemptData, ActivitiesStartAttemptErrors, ActivitiesStartAttemptResponses, ActivitiesSubmitData, ActivitiesSubmitErrors, ActivitiesSubmitResponses, AdminAdminMeData, AdminAdminMeResponses, AdminAuditData, AdminAuditErrors, AdminAuditResponses, AdminContentApproveRequestData, AdminContentApproveRequestErrors, AdminContentApproveRequestResponses, AdminContentEditableSubjectsData, AdminContentEditableSubjectsResponses, AdminContentGetRequestData, AdminContentGetRequestErrors, AdminContentGetRequestResponses, AdminContentLessonForEditData, AdminContentLessonForEditErrors, AdminContentLessonForEditResponses, AdminContentListRequestsData, AdminContentListRequestsErrors, AdminContentListRequestsResponses, AdminContentRejectRequestData, AdminContentRejectRequestErrors, AdminContentRejectRequestResponses, AdminContentReviseRequestData, AdminContentReviseRequestErrors, AdminContentReviseRequestResponses, AdminContentSubjectTreeData, AdminContentSubjectTreeErrors, AdminContentSubjectTreeResponses, AdminContentSubmitChangeData, AdminContentSubmitChangeErrors, AdminContentSubmitChangeResponses, AdminContentWithdrawRequestData, AdminContentWithdrawRequestErrors, AdminContentWithdrawRequestResponses, AdminGetUserData, AdminGetUserErrors, AdminGetUserResponses, AdminListUsersData, AdminListUsersErrors, AdminListUsersResponses, AdminLockUserData, AdminLockUserErrors, AdminLockUserResponses, AdminSetRoleData, AdminSetRoleErrors, AdminSetRoleResponses, AdminUnlockUserData, AdminUnlockUserErrors, AdminUnlockUserResponses, AiCreateConversationData, AiCreateConversationErrors, AiCreateConversationResponses, AiDeleteConversationData, AiDeleteConversationErrors, AiDeleteConversationResponses, AiGetConversationData, AiGetConversationErrors, AiGetConversationResponses, AiGetQuotaData, AiGetQuotaResponses, AiListConversationsData, AiListConversationsResponses, AiSendMessageData, AiSendMessageErrors, AiSendMessageResponses, AiTeachingAnswerData, AiTeachingAnswerErrors, AiTeachingAnswerResponses, AiTeachingGetData, AiTeachingGetErrors, AiTeachingGetResponses, AiTeachingGradeData, AiTeachingGradeErrors, AiTeachingGradeResponses, AiTeachingOverviewData, AiTeachingOverviewErrors, AiTeachingOverviewResponses, AiTeachingQuestionData, AiTeachingQuestionErrors, AiTeachingQuestionResponses, AiTeachingStartData, AiTeachingStartErrors, AiTeachingStartResponses, AuthAdminPingData, AuthAdminPingResponses, AuthMeData, AuthMeResponses, AuthSignInGoogleData, AuthSignInGoogleErrors, AuthSignInGoogleResponses, AuthSignOutData, AuthSignOutResponses, CatalogLessonData, CatalogLessonErrors, CatalogLessonResponses, CatalogSearchLessonsData, CatalogSearchLessonsErrors, CatalogSearchLessonsResponses, CatalogSubjectOutlineData, CatalogSubjectOutlineErrors, CatalogSubjectOutlineResponses, CatalogSubjectsData, CatalogSubjectsResponses, CommunityAddCommentData, CommunityAddCommentErrors, CommunityAddCommentResponses, CommunityCreatePostData, CommunityCreatePostErrors, CommunityCreatePostResponses, CommunityCreateUploadData, CommunityCreateUploadErrors, CommunityCreateUploadResponses, CommunityDeleteCommentData, CommunityDeleteCommentErrors, CommunityDeleteCommentResponses, CommunityDeletePostData, CommunityDeletePostErrors, CommunityDeletePostResponses, CommunityEditCommentData, CommunityEditCommentErrors, CommunityEditCommentResponses, CommunityEditPostData, CommunityEditPostErrors, CommunityEditPostResponses, CommunityGetPostData, CommunityGetPostErrors, CommunityGetPostResponses, CommunityListCommentsData, CommunityListCommentsErrors, CommunityListCommentsResponses, CommunityListPostsData, CommunityListPostsErrors, CommunityListPostsResponses, CommunityMyNotificationsData, CommunityMyNotificationsResponses, CommunityNewPostsData, CommunityNewPostsErrors, CommunityNewPostsResponses, CommunityReadNotificationsData, CommunityReadNotificationsResponses, HealthHealthData, HealthHealthDbData, HealthHealthDbResponses, HealthHealthResponses, LeaderboardContributionsData, LeaderboardContributionsResponses, LeaderboardStudyTimeData, LeaderboardStudyTimeResponses, ModerationAdminReportsData, ModerationAdminReportsErrors, ModerationAdminReportsResponses, ModerationAdminResolveData, ModerationAdminResolveErrors, ModerationAdminResolveResponses, ModerationAdminReviewData, ModerationAdminReviewErrors, ModerationAdminReviewResponses, ModerationReportContentData, ModerationReportContentErrors, ModerationReportContentResponses, ProgressMyProgressData, ProgressMyProgressResponses, ProgressTimeHeartbeatData, ProgressTimeHeartbeatErrors, ProgressTimeHeartbeatResponses } from './types.gen';
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean, TResponse = unknown> = Options2<TData, ThrowOnError, TResponse> & {
     /**
@@ -424,3 +424,74 @@ export const adminSetRole = <ThrowOnError extends boolean = false>(options: Opti
  * Audit
  */
 export const adminAudit = <ThrowOnError extends boolean = false>(options?: Options<AdminAuditData, ThrowOnError>): RequestResult<AdminAuditResponses, AdminAuditErrors, ThrowOnError> => (options?.client ?? client).get<AdminAuditResponses, AdminAuditErrors, ThrowOnError>({ url: '/v1/admin/audit', ...options });
+
+/**
+ * Editable Subjects
+ */
+export const adminContentEditableSubjects = <ThrowOnError extends boolean = false>(options?: Options<AdminContentEditableSubjectsData, ThrowOnError>): RequestResult<AdminContentEditableSubjectsResponses, unknown, ThrowOnError> => (options?.client ?? client).get<AdminContentEditableSubjectsResponses, unknown, ThrowOnError>({ url: '/v1/admin/content/subjects', ...options });
+
+/**
+ * Subject Tree
+ */
+export const adminContentSubjectTree = <ThrowOnError extends boolean = false>(options: Options<AdminContentSubjectTreeData, ThrowOnError>): RequestResult<AdminContentSubjectTreeResponses, AdminContentSubjectTreeErrors, ThrowOnError> => (options.client ?? client).get<AdminContentSubjectTreeResponses, AdminContentSubjectTreeErrors, ThrowOnError>({ url: '/v1/admin/content/subjects/{code}', ...options });
+
+/**
+ * Lesson For Edit
+ */
+export const adminContentLessonForEdit = <ThrowOnError extends boolean = false>(options: Options<AdminContentLessonForEditData, ThrowOnError>): RequestResult<AdminContentLessonForEditResponses, AdminContentLessonForEditErrors, ThrowOnError> => (options.client ?? client).get<AdminContentLessonForEditResponses, AdminContentLessonForEditErrors, ThrowOnError>({ url: '/v1/admin/content/lessons/{lesson_id}', ...options });
+
+/**
+ * Submit Change
+ */
+export const adminContentSubmitChange = <ThrowOnError extends boolean = false>(options: Options<AdminContentSubmitChangeData, ThrowOnError>): RequestResult<AdminContentSubmitChangeResponses, AdminContentSubmitChangeErrors, ThrowOnError> => (options.client ?? client).post<AdminContentSubmitChangeResponses, AdminContentSubmitChangeErrors, ThrowOnError>({
+    url: '/v1/admin/content/changes',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+/**
+ * List Requests
+ */
+export const adminContentListRequests = <ThrowOnError extends boolean = false>(options?: Options<AdminContentListRequestsData, ThrowOnError>): RequestResult<AdminContentListRequestsResponses, AdminContentListRequestsErrors, ThrowOnError> => (options?.client ?? client).get<AdminContentListRequestsResponses, AdminContentListRequestsErrors, ThrowOnError>({ url: '/v1/admin/change-requests', ...options });
+
+/**
+ * Get Request
+ */
+export const adminContentGetRequest = <ThrowOnError extends boolean = false>(options: Options<AdminContentGetRequestData, ThrowOnError>): RequestResult<AdminContentGetRequestResponses, AdminContentGetRequestErrors, ThrowOnError> => (options.client ?? client).get<AdminContentGetRequestResponses, AdminContentGetRequestErrors, ThrowOnError>({ url: '/v1/admin/change-requests/{request_id}', ...options });
+
+/**
+ * Revise Request
+ */
+export const adminContentReviseRequest = <ThrowOnError extends boolean = false>(options: Options<AdminContentReviseRequestData, ThrowOnError>): RequestResult<AdminContentReviseRequestResponses, AdminContentReviseRequestErrors, ThrowOnError> => (options.client ?? client).put<AdminContentReviseRequestResponses, AdminContentReviseRequestErrors, ThrowOnError>({
+    url: '/v1/admin/change-requests/{request_id}',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+/**
+ * Withdraw Request
+ */
+export const adminContentWithdrawRequest = <ThrowOnError extends boolean = false>(options: Options<AdminContentWithdrawRequestData, ThrowOnError>): RequestResult<AdminContentWithdrawRequestResponses, AdminContentWithdrawRequestErrors, ThrowOnError> => (options.client ?? client).post<AdminContentWithdrawRequestResponses, AdminContentWithdrawRequestErrors, ThrowOnError>({ url: '/v1/admin/change-requests/{request_id}/withdraw', ...options });
+
+/**
+ * Approve Request
+ */
+export const adminContentApproveRequest = <ThrowOnError extends boolean = false>(options: Options<AdminContentApproveRequestData, ThrowOnError>): RequestResult<AdminContentApproveRequestResponses, AdminContentApproveRequestErrors, ThrowOnError> => (options.client ?? client).post<AdminContentApproveRequestResponses, AdminContentApproveRequestErrors, ThrowOnError>({ url: '/v1/admin/change-requests/{request_id}/approve', ...options });
+
+/**
+ * Reject Request
+ */
+export const adminContentRejectRequest = <ThrowOnError extends boolean = false>(options: Options<AdminContentRejectRequestData, ThrowOnError>): RequestResult<AdminContentRejectRequestResponses, AdminContentRejectRequestErrors, ThrowOnError> => (options.client ?? client).post<AdminContentRejectRequestResponses, AdminContentRejectRequestErrors, ThrowOnError>({
+    url: '/v1/admin/change-requests/{request_id}/reject',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});

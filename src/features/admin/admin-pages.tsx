@@ -7,6 +7,9 @@ import { ReportsPage } from "@/features/community/reports-page";
 
 import { AdminShell, adminItems } from "./admin-shell";
 import { AuditAdmin } from "./audit-admin";
+import { MyChanges, ReviewQueue } from "./change-requests";
+import { ContentAdmin } from "./content-admin";
+import { LessonEditor, NewLesson } from "./lesson-editor";
 import { UsersAdmin } from "./users-admin";
 
 /** /admin: entry cards for the sections this account may open. */
@@ -73,6 +76,58 @@ export function AdminReports() {
       description="Xem nội dung bị báo cáo, rồi giữ, ẩn hoặc xóa. Báo cáo không tự xóa nội dung."
     >
       {() => <ReportsPage />}
+    </AdminShell>
+  );
+}
+
+export function AdminContent() {
+  return (
+    <AdminShell
+      active="content"
+      title="Nội dung"
+      description="Bài học, Lý thuyết và ngân hàng câu hỏi của phần Học tập."
+    >
+      {(me) => <ContentAdmin isAdmin={me.role === "admin"} />}
+    </AdminShell>
+  );
+}
+
+export function AdminLesson({ lessonId }: { lessonId: string }) {
+  return (
+    <AdminShell active="content" title="Sửa bài">
+      {(me) => <LessonEditor lessonId={lessonId} isAdmin={me.role === "admin"} />}
+    </AdminShell>
+  );
+}
+
+export function AdminNewLesson({ subject, unit }: { subject: string; unit: string }) {
+  return (
+    <AdminShell active="content" title="Thêm bài">
+      {(me) => <NewLesson subject={subject} unit={unit} isAdmin={me.role === "admin"} />}
+    </AdminShell>
+  );
+}
+
+export function AdminReviews() {
+  return (
+    <AdminShell
+      active="reviews"
+      title="Chờ duyệt"
+      description="Thay đổi nội dung do giáo viên gửi. Chỉ sau khi duyệt, học sinh mới thấy."
+    >
+      {() => <ReviewQueue />}
+    </AdminShell>
+  );
+}
+
+export function AdminMyChanges() {
+  return (
+    <AdminShell
+      active="my_changes"
+      title="Yêu cầu của tôi"
+      description="Các thay đổi bạn đã gửi và kết quả duyệt."
+    >
+      {() => <MyChanges />}
     </AdminShell>
   );
 }

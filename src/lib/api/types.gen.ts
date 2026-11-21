@@ -210,6 +210,123 @@ export type BoxOut = {
 };
 
 /**
+ * ChangeAction
+ */
+export type ChangeAction = 'lesson.create' | 'lesson.update' | 'lesson.delete' | 'question.create' | 'question.update' | 'question.delete';
+
+/**
+ * ChangeIn
+ */
+export type ChangeIn = {
+    action: ChangeAction;
+    /**
+     * Subject
+     */
+    subject?: string | null;
+    /**
+     * Lesson Id
+     */
+    lesson_id?: string | null;
+    /**
+     * Question Id
+     */
+    question_id?: string | null;
+    /**
+     * Base Version
+     */
+    base_version?: number | null;
+    lesson?: LessonData | null;
+    question?: QuestionData | null;
+};
+
+/**
+ * ChangeOut
+ */
+export type ChangeOut = {
+    /**
+     * Id
+     */
+    id: string;
+    action: ChangeAction;
+    status: ChangeStatus;
+    /**
+     * Subject Code
+     */
+    subject_code: string;
+    /**
+     * Lesson Id
+     */
+    lesson_id: string | null;
+    /**
+     * Question Id
+     */
+    question_id: string | null;
+    /**
+     * Summary
+     */
+    summary: string;
+    /**
+     * Author Name
+     */
+    author_name: string | null;
+    /**
+     * Reviewer Name
+     */
+    reviewer_name: string | null;
+    /**
+     * Review Note
+     */
+    review_note: string | null;
+    /**
+     * Stale
+     */
+    stale: boolean;
+    /**
+     * Before
+     */
+    before: {
+        [key: string]: unknown;
+    } | null;
+    /**
+     * After
+     */
+    after: {
+        [key: string]: unknown;
+    } | null;
+    /**
+     * Created At
+     */
+    created_at: string;
+    /**
+     * Updated At
+     */
+    updated_at: string;
+    /**
+     * Reviewed At
+     */
+    reviewed_at: string | null;
+};
+
+/**
+ * ChangePageOut
+ */
+export type ChangePageOut = {
+    /**
+     * Items
+     */
+    items: Array<ChangeOut>;
+    /**
+     * Total
+     */
+    total: number;
+};
+
+/**
+ * ChangeStatus
+ */
+export type ChangeStatus = 'pending' | 'approved' | 'rejected' | 'withdrawn';
+
+/**
  * CommentEditIn
  */
 export type CommentEditIn = {
@@ -266,6 +383,83 @@ export type CommentOut = {
      * Mine
      */
     mine: boolean;
+};
+
+/**
+ * ContentLessonOut
+ */
+export type ContentLessonOut = {
+    /**
+     * Id
+     */
+    id: string;
+    /**
+     * Code
+     */
+    code: string;
+    kind: LessonKind;
+    /**
+     * Label
+     */
+    label: string | null;
+    /**
+     * Title
+     */
+    title: string;
+    status: LessonStatus;
+    /**
+     * Counts
+     */
+    counts: {
+        [key: string]: number;
+    };
+    /**
+     * Needed
+     */
+    needed: {
+        [key: string]: number;
+    };
+    /**
+     * Pending
+     */
+    pending: number;
+};
+
+/**
+ * ContentQuestionOut
+ */
+export type ContentQuestionOut = {
+    /**
+     * Id
+     */
+    id: string;
+    /**
+     * Code
+     */
+    code: string;
+    /**
+     * Version
+     */
+    version: number;
+    data: QuestionData;
+};
+
+/**
+ * ContentUnitOut
+ */
+export type ContentUnitOut = {
+    /**
+     * Code
+     */
+    code: string;
+    /**
+     * Title
+     */
+    title: string;
+    /**
+     * Lessons
+     */
+    lessons: Array<ContentLessonOut>;
 };
 
 /**
@@ -371,6 +565,20 @@ export type DbHealthOut = {
      * Database
      */
     database: string;
+};
+
+/**
+ * EditableSubjectOut
+ */
+export type EditableSubjectOut = {
+    /**
+     * Code
+     */
+    code: string;
+    /**
+     * Name
+     */
+    name: string;
 };
 
 /**
@@ -493,6 +701,68 @@ export type LessonBrief = {
 };
 
 /**
+ * LessonData
+ *
+ * Editable fields of a lesson. `code`, `unit_code` and `kind` are only used when creating.
+ */
+export type LessonData = {
+    /**
+     * Code
+     */
+    code?: string | null;
+    /**
+     * Unit Code
+     */
+    unit_code?: string | null;
+    kind?: LessonKind;
+    /**
+     * Label
+     */
+    label?: string | null;
+    /**
+     * Title
+     */
+    title: string;
+    status?: LessonStatus;
+    /**
+     * Sections
+     */
+    sections?: Array<SectionIn>;
+    /**
+     * Teach Reference
+     */
+    teach_reference?: string | null;
+    periodic?: PeriodicIn | null;
+};
+
+/**
+ * LessonEditOut
+ */
+export type LessonEditOut = {
+    /**
+     * Id
+     */
+    id: string;
+    /**
+     * Subject Code
+     */
+    subject_code: string;
+    /**
+     * Code
+     */
+    code: string;
+    /**
+     * Version
+     */
+    version: number;
+    data: LessonData;
+    /**
+     * Questions
+     */
+    questions: Array<ContentQuestionOut>;
+};
+
+/**
  * LessonKind
  */
 export type LessonKind = 'lesson' | 'practice' | 'periodic';
@@ -580,6 +850,13 @@ export type LessonRowOut = {
      */
     available: Array<Activity>;
 };
+
+/**
+ * LessonStatus
+ *
+ * K11-D4: learners only see published lessons; a lesson with results is hidden, never deleted.
+ */
+export type LessonStatus = 'draft' | 'published' | 'hidden';
 
 /**
  * LockIn
@@ -837,6 +1114,26 @@ export type PeriodicConfigOut = {
 };
 
 /**
+ * PeriodicIn
+ *
+ * Set by the content team for each periodic review or test (spec 1.6).
+ */
+export type PeriodicIn = {
+    /**
+     * Question Count
+     */
+    question_count: number;
+    /**
+     * Time Limit Minutes
+     */
+    time_limit_minutes: number;
+    /**
+     * Pass Percent
+     */
+    pass_percent: number;
+};
+
+/**
  * Permission
  *
  * What a teacher may do (K11-D2). Admins implicitly have all of them.
@@ -972,6 +1269,42 @@ export type PostPageOut = {
 };
 
 /**
+ * QuestionData
+ */
+export type QuestionData = {
+    activity: Activity;
+    type: QuestionType;
+    /**
+     * Prompt
+     */
+    prompt: string;
+    /**
+     * Options
+     */
+    options?: Array<string> | null;
+    /**
+     * Answer
+     */
+    answer?: unknown;
+    /**
+     * Explanation
+     */
+    explanation?: string;
+    /**
+     * Section
+     */
+    section?: number | null;
+    level?: QuestionLevel | null;
+};
+
+/**
+ * QuestionLevel
+ *
+ * Difficulty levels of the Vietnamese curriculum (K11b).
+ */
+export type QuestionLevel = 'recognize' | 'understand' | 'apply' | 'apply_high';
+
+/**
  * QuestionOut
  */
 export type QuestionOut = {
@@ -1033,6 +1366,16 @@ export type ReadStatusOut = {
      * Remaining Seconds
      */
     remaining_seconds: number;
+};
+
+/**
+ * RejectIn
+ */
+export type RejectIn = {
+    /**
+     * Note
+     */
+    note: string;
 };
 
 /**
@@ -1282,6 +1625,20 @@ export type SearchHitOut = {
 };
 
 /**
+ * SectionIn
+ */
+export type SectionIn = {
+    /**
+     * Title
+     */
+    title: string;
+    /**
+     * Body
+     */
+    body: string;
+};
+
+/**
  * SectionOut
  */
 export type SectionOut = {
@@ -1343,6 +1700,24 @@ export type SubjectOut = {
 };
 
 /**
+ * SubjectTreeOut
+ */
+export type SubjectTreeOut = {
+    /**
+     * Code
+     */
+    code: string;
+    /**
+     * Name
+     */
+    name: string;
+    /**
+     * Units
+     */
+    units: Array<ContentUnitOut>;
+};
+
+/**
  * SubmitIn
  */
 export type SubmitIn = {
@@ -1350,6 +1725,19 @@ export type SubmitIn = {
      * Answers
      */
     answers: Array<AnswerIn>;
+};
+
+/**
+ * SubmitOut
+ *
+ * `applied` is true for an admin (live at once); a teacher gets the pending `request`.
+ */
+export type SubmitOut = {
+    /**
+     * Applied
+     */
+    applied: boolean;
+    request: ChangeOut | null;
 };
 
 /**
@@ -3183,3 +3571,290 @@ export type AdminAuditResponses = {
 };
 
 export type AdminAuditResponse = AdminAuditResponses[keyof AdminAuditResponses];
+
+export type AdminContentEditableSubjectsData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/v1/admin/content/subjects';
+};
+
+export type AdminContentEditableSubjectsResponses = {
+    /**
+     * Response Admin-Content-Editable Subjects
+     *
+     * Successful Response
+     */
+    200: Array<EditableSubjectOut>;
+};
+
+export type AdminContentEditableSubjectsResponse = AdminContentEditableSubjectsResponses[keyof AdminContentEditableSubjectsResponses];
+
+export type AdminContentSubjectTreeData = {
+    body?: never;
+    path: {
+        /**
+         * Code
+         */
+        code: string;
+    };
+    query?: never;
+    url: '/v1/admin/content/subjects/{code}';
+};
+
+export type AdminContentSubjectTreeErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type AdminContentSubjectTreeError = AdminContentSubjectTreeErrors[keyof AdminContentSubjectTreeErrors];
+
+export type AdminContentSubjectTreeResponses = {
+    /**
+     * Successful Response
+     */
+    200: SubjectTreeOut;
+};
+
+export type AdminContentSubjectTreeResponse = AdminContentSubjectTreeResponses[keyof AdminContentSubjectTreeResponses];
+
+export type AdminContentLessonForEditData = {
+    body?: never;
+    path: {
+        /**
+         * Lesson Id
+         */
+        lesson_id: string;
+    };
+    query?: never;
+    url: '/v1/admin/content/lessons/{lesson_id}';
+};
+
+export type AdminContentLessonForEditErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type AdminContentLessonForEditError = AdminContentLessonForEditErrors[keyof AdminContentLessonForEditErrors];
+
+export type AdminContentLessonForEditResponses = {
+    /**
+     * Successful Response
+     */
+    200: LessonEditOut;
+};
+
+export type AdminContentLessonForEditResponse = AdminContentLessonForEditResponses[keyof AdminContentLessonForEditResponses];
+
+export type AdminContentSubmitChangeData = {
+    body: ChangeIn;
+    path?: never;
+    query?: never;
+    url: '/v1/admin/content/changes';
+};
+
+export type AdminContentSubmitChangeErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type AdminContentSubmitChangeError = AdminContentSubmitChangeErrors[keyof AdminContentSubmitChangeErrors];
+
+export type AdminContentSubmitChangeResponses = {
+    /**
+     * Successful Response
+     */
+    200: SubmitOut;
+};
+
+export type AdminContentSubmitChangeResponse = AdminContentSubmitChangeResponses[keyof AdminContentSubmitChangeResponses];
+
+export type AdminContentListRequestsData = {
+    body?: never;
+    path?: never;
+    query?: {
+        /**
+         * Status
+         */
+        status?: ChangeStatus | null;
+        /**
+         * Mine
+         */
+        mine?: boolean;
+    };
+    url: '/v1/admin/change-requests';
+};
+
+export type AdminContentListRequestsErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type AdminContentListRequestsError = AdminContentListRequestsErrors[keyof AdminContentListRequestsErrors];
+
+export type AdminContentListRequestsResponses = {
+    /**
+     * Successful Response
+     */
+    200: ChangePageOut;
+};
+
+export type AdminContentListRequestsResponse = AdminContentListRequestsResponses[keyof AdminContentListRequestsResponses];
+
+export type AdminContentGetRequestData = {
+    body?: never;
+    path: {
+        /**
+         * Request Id
+         */
+        request_id: string;
+    };
+    query?: never;
+    url: '/v1/admin/change-requests/{request_id}';
+};
+
+export type AdminContentGetRequestErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type AdminContentGetRequestError = AdminContentGetRequestErrors[keyof AdminContentGetRequestErrors];
+
+export type AdminContentGetRequestResponses = {
+    /**
+     * Successful Response
+     */
+    200: ChangeOut;
+};
+
+export type AdminContentGetRequestResponse = AdminContentGetRequestResponses[keyof AdminContentGetRequestResponses];
+
+export type AdminContentReviseRequestData = {
+    body: ChangeIn;
+    path: {
+        /**
+         * Request Id
+         */
+        request_id: string;
+    };
+    query?: never;
+    url: '/v1/admin/change-requests/{request_id}';
+};
+
+export type AdminContentReviseRequestErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type AdminContentReviseRequestError = AdminContentReviseRequestErrors[keyof AdminContentReviseRequestErrors];
+
+export type AdminContentReviseRequestResponses = {
+    /**
+     * Successful Response
+     */
+    200: ChangeOut;
+};
+
+export type AdminContentReviseRequestResponse = AdminContentReviseRequestResponses[keyof AdminContentReviseRequestResponses];
+
+export type AdminContentWithdrawRequestData = {
+    body?: never;
+    path: {
+        /**
+         * Request Id
+         */
+        request_id: string;
+    };
+    query?: never;
+    url: '/v1/admin/change-requests/{request_id}/withdraw';
+};
+
+export type AdminContentWithdrawRequestErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type AdminContentWithdrawRequestError = AdminContentWithdrawRequestErrors[keyof AdminContentWithdrawRequestErrors];
+
+export type AdminContentWithdrawRequestResponses = {
+    /**
+     * Successful Response
+     */
+    200: ChangeOut;
+};
+
+export type AdminContentWithdrawRequestResponse = AdminContentWithdrawRequestResponses[keyof AdminContentWithdrawRequestResponses];
+
+export type AdminContentApproveRequestData = {
+    body?: never;
+    path: {
+        /**
+         * Request Id
+         */
+        request_id: string;
+    };
+    query?: never;
+    url: '/v1/admin/change-requests/{request_id}/approve';
+};
+
+export type AdminContentApproveRequestErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type AdminContentApproveRequestError = AdminContentApproveRequestErrors[keyof AdminContentApproveRequestErrors];
+
+export type AdminContentApproveRequestResponses = {
+    /**
+     * Successful Response
+     */
+    200: ChangeOut;
+};
+
+export type AdminContentApproveRequestResponse = AdminContentApproveRequestResponses[keyof AdminContentApproveRequestResponses];
+
+export type AdminContentRejectRequestData = {
+    body: RejectIn;
+    path: {
+        /**
+         * Request Id
+         */
+        request_id: string;
+    };
+    query?: never;
+    url: '/v1/admin/change-requests/{request_id}/reject';
+};
+
+export type AdminContentRejectRequestErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type AdminContentRejectRequestError = AdminContentRejectRequestErrors[keyof AdminContentRejectRequestErrors];
+
+export type AdminContentRejectRequestResponses = {
+    /**
+     * Successful Response
+     */
+    200: ChangeOut;
+};
+
+export type AdminContentRejectRequestResponse = AdminContentRejectRequestResponses[keyof AdminContentRejectRequestResponses];

@@ -11,7 +11,8 @@ import {
   ShieldCheck,
   Trophy,
   Users,
-  FileQuestion,
+  FileCheck2,
+  Send,
 } from "lucide-react";
 import Link from "next/link";
 import type { ReactNode } from "react";
@@ -23,15 +24,26 @@ import { type AdminMeOut, adminAdminMe } from "@/lib/api-client";
 import { cn } from "@/lib/utils";
 
 export type AdminSection =
-  "home" | "users" | "content" | "questions" | "essays" | "community" | "reports" | "points" | "ai" | "audit";
+  | "home"
+  | "users"
+  | "content"
+  | "reviews"
+  | "my_changes"
+  | "essays"
+  | "community"
+  | "reports"
+  | "points"
+  | "ai"
+  | "audit";
 
 type Item = { key: AdminSection; label: string; icon: LucideIcon; href?: string };
 
 // Sections without a page yet are listed so the admin sees what is coming (K11b, K11c).
 const ITEMS: Item[] = [
   { key: "users", label: "Tài khoản", icon: Users, href: "/admin/users" },
-  { key: "content", label: "Nội dung", icon: BookOpen },
-  { key: "questions", label: "Câu hỏi", icon: FileQuestion },
+  { key: "content", label: "Nội dung", icon: BookOpen, href: "/admin/content" },
+  { key: "reviews", label: "Chờ duyệt", icon: FileCheck2, href: "/admin/reviews" },
+  { key: "my_changes", label: "Yêu cầu của tôi", icon: Send, href: "/admin/my-changes" },
   { key: "essays", label: "Chấm tự luận", icon: ClipboardCheck },
   { key: "community", label: "Cộng đồng", icon: MessagesSquare },
   { key: "reports", label: "Báo cáo vi phạm", icon: Flag, href: "/admin/reports" },
