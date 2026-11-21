@@ -15,12 +15,23 @@ export type SessionState =
 type SessionContextValue = {
   state: SessionState;
   refresh: () => void;
+  /** The API accepted a sign-in: adopt that account right away, so no page ever sees a stale "guest". */
+  signIn: (user: MeOut) => void;
+  /** The sign-in page is showing: a finished sign-out is now just "guest". */
+  settleSignOut: () => void;
   signOut: () => Promise<void>;
 };
 
 const SessionContext = createContext<SessionContextValue | null>(null);
 
-/** Who is signed in, as told by GET /api/v1/me. The API stays the only authority on access. */
+/**
+ * Who is signed in, as told by GET /api/v1/me. The API stays the only authority on access.
+ *
+ * It lives in the root layout, ABOVE both /login and the learner pages. When it sat inside the (app) layout,
+ * the production build kept that layout's old state while the learner was on /login: a visitor who opened a
+ * page signed out and then signed in came back to a stale "guest", was sent to /login again, and bounced
+ * between the two pages forever.
+ */
 export function SessionProvider({ children }: { children: ReactNode }) {
   const [state, setState] = useState<SessionState>({ status: "loading" });
   const [attempt, setAttempt] = useState(0);
@@ -43,6 +54,13 @@ export function SessionProvider({ children }: { children: ReactNode }) {
     setAttempt((n) => n + 1);
   }, []);
 
+  const signIn = useCallback((user: MeOut) => setState({ status: "signed-in", user }), []);
+
+  const settleSignOut = useCallback(
+    () => setState((current) => (current.status === "signing-out" ? { status: "guest" } : current)),
+    [],
+  );
+
   const signOut = useCallback(async () => {
     // "signing-out" (not "guest") so the session gate does not race us with its own
     // "?next=<this page>" redirect: the next person to sign in starts fresh.
@@ -51,7 +69,10 @@ export function SessionProvider({ children }: { children: ReactNode }) {
     router.replace("/login");
   }, [router]);
 
-  const value = useMemo(() => ({ state, refresh, signOut }), [state, refresh, signOut]);
+  const value = useMemo(
+    () => ({ state, refresh, signIn, settleSignOut, signOut }),
+    [state, refresh, signIn, settleSignOut, signOut],
+  );
   return <SessionContext value={value}>{children}</SessionContext>;
 }
 

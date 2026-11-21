@@ -6,29 +6,38 @@ import { useCallback, useEffect } from "react";
 import { CometLogo } from "@/components/brand/comet-logo";
 import { Mascot } from "@/components/brand/mascot";
 import { Wordmark } from "@/components/brand/wordmark";
-import { authMe } from "@/lib/api-client";
+import type { MeOut } from "@/lib/api-client";
 
 import { GoogleSignIn } from "./google-sign-in";
 import { safeNextPath } from "./safe-next";
+import { useSession } from "./session";
 
 /** Public sign-in page: the only learner page that does not need an account (K3-D2). */
 export function SignInScreen() {
   const router = useRouter();
+  const session = useSession();
   const goNext = useCallback(() => {
     const next = new URLSearchParams(window.location.search).get("next");
     router.replace(safeNextPath(next));
   }, [router]);
 
-  // Already signed in (for example a bookmarked /login): skip straight to the app.
+  const status = session?.state.status;
+  const settleSignOut = session?.settleSignOut;
+
+  // Already signed in (for example a bookmarked /login): skip straight to the app. The session is the one
+  // shared with the learner pages, so there is no second /me call to disagree with it.
   useEffect(() => {
-    let cancelled = false;
-    void authMe().then(({ data }) => {
-      if (data && !cancelled) goNext();
-    });
-    return () => {
-      cancelled = true;
-    };
-  }, [goNext]);
+    if (status === "signed-in") goNext();
+  }, [status, goNext]);
+
+  // Just signed out: from here on the visitor is a plain guest.
+  useEffect(() => {
+    if (status === "signing-out") settleSignOut?.();
+  }, [status, settleSignOut]);
+
+  const onSignedIn = (user: MeOut) => {
+    session?.signIn(user); // the effect above then leaves for the page they asked for
+  };
 
   return (
     <section
@@ -47,7 +56,7 @@ export function SignInScreen() {
         Đăng nhập bằng tài khoản Google để bắt đầu hành trình học Toán, Tiếng Anh và Ngữ văn lớp 9.
       </p>
       <div className="mt-6">
-        <GoogleSignIn onSignedIn={goNext} />
+        <GoogleSignIn onSignedIn={onSignedIn} />
       </div>
       <p className="mt-6 text-xs text-muted-foreground">
         LEARNIVERSE chỉ nhận tên và email từ Google, không bao giờ thấy mật khẩu của bạn.

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Be_Vietnam_Pro } from "next/font/google";
 
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { SessionProvider } from "@/features/auth/session";
 
 import "./globals.css";
 import "./motion.css";
@@ -22,7 +23,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="vi" className={`${beVietnamPro.variable} h-full antialiased`}>
       <body className="flex min-h-full flex-col">
-        <TooltipProvider>{children}</TooltipProvider>
+        <TooltipProvider>
+          <SessionProvider>{children}</SessionProvider>
+        </TooltipProvider>
       </body>
     </html>
   );
