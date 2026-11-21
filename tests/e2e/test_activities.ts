@@ -23,7 +23,10 @@ test.describe("activities (K5)", () => {
       "href",
       "/courses/math/lesson-1/review",
     );
-    await expect(actions).toContainText("Dạy AI· Mở ở K10");
+    await expect(actions.getByRole("link", { name: "Dạy AI" })).toHaveAttribute(
+      "href",
+      "/courses/math/lesson-1/teach",
+    );
 
     await page.getByRole("button", { name: /Luyện tập chung/ }).click();
     await expect(page.getByRole("list", { name: /Chức năng của Luyện tập chung/ })).toContainText("Chưa mở");
