@@ -1,13 +1,13 @@
 "use client";
 
-import { Sparkles } from "lucide-react";
+import { PenLine, Sparkles } from "lucide-react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 
 import { ErrorState } from "@/components/states/error-state";
 import { PageSkeleton } from "@/components/states/page-skeleton";
 import { askAboutLesson } from "@/features/ai/ask-ai";
-import { catalogLesson } from "@/lib/api-client";
+import { activitiesLessonEssays, catalogLesson } from "@/lib/api-client";
 
 import { MathText } from "./math-text";
 import { TheoryCheck } from "./theory-check";
@@ -20,6 +20,11 @@ export function LessonTheory() {
   const [state, retry] = useApi(`lesson:${subject}/${code}`, () =>
     catalogLesson({ path: { subject, code } }),
   );
+
+  const [essays] = useApi(`essays:${subject}/${code}`, () =>
+    activitiesLessonEssays({ path: { subject, code } }),
+  );
+  const essayCount = essays.status === "ready" ? essays.data.items.length : 0;
 
   // Reading time counts only while this page is open and visible (K6-D5).
   useStudyTimer(subject, code, "theory", state.status === "ready" && state.data.kind === "lesson");
@@ -57,6 +62,14 @@ export function LessonTheory() {
         >
           <Sparkles aria-hidden className="size-4" /> Hỏi Sao Nhí về bài này
         </button>
+        {essayCount > 0 && (
+          <Link
+            href={`/courses/${lesson.subject_code}/${lesson.code}/essays`}
+            className="flex items-center gap-1.5 rounded-full bg-violet-50 px-3 py-1 text-sm font-semibold text-violet-800 ring-1 ring-violet-200 hover:bg-violet-100"
+          >
+            <PenLine aria-hidden className="size-4" /> Tự luận ({essayCount})
+          </Link>
+        )}
       </div>
 
       <div className="mt-6 space-y-5">

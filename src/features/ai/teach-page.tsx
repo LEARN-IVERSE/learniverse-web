@@ -87,6 +87,7 @@ export function TeachPage() {
   const l = lesson.data;
   const current = session ?? overview.data.session;
   const sessionsLeft = left ?? overview.data.sessions_left;
+  const paused = overview.data.enabled === false; // an admin switched AI off (K11c-3)
   const earned = overview.data.earned || Boolean(current?.result?.star_earned);
   const open = current && (current.status === "in_progress" || current.status === "grading_failed");
   const pending = current?.turns.at(-1)?.answer === null ? current.turns.at(-1) : undefined;
@@ -366,13 +367,18 @@ export function TeachPage() {
           )}
           <button
             type="button"
-            disabled={busy !== null || sessionsLeft === 0}
+            disabled={busy !== null || sessionsLeft === 0 || paused}
             onClick={() => void start()}
             className="inline-flex items-center gap-2 rounded-full bg-violet-600 px-6 py-2.5 font-semibold text-white disabled:opacity-50"
           >
             <GraduationCap aria-hidden className="size-5" /> {result ? "Dạy lại" : "Bắt đầu dạy"}
           </button>
-          {sessionsLeft === 0 && (
+          {paused && (
+            <p role="status" className="text-sm text-amber-800">
+              AI đang tạm nghỉ. Bạn quay lại sau nhé!
+            </p>
+          )}
+          {!paused && sessionsLeft === 0 && (
             <p className="text-sm text-muted-foreground">
               Hôm nay bạn đã dùng hết lượt Dạy AI. Mai quay lại nhé!
             </p>

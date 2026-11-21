@@ -46,6 +46,118 @@ export type ActivityStateOut = {
 };
 
 /**
+ * AdminMeOut
+ *
+ * What the signed-in user may open in the admin area (drives the menu).
+ */
+export type AdminMeOut = {
+    role: Role;
+    /**
+     * Permissions
+     */
+    permissions: Array<PermissionOut>;
+    /**
+     * Sections
+     */
+    sections: Array<string>;
+};
+
+/**
+ * AiFieldOut
+ */
+export type AiFieldOut = {
+    /**
+     * Value
+     */
+    value: string | number | number | null;
+    /**
+     * Default
+     */
+    default: string | number | number | null;
+    /**
+     * Custom
+     */
+    custom: boolean;
+};
+
+/**
+ * AiSettingsIn
+ *
+ * Every field is optional: null means "use the value from .env".
+ */
+export type AiSettingsIn = {
+    /**
+     * Chat Model
+     */
+    chat_model?: string | null;
+    /**
+     * Grader Model
+     */
+    grader_model?: string | null;
+    /**
+     * Daily Messages
+     */
+    daily_messages?: number | null;
+    /**
+     * Daily Images
+     */
+    daily_images?: number | null;
+    /**
+     * Daily Teach Sessions
+     */
+    daily_teach_sessions?: number | null;
+    /**
+     * Price Input Per M
+     */
+    price_input_per_m?: number | null;
+    /**
+     * Price Output Per M
+     */
+    price_output_per_m?: number | null;
+    /**
+     * Enabled
+     */
+    enabled?: boolean;
+};
+
+/**
+ * AiSettingsOut
+ */
+export type AiSettingsOut = {
+    /**
+     * Enabled
+     */
+    enabled: boolean;
+    /**
+     * Env Enabled
+     */
+    env_enabled: boolean;
+    /**
+     * Provider
+     */
+    provider: string;
+    /**
+     * Key Configured
+     */
+    key_configured: boolean;
+    chat_model: AiFieldOut;
+    grader_model: AiFieldOut;
+    daily_messages: AiFieldOut;
+    daily_images: AiFieldOut;
+    daily_teach_sessions: AiFieldOut;
+    price_input_per_m: AiFieldOut;
+    price_output_per_m: AiFieldOut;
+    /**
+     * Updated At
+     */
+    updated_at: string | null;
+    /**
+     * Updated By
+     */
+    updated_by: string | null;
+};
+
+/**
  * AnswerIn
  */
 export type AnswerIn = {
@@ -93,6 +205,70 @@ export type AttemptOut = {
 export type AttemptStatus = 'in_progress' | 'graded' | 'pending_review';
 
 /**
+ * AuditOut
+ */
+export type AuditOut = {
+    /**
+     * Id
+     */
+    id: string;
+    /**
+     * Actor Name
+     */
+    actor_name: string | null;
+    /**
+     * Action
+     */
+    action: string;
+    /**
+     * Target Type
+     */
+    target_type: string;
+    /**
+     * Target Id
+     */
+    target_id: string;
+    /**
+     * Before
+     */
+    before: {
+        [key: string]: unknown;
+    } | null;
+    /**
+     * After
+     */
+    after: {
+        [key: string]: unknown;
+    } | null;
+    /**
+     * Created At
+     */
+    created_at: string;
+};
+
+/**
+ * AuditPageOut
+ */
+export type AuditPageOut = {
+    /**
+     * Items
+     */
+    items: Array<AuditOut>;
+    /**
+     * Total
+     */
+    total: number;
+    /**
+     * Page
+     */
+    page: number;
+    /**
+     * Pages
+     */
+    pages: number;
+};
+
+/**
  * AuthorOut
  */
 export type AuthorOut = {
@@ -126,6 +302,172 @@ export type BoxOut = {
      * Name
      */
     name: string;
+};
+
+/**
+ * BulkData
+ */
+export type BulkData = {
+    /**
+     * Items
+     */
+    items: Array<BulkItem>;
+};
+
+/**
+ * BulkItem
+ */
+export type BulkItem = {
+    /**
+     * Lesson Code
+     */
+    lesson_code: string;
+    question: QuestionData;
+};
+
+/**
+ * ChangeAction
+ */
+export type ChangeAction = 'lesson.create' | 'lesson.update' | 'lesson.delete' | 'question.create' | 'question.update' | 'question.delete' | 'question.bulk_create' | 'lesson.move';
+
+/**
+ * ChangeIn
+ */
+export type ChangeIn = {
+    action: ChangeAction;
+    /**
+     * Subject
+     */
+    subject?: string | null;
+    /**
+     * Lesson Id
+     */
+    lesson_id?: string | null;
+    /**
+     * Question Id
+     */
+    question_id?: string | null;
+    /**
+     * Base Version
+     */
+    base_version?: number | null;
+    lesson?: LessonData | null;
+    question?: QuestionData | null;
+    bulk?: BulkData | null;
+    move?: MoveData | null;
+};
+
+/**
+ * ChangeOut
+ */
+export type ChangeOut = {
+    /**
+     * Id
+     */
+    id: string;
+    action: ChangeAction;
+    status: ChangeStatus;
+    /**
+     * Subject Code
+     */
+    subject_code: string;
+    /**
+     * Lesson Id
+     */
+    lesson_id: string | null;
+    /**
+     * Question Id
+     */
+    question_id: string | null;
+    /**
+     * Summary
+     */
+    summary: string;
+    /**
+     * Author Name
+     */
+    author_name: string | null;
+    /**
+     * Reviewer Name
+     */
+    reviewer_name: string | null;
+    /**
+     * Review Note
+     */
+    review_note: string | null;
+    /**
+     * Stale
+     */
+    stale: boolean;
+    /**
+     * Before
+     */
+    before: {
+        [key: string]: unknown;
+    } | null;
+    /**
+     * After
+     */
+    after: {
+        [key: string]: unknown;
+    } | null;
+    /**
+     * Created At
+     */
+    created_at: string;
+    /**
+     * Updated At
+     */
+    updated_at: string;
+    /**
+     * Reviewed At
+     */
+    reviewed_at: string | null;
+};
+
+/**
+ * ChangePageOut
+ */
+export type ChangePageOut = {
+    /**
+     * Items
+     */
+    items: Array<ChangeOut>;
+    /**
+     * Total
+     */
+    total: number;
+};
+
+/**
+ * ChangeStatus
+ */
+export type ChangeStatus = 'pending' | 'approved' | 'rejected' | 'withdrawn';
+
+/**
+ * CheckIn
+ */
+export type CheckIn = {
+    /**
+     * Subject
+     */
+    subject: string;
+    /**
+     * Rows
+     */
+    rows: Array<{
+        [key: string]: string;
+    }>;
+};
+
+/**
+ * CheckOut
+ */
+export type CheckOut = {
+    /**
+     * Rows
+     */
+    rows: Array<RowOut>;
 };
 
 /**
@@ -185,6 +527,177 @@ export type CommentOut = {
      * Mine
      */
     mine: boolean;
+};
+
+/**
+ * CommunityItemOut
+ */
+export type CommunityItemOut = {
+    /**
+     * Id
+     */
+    id: string;
+    kind: TargetType;
+    /**
+     * Post Id
+     */
+    post_id: string;
+    /**
+     * Box Code
+     */
+    box_code: string;
+    /**
+     * Box Name
+     */
+    box_name: string;
+    /**
+     * Title
+     */
+    title: string;
+    /**
+     * Excerpt
+     */
+    excerpt: string;
+    /**
+     * Author Id
+     */
+    author_id: string;
+    /**
+     * Author Name
+     */
+    author_name: string;
+    /**
+     * Created At
+     */
+    created_at: string;
+    /**
+     * State
+     */
+    state: 'visible' | 'hidden' | 'deleted';
+    /**
+     * Open Reports
+     */
+    open_reports: number;
+};
+
+/**
+ * CommunityPageOut
+ */
+export type CommunityPageOut = {
+    /**
+     * Items
+     */
+    items: Array<CommunityItemOut>;
+    /**
+     * Total
+     */
+    total: number;
+    /**
+     * Page
+     */
+    page: number;
+    /**
+     * Pages
+     */
+    pages: number;
+    /**
+     * Boxes
+     */
+    boxes: Array<[
+        string,
+        string
+    ]>;
+};
+
+/**
+ * CommunityResultOut
+ */
+export type CommunityResultOut = {
+    /**
+     * State
+     */
+    state: 'visible' | 'hidden' | 'deleted';
+};
+
+/**
+ * ContentLessonOut
+ */
+export type ContentLessonOut = {
+    /**
+     * Id
+     */
+    id: string;
+    /**
+     * Code
+     */
+    code: string;
+    kind: LessonKind;
+    /**
+     * Label
+     */
+    label: string | null;
+    /**
+     * Title
+     */
+    title: string;
+    status: LessonStatus;
+    /**
+     * Version
+     */
+    version: number;
+    /**
+     * Counts
+     */
+    counts: {
+        [key: string]: number;
+    };
+    /**
+     * Needed
+     */
+    needed: {
+        [key: string]: number;
+    };
+    /**
+     * Pending
+     */
+    pending: number;
+};
+
+/**
+ * ContentQuestionOut
+ */
+export type ContentQuestionOut = {
+    /**
+     * Id
+     */
+    id: string;
+    /**
+     * Code
+     */
+    code: string;
+    /**
+     * Version
+     */
+    version: number;
+    data: QuestionData;
+};
+
+/**
+ * ContentUnitOut
+ */
+export type ContentUnitOut = {
+    /**
+     * Code
+     */
+    code: string;
+    /**
+     * Title
+     */
+    title: string;
+    /**
+     * Lessons
+     */
+    lessons: Array<ContentLessonOut>;
 };
 
 /**
@@ -293,6 +806,191 @@ export type DbHealthOut = {
 };
 
 /**
+ * EditableSubjectOut
+ */
+export type EditableSubjectOut = {
+    /**
+     * Code
+     */
+    code: string;
+    /**
+     * Name
+     */
+    name: string;
+};
+
+/**
+ * EssayAnswerOut
+ */
+export type EssayAnswerOut = {
+    /**
+     * Id
+     */
+    id: string;
+    /**
+     * Body Md
+     */
+    body_md: string;
+    status: EssayStatus;
+    /**
+     * Comment
+     */
+    comment: string | null;
+    /**
+     * Grader Name
+     */
+    grader_name: string | null;
+    /**
+     * Submitted At
+     */
+    submitted_at: string;
+    /**
+     * Graded At
+     */
+    graded_at: string | null;
+};
+
+/**
+ * EssayIn
+ */
+export type EssayIn = {
+    /**
+     * Body
+     */
+    body: string;
+};
+
+/**
+ * EssayNoteOut
+ *
+ * What an "essay graded" notification needs to link back to the lesson.
+ */
+export type EssayNoteOut = {
+    status: EssayStatus;
+    /**
+     * Lesson Title
+     */
+    lesson_title: string;
+    /**
+     * Subject Code
+     */
+    subject_code: string;
+    /**
+     * Lesson Code
+     */
+    lesson_code: string;
+};
+
+/**
+ * EssayQuestionOut
+ */
+export type EssayQuestionOut = {
+    /**
+     * Id
+     */
+    id: string;
+    /**
+     * Prompt Md
+     */
+    prompt_md: string;
+    /**
+     * Can Submit
+     */
+    can_submit: boolean;
+    /**
+     * Answers
+     */
+    answers: Array<EssayAnswerOut>;
+};
+
+/**
+ * EssayQueueOut
+ */
+export type EssayQueueOut = {
+    /**
+     * Items
+     */
+    items: Array<EssayRowOut>;
+    /**
+     * Subjects
+     */
+    subjects: Array<[
+        string,
+        string
+    ]>;
+};
+
+/**
+ * EssayRowOut
+ */
+export type EssayRowOut = {
+    /**
+     * Id
+     */
+    id: string;
+    status: EssayStatus;
+    /**
+     * Subject Code
+     */
+    subject_code: string;
+    /**
+     * Subject Name
+     */
+    subject_name: string;
+    /**
+     * Lesson Label
+     */
+    lesson_label: string | null;
+    /**
+     * Lesson Title
+     */
+    lesson_title: string;
+    /**
+     * Prompt Md
+     */
+    prompt_md: string;
+    /**
+     * Body Md
+     */
+    body_md: string;
+    /**
+     * Student Name
+     */
+    student_name: string;
+    /**
+     * Submitted At
+     */
+    submitted_at: string;
+    /**
+     * Comment
+     */
+    comment: string | null;
+    /**
+     * Grader Name
+     */
+    grader_name: string | null;
+    /**
+     * Graded At
+     */
+    graded_at: string | null;
+};
+
+/**
+ * EssayStatus
+ */
+export type EssayStatus = 'pending' | 'passed' | 'failed';
+
+/**
+ * EssaysOut
+ */
+export type EssaysOut = {
+    /**
+     * Items
+     */
+    items: Array<EssayQuestionOut>;
+};
+
+/**
  * GoogleSignInIn
  */
 export type GoogleSignInIn = {
@@ -300,6 +998,20 @@ export type GoogleSignInIn = {
      * Credential
      */
     credential: string;
+};
+
+/**
+ * GradeIn
+ */
+export type GradeIn = {
+    /**
+     * Passed
+     */
+    passed: boolean;
+    /**
+     * Comment
+     */
+    comment?: string;
 };
 
 /**
@@ -412,6 +1124,68 @@ export type LessonBrief = {
 };
 
 /**
+ * LessonData
+ *
+ * Editable fields of a lesson. `code`, `unit_code` and `kind` are only used when creating.
+ */
+export type LessonData = {
+    /**
+     * Code
+     */
+    code?: string | null;
+    /**
+     * Unit Code
+     */
+    unit_code?: string | null;
+    kind?: LessonKind;
+    /**
+     * Label
+     */
+    label?: string | null;
+    /**
+     * Title
+     */
+    title: string;
+    status?: LessonStatus;
+    /**
+     * Sections
+     */
+    sections?: Array<SectionIn>;
+    /**
+     * Teach Reference
+     */
+    teach_reference?: string | null;
+    periodic?: PeriodicIn | null;
+};
+
+/**
+ * LessonEditOut
+ */
+export type LessonEditOut = {
+    /**
+     * Id
+     */
+    id: string;
+    /**
+     * Subject Code
+     */
+    subject_code: string;
+    /**
+     * Code
+     */
+    code: string;
+    /**
+     * Version
+     */
+    version: number;
+    data: LessonData;
+    /**
+     * Questions
+     */
+    questions: Array<ContentQuestionOut>;
+};
+
+/**
  * LessonKind
  */
 export type LessonKind = 'lesson' | 'practice' | 'periodic';
@@ -498,6 +1272,23 @@ export type LessonRowOut = {
      * Available
      */
     available: Array<Activity>;
+};
+
+/**
+ * LessonStatus
+ *
+ * K11-D4: learners only see published lessons; a lesson with results is hidden, never deleted.
+ */
+export type LessonStatus = 'draft' | 'published' | 'hidden';
+
+/**
+ * LockIn
+ */
+export type LockIn = {
+    /**
+     * Reason
+     */
+    reason: string;
 };
 
 /**
@@ -600,6 +1391,22 @@ export type MessageOut = {
 };
 
 /**
+ * MoveData
+ *
+ * Where a lesson goes: a chapter and its 0-based place among that chapter's lessons.
+ */
+export type MoveData = {
+    /**
+     * Unit Code
+     */
+    unit_code: string;
+    /**
+     * Index
+     */
+    index: number;
+};
+
+/**
  * MyProgressOut
  */
 export type MyProgressOut = {
@@ -668,7 +1475,7 @@ export type NewCountOut = {
 /**
  * NotificationKind
  */
-export type NotificationKind = 'comment_on_post' | 'reply';
+export type NotificationKind = 'comment_on_post' | 'reply' | 'essay_graded';
 
 /**
  * NotificationOut
@@ -683,15 +1490,16 @@ export type NotificationOut = {
     /**
      * Post Id
      */
-    post_id: string;
+    post_id: string | null;
     /**
      * Post Title
      */
-    post_title: string;
+    post_title: string | null;
     /**
      * Comment Id
      */
-    comment_id: string;
+    comment_id: string | null;
+    essay: EssayNoteOut | null;
     /**
      * Created At
      */
@@ -743,6 +1551,138 @@ export type PeriodicConfigOut = {
      * Pass Percent
      */
     pass_percent: number;
+};
+
+/**
+ * PeriodicIn
+ *
+ * Set by the content team for each periodic review or test (spec 1.6).
+ */
+export type PeriodicIn = {
+    /**
+     * Question Count
+     */
+    question_count: number;
+    /**
+     * Time Limit Minutes
+     */
+    time_limit_minutes: number;
+    /**
+     * Pass Percent
+     */
+    pass_percent: number;
+};
+
+/**
+ * Permission
+ *
+ * What a teacher may do (K11-D2). Admins implicitly have all of them.
+ */
+export type Permission = 'content' | 'essay_review' | 'moderation';
+
+/**
+ * PermissionIn
+ */
+export type PermissionIn = {
+    permission: Permission;
+    /**
+     * Subject
+     */
+    subject?: string | null;
+};
+
+/**
+ * PermissionOut
+ */
+export type PermissionOut = {
+    permission: Permission;
+    /**
+     * Subject
+     */
+    subject: string | null;
+};
+
+/**
+ * PointsOut
+ */
+export type PointsOut = {
+    /**
+     * Users
+     */
+    users: Array<PointsUserOut>;
+    selected: PointsUserOut | null;
+    /**
+     * Rows
+     */
+    rows: Array<PointsRowOut>;
+};
+
+/**
+ * PointsRowOut
+ */
+export type PointsRowOut = {
+    /**
+     * Id
+     */
+    id: string;
+    /**
+     * Kind
+     */
+    kind: 'grant' | 'revoke';
+    /**
+     * Delta
+     */
+    delta: number;
+    /**
+     * Reason
+     */
+    reason: string;
+    /**
+     * Reason Text
+     */
+    reason_text: string;
+    /**
+     * Target Type
+     */
+    target_type: 'post' | 'comment';
+    /**
+     * Target Id
+     */
+    target_id: string;
+    /**
+     * Post Id
+     */
+    post_id: string | null;
+    /**
+     * Excerpt
+     */
+    excerpt: string | null;
+    /**
+     * Created At
+     */
+    created_at: string;
+};
+
+/**
+ * PointsUserOut
+ */
+export type PointsUserOut = {
+    /**
+     * Id
+     */
+    id: string;
+    /**
+     * Name
+     */
+    name: string;
+    /**
+     * Email
+     */
+    email: string;
+    /**
+     * Total
+     */
+    total: number;
 };
 
 /**
@@ -852,6 +1792,42 @@ export type PostPageOut = {
 };
 
 /**
+ * QuestionData
+ */
+export type QuestionData = {
+    activity: Activity;
+    type: QuestionType;
+    /**
+     * Prompt
+     */
+    prompt: string;
+    /**
+     * Options
+     */
+    options?: Array<string> | null;
+    /**
+     * Answer
+     */
+    answer?: unknown;
+    /**
+     * Explanation
+     */
+    explanation?: string;
+    /**
+     * Section
+     */
+    section?: number | null;
+    level?: QuestionLevel | null;
+};
+
+/**
+ * QuestionLevel
+ *
+ * Difficulty levels of the Vietnamese curriculum (K11b).
+ */
+export type QuestionLevel = 'recognize' | 'understand' | 'apply' | 'apply_high';
+
+/**
  * QuestionOut
  */
 export type QuestionOut = {
@@ -895,6 +1871,10 @@ export type QuotaOut = {
      * Daily Images
      */
     daily_images: number;
+    /**
+     * Enabled
+     */
+    enabled?: boolean;
 };
 
 /**
@@ -913,6 +1893,16 @@ export type ReadStatusOut = {
      * Remaining Seconds
      */
     remaining_seconds: number;
+};
+
+/**
+ * RejectIn
+ */
+export type RejectIn = {
+    /**
+     * Note
+     */
+    note: string;
 };
 
 /**
@@ -1124,6 +2114,44 @@ export type ReviewedQuestionOut = {
 export type Role = 'student' | 'teacher' | 'admin';
 
 /**
+ * RoleIn
+ */
+export type RoleIn = {
+    role: Role;
+    /**
+     * Permissions
+     */
+    permissions?: Array<PermissionIn>;
+};
+
+/**
+ * RowOut
+ */
+export type RowOut = {
+    /**
+     * Status
+     */
+    status: 'ok' | 'duplicate' | 'error';
+    /**
+     * Messages
+     */
+    messages: Array<string>;
+    /**
+     * Lesson Code
+     */
+    lesson_code: string;
+    /**
+     * Lesson Id
+     */
+    lesson_id: string | null;
+    /**
+     * Lesson Title
+     */
+    lesson_title: string | null;
+    question: QuestionData | null;
+};
+
+/**
  * SearchHitOut
  */
 export type SearchHitOut = {
@@ -1151,6 +2179,20 @@ export type SearchHitOut = {
 };
 
 /**
+ * SectionIn
+ */
+export type SectionIn = {
+    /**
+     * Title
+     */
+    title: string;
+    /**
+     * Body
+     */
+    body: string;
+};
+
+/**
  * SectionOut
  */
 export type SectionOut = {
@@ -1162,6 +2204,38 @@ export type SectionOut = {
      * Body Md
      */
     body_md: string;
+};
+
+/**
+ * SheetIn
+ *
+ * A file (base64, .xlsx or .csv) or pasted cells (`text`, tab separated).
+ */
+export type SheetIn = {
+    /**
+     * File Name
+     */
+    file_name?: string | null;
+    /**
+     * Content Base64
+     */
+    content_base64?: string | null;
+    /**
+     * Text
+     */
+    text?: string | null;
+};
+
+/**
+ * SheetOut
+ */
+export type SheetOut = {
+    /**
+     * Rows
+     */
+    rows: Array<{
+        [key: string]: string;
+    }>;
 };
 
 /**
@@ -1212,6 +2286,24 @@ export type SubjectOut = {
 };
 
 /**
+ * SubjectTreeOut
+ */
+export type SubjectTreeOut = {
+    /**
+     * Code
+     */
+    code: string;
+    /**
+     * Name
+     */
+    name: string;
+    /**
+     * Units
+     */
+    units: Array<ContentUnitOut>;
+};
+
+/**
  * SubmitIn
  */
 export type SubmitIn = {
@@ -1219,6 +2311,19 @@ export type SubmitIn = {
      * Answers
      */
     answers: Array<AnswerIn>;
+};
+
+/**
+ * SubmitOut
+ *
+ * `applied` is true for an admin (live at once); a teacher gets the pending `request`.
+ */
+export type SubmitOut = {
+    /**
+     * Applied
+     */
+    applied: boolean;
+    request: ChangeOut | null;
 };
 
 /**
@@ -1267,6 +2372,10 @@ export type TeachOverviewOut = {
      * Daily Sessions
      */
     daily_sessions: number;
+    /**
+     * Enabled
+     */
+    enabled?: boolean;
 };
 
 /**
@@ -1413,6 +2522,91 @@ export type UploadOut = {
      * Content Type
      */
     content_type: string;
+};
+
+/**
+ * UserAdminOut
+ */
+export type UserAdminOut = {
+    /**
+     * Id
+     */
+    id: string;
+    /**
+     * Name
+     */
+    name: string;
+    /**
+     * Email
+     */
+    email: string;
+    /**
+     * Avatar Initial
+     */
+    avatar_initial: string;
+    /**
+     * Avatar Color
+     */
+    avatar_color: number;
+    role: Role;
+    /**
+     * Is Locked
+     */
+    is_locked: boolean;
+    /**
+     * Lock Reason
+     */
+    lock_reason: string | null;
+    /**
+     * Locked At
+     */
+    locked_at: string | null;
+    /**
+     * Created At
+     */
+    created_at: string;
+    /**
+     * Last Login At
+     */
+    last_login_at: string | null;
+    /**
+     * Stars
+     */
+    stars: number;
+    /**
+     * Points
+     */
+    points: number;
+    /**
+     * Permissions
+     */
+    permissions: Array<PermissionOut>;
+};
+
+/**
+ * UserPageOut
+ */
+export type UserPageOut = {
+    /**
+     * Items
+     */
+    items: Array<UserAdminOut>;
+    /**
+     * Total
+     */
+    total: number;
+    /**
+     * Page
+     */
+    page: number;
+    /**
+     * Pages
+     */
+    pages: number;
+    /**
+     * Page Size
+     */
+    page_size: number;
 };
 
 /**
@@ -1871,6 +3065,78 @@ export type ActivitiesAttemptResultResponses = {
 };
 
 export type ActivitiesAttemptResultResponse = ActivitiesAttemptResultResponses[keyof ActivitiesAttemptResultResponses];
+
+export type ActivitiesLessonEssaysData = {
+    body?: never;
+    path: {
+        /**
+         * Subject
+         */
+        subject: string;
+        /**
+         * Code
+         */
+        code: string;
+    };
+    query?: never;
+    url: '/v1/subjects/{subject}/lessons/{code}/essays';
+};
+
+export type ActivitiesLessonEssaysErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type ActivitiesLessonEssaysError = ActivitiesLessonEssaysErrors[keyof ActivitiesLessonEssaysErrors];
+
+export type ActivitiesLessonEssaysResponses = {
+    /**
+     * Successful Response
+     */
+    200: EssaysOut;
+};
+
+export type ActivitiesLessonEssaysResponse = ActivitiesLessonEssaysResponses[keyof ActivitiesLessonEssaysResponses];
+
+export type ActivitiesSubmitEssayData = {
+    body: EssayIn;
+    path: {
+        /**
+         * Subject
+         */
+        subject: string;
+        /**
+         * Code
+         */
+        code: string;
+        /**
+         * Question Id
+         */
+        question_id: string;
+    };
+    query?: never;
+    url: '/v1/subjects/{subject}/lessons/{code}/essays/{question_id}';
+};
+
+export type ActivitiesSubmitEssayErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type ActivitiesSubmitEssayError = ActivitiesSubmitEssayErrors[keyof ActivitiesSubmitEssayErrors];
+
+export type ActivitiesSubmitEssayResponses = {
+    /**
+     * Successful Response
+     */
+    200: EssayAnswerOut;
+};
+
+export type ActivitiesSubmitEssayResponse = ActivitiesSubmitEssayResponses[keyof ActivitiesSubmitEssayResponses];
 
 export type ProgressMyProgressData = {
     body?: never;
@@ -2404,36 +3670,6 @@ export type ModerationAdminResolveResponses = {
 
 export type ModerationAdminResolveResponse = ModerationAdminResolveResponses[keyof ModerationAdminResolveResponses];
 
-export type ModerationAdminLockUserData = {
-    body?: never;
-    path: {
-        /**
-         * User Id
-         */
-        user_id: string;
-    };
-    query?: never;
-    url: '/v1/admin/users/{user_id}/lock';
-};
-
-export type ModerationAdminLockUserErrors = {
-    /**
-     * Validation Error
-     */
-    422: HttpValidationError;
-};
-
-export type ModerationAdminLockUserError = ModerationAdminLockUserErrors[keyof ModerationAdminLockUserErrors];
-
-export type ModerationAdminLockUserResponses = {
-    /**
-     * Successful Response
-     */
-    204: void;
-};
-
-export type ModerationAdminLockUserResponse = ModerationAdminLockUserResponses[keyof ModerationAdminLockUserResponses];
-
 export type LeaderboardContributionsData = {
     body?: never;
     path?: never;
@@ -2789,3 +4025,780 @@ export type AiTeachingGradeResponses = {
 };
 
 export type AiTeachingGradeResponse = AiTeachingGradeResponses[keyof AiTeachingGradeResponses];
+
+export type AdminAdminMeData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/v1/admin/me';
+};
+
+export type AdminAdminMeResponses = {
+    /**
+     * Successful Response
+     */
+    200: AdminMeOut;
+};
+
+export type AdminAdminMeResponse = AdminAdminMeResponses[keyof AdminAdminMeResponses];
+
+export type AdminListUsersData = {
+    body?: never;
+    path?: never;
+    query?: {
+        /**
+         * Q
+         */
+        q?: string | null;
+        /**
+         * Role
+         */
+        role?: Role | null;
+        /**
+         * Locked
+         */
+        locked?: boolean | null;
+        /**
+         * Page
+         */
+        page?: number;
+    };
+    url: '/v1/admin/users';
+};
+
+export type AdminListUsersErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type AdminListUsersError = AdminListUsersErrors[keyof AdminListUsersErrors];
+
+export type AdminListUsersResponses = {
+    /**
+     * Successful Response
+     */
+    200: UserPageOut;
+};
+
+export type AdminListUsersResponse = AdminListUsersResponses[keyof AdminListUsersResponses];
+
+export type AdminGetUserData = {
+    body?: never;
+    path: {
+        /**
+         * User Id
+         */
+        user_id: string;
+    };
+    query?: never;
+    url: '/v1/admin/users/{user_id}';
+};
+
+export type AdminGetUserErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type AdminGetUserError = AdminGetUserErrors[keyof AdminGetUserErrors];
+
+export type AdminGetUserResponses = {
+    /**
+     * Successful Response
+     */
+    200: UserAdminOut;
+};
+
+export type AdminGetUserResponse = AdminGetUserResponses[keyof AdminGetUserResponses];
+
+export type AdminLockUserData = {
+    body: LockIn;
+    path: {
+        /**
+         * User Id
+         */
+        user_id: string;
+    };
+    query?: never;
+    url: '/v1/admin/users/{user_id}/lock';
+};
+
+export type AdminLockUserErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type AdminLockUserError = AdminLockUserErrors[keyof AdminLockUserErrors];
+
+export type AdminLockUserResponses = {
+    /**
+     * Successful Response
+     */
+    200: UserAdminOut;
+};
+
+export type AdminLockUserResponse = AdminLockUserResponses[keyof AdminLockUserResponses];
+
+export type AdminUnlockUserData = {
+    body?: never;
+    path: {
+        /**
+         * User Id
+         */
+        user_id: string;
+    };
+    query?: never;
+    url: '/v1/admin/users/{user_id}/unlock';
+};
+
+export type AdminUnlockUserErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type AdminUnlockUserError = AdminUnlockUserErrors[keyof AdminUnlockUserErrors];
+
+export type AdminUnlockUserResponses = {
+    /**
+     * Successful Response
+     */
+    200: UserAdminOut;
+};
+
+export type AdminUnlockUserResponse = AdminUnlockUserResponses[keyof AdminUnlockUserResponses];
+
+export type AdminSetRoleData = {
+    body: RoleIn;
+    path: {
+        /**
+         * User Id
+         */
+        user_id: string;
+    };
+    query?: never;
+    url: '/v1/admin/users/{user_id}/role';
+};
+
+export type AdminSetRoleErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type AdminSetRoleError = AdminSetRoleErrors[keyof AdminSetRoleErrors];
+
+export type AdminSetRoleResponses = {
+    /**
+     * Successful Response
+     */
+    200: UserAdminOut;
+};
+
+export type AdminSetRoleResponse = AdminSetRoleResponses[keyof AdminSetRoleResponses];
+
+export type AdminAuditData = {
+    body?: never;
+    path?: never;
+    query?: {
+        /**
+         * Page
+         */
+        page?: number;
+    };
+    url: '/v1/admin/audit';
+};
+
+export type AdminAuditErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type AdminAuditError = AdminAuditErrors[keyof AdminAuditErrors];
+
+export type AdminAuditResponses = {
+    /**
+     * Successful Response
+     */
+    200: AuditPageOut;
+};
+
+export type AdminAuditResponse = AdminAuditResponses[keyof AdminAuditResponses];
+
+export type AdminAiGetAiSettingsData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/v1/admin/ai-settings';
+};
+
+export type AdminAiGetAiSettingsResponses = {
+    /**
+     * Successful Response
+     */
+    200: AiSettingsOut;
+};
+
+export type AdminAiGetAiSettingsResponse = AdminAiGetAiSettingsResponses[keyof AdminAiGetAiSettingsResponses];
+
+export type AdminAiPutAiSettingsData = {
+    body: AiSettingsIn;
+    path?: never;
+    query?: never;
+    url: '/v1/admin/ai-settings';
+};
+
+export type AdminAiPutAiSettingsErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type AdminAiPutAiSettingsError = AdminAiPutAiSettingsErrors[keyof AdminAiPutAiSettingsErrors];
+
+export type AdminAiPutAiSettingsResponses = {
+    /**
+     * Successful Response
+     */
+    200: AiSettingsOut;
+};
+
+export type AdminAiPutAiSettingsResponse = AdminAiPutAiSettingsResponses[keyof AdminAiPutAiSettingsResponses];
+
+export type AdminCommunityCommunityItemsData = {
+    body?: never;
+    path?: never;
+    query?: {
+        kind?: TargetType;
+        /**
+         * Box
+         */
+        box?: string | null;
+        /**
+         * State
+         */
+        state?: 'visible' | 'hidden' | 'deleted' | null;
+        /**
+         * Reported
+         */
+        reported?: boolean;
+        /**
+         * Q
+         */
+        q?: string;
+        /**
+         * Page
+         */
+        page?: number;
+    };
+    url: '/v1/admin/community';
+};
+
+export type AdminCommunityCommunityItemsErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type AdminCommunityCommunityItemsError = AdminCommunityCommunityItemsErrors[keyof AdminCommunityCommunityItemsErrors];
+
+export type AdminCommunityCommunityItemsResponses = {
+    /**
+     * Successful Response
+     */
+    200: CommunityPageOut;
+};
+
+export type AdminCommunityCommunityItemsResponse = AdminCommunityCommunityItemsResponses[keyof AdminCommunityCommunityItemsResponses];
+
+export type AdminCommunityCommunityActData = {
+    body?: never;
+    path: {
+        kind: TargetType;
+        /**
+         * Target Id
+         */
+        target_id: string;
+        /**
+         * Action
+         */
+        action: 'hide' | 'unhide' | 'delete';
+    };
+    query?: never;
+    url: '/v1/admin/community/{kind}/{target_id}/{action}';
+};
+
+export type AdminCommunityCommunityActErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type AdminCommunityCommunityActError = AdminCommunityCommunityActErrors[keyof AdminCommunityCommunityActErrors];
+
+export type AdminCommunityCommunityActResponses = {
+    /**
+     * Successful Response
+     */
+    200: CommunityResultOut;
+};
+
+export type AdminCommunityCommunityActResponse = AdminCommunityCommunityActResponses[keyof AdminCommunityCommunityActResponses];
+
+export type AdminCommunityPointsData = {
+    body?: never;
+    path?: never;
+    query?: {
+        /**
+         * Q
+         */
+        q?: string;
+        /**
+         * User Id
+         */
+        user_id?: string | null;
+    };
+    url: '/v1/admin/points';
+};
+
+export type AdminCommunityPointsErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type AdminCommunityPointsError = AdminCommunityPointsErrors[keyof AdminCommunityPointsErrors];
+
+export type AdminCommunityPointsResponses = {
+    /**
+     * Successful Response
+     */
+    200: PointsOut;
+};
+
+export type AdminCommunityPointsResponse = AdminCommunityPointsResponses[keyof AdminCommunityPointsResponses];
+
+export type AdminContentEditableSubjectsData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/v1/admin/content/subjects';
+};
+
+export type AdminContentEditableSubjectsResponses = {
+    /**
+     * Response Admin-Content-Editable Subjects
+     *
+     * Successful Response
+     */
+    200: Array<EditableSubjectOut>;
+};
+
+export type AdminContentEditableSubjectsResponse = AdminContentEditableSubjectsResponses[keyof AdminContentEditableSubjectsResponses];
+
+export type AdminContentSubjectTreeData = {
+    body?: never;
+    path: {
+        /**
+         * Code
+         */
+        code: string;
+    };
+    query?: never;
+    url: '/v1/admin/content/subjects/{code}';
+};
+
+export type AdminContentSubjectTreeErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type AdminContentSubjectTreeError = AdminContentSubjectTreeErrors[keyof AdminContentSubjectTreeErrors];
+
+export type AdminContentSubjectTreeResponses = {
+    /**
+     * Successful Response
+     */
+    200: SubjectTreeOut;
+};
+
+export type AdminContentSubjectTreeResponse = AdminContentSubjectTreeResponses[keyof AdminContentSubjectTreeResponses];
+
+export type AdminContentLessonForEditData = {
+    body?: never;
+    path: {
+        /**
+         * Lesson Id
+         */
+        lesson_id: string;
+    };
+    query?: never;
+    url: '/v1/admin/content/lessons/{lesson_id}';
+};
+
+export type AdminContentLessonForEditErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type AdminContentLessonForEditError = AdminContentLessonForEditErrors[keyof AdminContentLessonForEditErrors];
+
+export type AdminContentLessonForEditResponses = {
+    /**
+     * Successful Response
+     */
+    200: LessonEditOut;
+};
+
+export type AdminContentLessonForEditResponse = AdminContentLessonForEditResponses[keyof AdminContentLessonForEditResponses];
+
+export type AdminContentImportTemplateData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/v1/admin/content/import/template';
+};
+
+export type AdminContentImportTemplateResponses = {
+    /**
+     * Successful Response
+     */
+    200: unknown;
+};
+
+export type AdminContentImportReadData = {
+    body: SheetIn;
+    path?: never;
+    query?: never;
+    url: '/v1/admin/content/import/read';
+};
+
+export type AdminContentImportReadErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type AdminContentImportReadError = AdminContentImportReadErrors[keyof AdminContentImportReadErrors];
+
+export type AdminContentImportReadResponses = {
+    /**
+     * Successful Response
+     */
+    200: SheetOut;
+};
+
+export type AdminContentImportReadResponse = AdminContentImportReadResponses[keyof AdminContentImportReadResponses];
+
+export type AdminContentImportCheckData = {
+    body: CheckIn;
+    path?: never;
+    query?: never;
+    url: '/v1/admin/content/import/check';
+};
+
+export type AdminContentImportCheckErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type AdminContentImportCheckError = AdminContentImportCheckErrors[keyof AdminContentImportCheckErrors];
+
+export type AdminContentImportCheckResponses = {
+    /**
+     * Successful Response
+     */
+    200: CheckOut;
+};
+
+export type AdminContentImportCheckResponse = AdminContentImportCheckResponses[keyof AdminContentImportCheckResponses];
+
+export type AdminContentSubmitChangeData = {
+    body: ChangeIn;
+    path?: never;
+    query?: never;
+    url: '/v1/admin/content/changes';
+};
+
+export type AdminContentSubmitChangeErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type AdminContentSubmitChangeError = AdminContentSubmitChangeErrors[keyof AdminContentSubmitChangeErrors];
+
+export type AdminContentSubmitChangeResponses = {
+    /**
+     * Successful Response
+     */
+    200: SubmitOut;
+};
+
+export type AdminContentSubmitChangeResponse = AdminContentSubmitChangeResponses[keyof AdminContentSubmitChangeResponses];
+
+export type AdminContentListRequestsData = {
+    body?: never;
+    path?: never;
+    query?: {
+        /**
+         * Status
+         */
+        status?: ChangeStatus | null;
+        /**
+         * Mine
+         */
+        mine?: boolean;
+    };
+    url: '/v1/admin/change-requests';
+};
+
+export type AdminContentListRequestsErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type AdminContentListRequestsError = AdminContentListRequestsErrors[keyof AdminContentListRequestsErrors];
+
+export type AdminContentListRequestsResponses = {
+    /**
+     * Successful Response
+     */
+    200: ChangePageOut;
+};
+
+export type AdminContentListRequestsResponse = AdminContentListRequestsResponses[keyof AdminContentListRequestsResponses];
+
+export type AdminContentGetRequestData = {
+    body?: never;
+    path: {
+        /**
+         * Request Id
+         */
+        request_id: string;
+    };
+    query?: never;
+    url: '/v1/admin/change-requests/{request_id}';
+};
+
+export type AdminContentGetRequestErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type AdminContentGetRequestError = AdminContentGetRequestErrors[keyof AdminContentGetRequestErrors];
+
+export type AdminContentGetRequestResponses = {
+    /**
+     * Successful Response
+     */
+    200: ChangeOut;
+};
+
+export type AdminContentGetRequestResponse = AdminContentGetRequestResponses[keyof AdminContentGetRequestResponses];
+
+export type AdminContentReviseRequestData = {
+    body: ChangeIn;
+    path: {
+        /**
+         * Request Id
+         */
+        request_id: string;
+    };
+    query?: never;
+    url: '/v1/admin/change-requests/{request_id}';
+};
+
+export type AdminContentReviseRequestErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type AdminContentReviseRequestError = AdminContentReviseRequestErrors[keyof AdminContentReviseRequestErrors];
+
+export type AdminContentReviseRequestResponses = {
+    /**
+     * Successful Response
+     */
+    200: ChangeOut;
+};
+
+export type AdminContentReviseRequestResponse = AdminContentReviseRequestResponses[keyof AdminContentReviseRequestResponses];
+
+export type AdminContentWithdrawRequestData = {
+    body?: never;
+    path: {
+        /**
+         * Request Id
+         */
+        request_id: string;
+    };
+    query?: never;
+    url: '/v1/admin/change-requests/{request_id}/withdraw';
+};
+
+export type AdminContentWithdrawRequestErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type AdminContentWithdrawRequestError = AdminContentWithdrawRequestErrors[keyof AdminContentWithdrawRequestErrors];
+
+export type AdminContentWithdrawRequestResponses = {
+    /**
+     * Successful Response
+     */
+    200: ChangeOut;
+};
+
+export type AdminContentWithdrawRequestResponse = AdminContentWithdrawRequestResponses[keyof AdminContentWithdrawRequestResponses];
+
+export type AdminContentApproveRequestData = {
+    body?: never;
+    path: {
+        /**
+         * Request Id
+         */
+        request_id: string;
+    };
+    query?: never;
+    url: '/v1/admin/change-requests/{request_id}/approve';
+};
+
+export type AdminContentApproveRequestErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type AdminContentApproveRequestError = AdminContentApproveRequestErrors[keyof AdminContentApproveRequestErrors];
+
+export type AdminContentApproveRequestResponses = {
+    /**
+     * Successful Response
+     */
+    200: ChangeOut;
+};
+
+export type AdminContentApproveRequestResponse = AdminContentApproveRequestResponses[keyof AdminContentApproveRequestResponses];
+
+export type AdminContentRejectRequestData = {
+    body: RejectIn;
+    path: {
+        /**
+         * Request Id
+         */
+        request_id: string;
+    };
+    query?: never;
+    url: '/v1/admin/change-requests/{request_id}/reject';
+};
+
+export type AdminContentRejectRequestErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type AdminContentRejectRequestError = AdminContentRejectRequestErrors[keyof AdminContentRejectRequestErrors];
+
+export type AdminContentRejectRequestResponses = {
+    /**
+     * Successful Response
+     */
+    200: ChangeOut;
+};
+
+export type AdminContentRejectRequestResponse = AdminContentRejectRequestResponses[keyof AdminContentRejectRequestResponses];
+
+export type AdminEssaysEssayQueueData = {
+    body?: never;
+    path?: never;
+    query?: {
+        status?: EssayStatus;
+        /**
+         * Subject
+         */
+        subject?: string | null;
+    };
+    url: '/v1/admin/essays';
+};
+
+export type AdminEssaysEssayQueueErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type AdminEssaysEssayQueueError = AdminEssaysEssayQueueErrors[keyof AdminEssaysEssayQueueErrors];
+
+export type AdminEssaysEssayQueueResponses = {
+    /**
+     * Successful Response
+     */
+    200: EssayQueueOut;
+};
+
+export type AdminEssaysEssayQueueResponse = AdminEssaysEssayQueueResponses[keyof AdminEssaysEssayQueueResponses];
+
+export type AdminEssaysGradeEssayData = {
+    body: GradeIn;
+    path: {
+        /**
+         * Essay Id
+         */
+        essay_id: string;
+    };
+    query?: never;
+    url: '/v1/admin/essays/{essay_id}/grade';
+};
+
+export type AdminEssaysGradeEssayErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type AdminEssaysGradeEssayError = AdminEssaysGradeEssayErrors[keyof AdminEssaysGradeEssayErrors];
+
+export type AdminEssaysGradeEssayResponses = {
+    /**
+     * Successful Response
+     */
+    200: EssayRowOut;
+};
+
+export type AdminEssaysGradeEssayResponse = AdminEssaysGradeEssayResponses[keyof AdminEssaysGradeEssayResponses];

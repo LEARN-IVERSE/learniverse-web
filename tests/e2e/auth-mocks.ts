@@ -47,6 +47,28 @@ export async function mockAccountApi(
   await page.route("**/api/v1/me", (route) =>
     current ? route.fulfill({ json: current }) : route.fulfill({ status: 401, json: UNAUTHENTICATED }),
   );
+  // K11a: the admin menu. Admins see every section; a test can register its own route for teachers.
+  await page.route("**/api/v1/admin/me", (route) =>
+    current?.role === "admin"
+      ? route.fulfill({
+          json: {
+            role: "admin",
+            permissions: [],
+            sections: [
+              "users",
+              "content",
+              "reviews",
+              "essays",
+              "community",
+              "reports",
+              "points",
+              "ai",
+              "audit",
+            ],
+          },
+        })
+      : route.fulfill({ status: 403, json: { error: { code: "forbidden", message: "Không có quyền" } } }),
+  );
   await page.route("**/api/v1/auth/logout", (route) => {
     current = null;
     return route.fulfill({ status: 204 });

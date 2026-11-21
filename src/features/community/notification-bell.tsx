@@ -89,7 +89,11 @@ export function NotificationBell() {
               {data.items.map((n) => (
                 <li key={n.id}>
                   <Link
-                    href={`/community/posts/${n.post_id}#comments`}
+                    href={
+                      n.essay
+                        ? `/courses/${n.essay.subject_code}/${n.essay.lesson_code}/essays`
+                        : `/community/posts/${n.post_id}#comments`
+                    }
                     onClick={() => setOpen(false)}
                     className={cn(
                       "flex gap-3 rounded-2xl px-3 py-2.5 text-sm hover:bg-blue-50",
@@ -100,10 +104,16 @@ export function NotificationBell() {
                     <span className="min-w-0">
                       <span className="block">
                         <strong>{n.actor.name}</strong>{" "}
-                        {n.kind === "reply" ? "đã trả lời bình luận của bạn" : "đã bình luận bài của bạn"}
+                        {n.essay
+                          ? n.essay.status === "passed"
+                            ? "đã chấm bài tự luận của bạn: Đạt"
+                            : "đã chấm bài tự luận của bạn: Chưa đạt"
+                          : n.kind === "reply"
+                            ? "đã trả lời bình luận của bạn"
+                            : "đã bình luận bài của bạn"}
                       </span>
                       <span className="block truncate text-xs text-muted-foreground">
-                        {n.post_title} · {timeAgo(n.created_at)}
+                        {n.essay ? n.essay.lesson_title : n.post_title} · {timeAgo(n.created_at)}
                       </span>
                     </span>
                   </Link>
