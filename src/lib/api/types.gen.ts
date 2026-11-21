@@ -303,6 +303,36 @@ export type GoogleSignInIn = {
 };
 
 /**
+ * GradeOut
+ */
+export type GradeOut = {
+    /**
+     * Score
+     */
+    score: number;
+    /**
+     * Feedback
+     */
+    feedback: string;
+    /**
+     * Strengths
+     */
+    strengths: Array<string>;
+    /**
+     * Improvements
+     */
+    improvements: Array<string>;
+    /**
+     * Passed
+     */
+    passed: boolean;
+    /**
+     * Star Earned
+     */
+    star_earned: boolean;
+};
+
+/**
  * HTTPValidationError
  */
 export type HttpValidationError = {
@@ -1197,6 +1227,88 @@ export type SubmitIn = {
 export type TargetType = 'post' | 'comment';
 
 /**
+ * TeachAnswerIn
+ */
+export type TeachAnswerIn = {
+    /**
+     * Text
+     */
+    text: string;
+};
+
+/**
+ * TeachLessonIn
+ */
+export type TeachLessonIn = {
+    /**
+     * Subject
+     */
+    subject: string;
+    /**
+     * Code
+     */
+    code: string;
+};
+
+/**
+ * TeachOverviewOut
+ */
+export type TeachOverviewOut = {
+    session: TeachSessionOut | null;
+    /**
+     * Earned
+     */
+    earned: boolean;
+    /**
+     * Sessions Left
+     */
+    sessions_left: number;
+    /**
+     * Daily Sessions
+     */
+    daily_sessions: number;
+};
+
+/**
+ * TeachSessionOut
+ */
+export type TeachSessionOut = {
+    /**
+     * Id
+     */
+    id: string;
+    /**
+     * Subject Code
+     */
+    subject_code: string;
+    /**
+     * Lesson Code
+     */
+    lesson_code: string;
+    /**
+     * Lesson Title
+     */
+    lesson_title: string;
+    /**
+     * Status
+     */
+    status: string;
+    /**
+     * Turns
+     */
+    turns: Array<TurnOut>;
+    /**
+     * Answered
+     */
+    answered: number;
+    /**
+     * Total Turns
+     */
+    total_turns?: number;
+    result: GradeOut | null;
+};
+
+/**
  * TimeBoardOut
  */
 export type TimeBoardOut = {
@@ -1228,6 +1340,24 @@ export type TimeRowOut = {
      * Seconds
      */
     seconds: number;
+};
+
+/**
+ * TurnOut
+ */
+export type TurnOut = {
+    /**
+     * N
+     */
+    n: number;
+    /**
+     * Question
+     */
+    question: string;
+    /**
+     * Answer
+     */
+    answer: string | null;
 };
 
 /**
@@ -1342,38 +1472,6 @@ export type HealthHealthResponses = {
 };
 
 export type HealthHealthResponse = HealthHealthResponses[keyof HealthHealthResponses];
-
-export type HealthHealthStreamData = {
-    body?: never;
-    path?: never;
-    query?: {
-        /**
-         * Count
-         */
-        count?: number;
-        /**
-         * Interval
-         */
-        interval?: number;
-    };
-    url: '/v1/health/stream';
-};
-
-export type HealthHealthStreamErrors = {
-    /**
-     * Validation Error
-     */
-    422: HttpValidationError;
-};
-
-export type HealthHealthStreamError = HealthHealthStreamErrors[keyof HealthHealthStreamErrors];
-
-export type HealthHealthStreamResponses = {
-    /**
-     * Successful Response
-     */
-    200: unknown;
-};
 
 export type HealthHealthDbData = {
     body?: never;
@@ -2514,3 +2612,180 @@ export type AiSendMessageResponses = {
      */
     200: unknown;
 };
+
+export type AiTeachingOverviewData = {
+    body?: never;
+    path: {
+        /**
+         * Subject
+         */
+        subject: string;
+        /**
+         * Code
+         */
+        code: string;
+    };
+    query?: never;
+    url: '/v1/subjects/{subject}/lessons/{code}/ai-teaching';
+};
+
+export type AiTeachingOverviewErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type AiTeachingOverviewError = AiTeachingOverviewErrors[keyof AiTeachingOverviewErrors];
+
+export type AiTeachingOverviewResponses = {
+    /**
+     * Successful Response
+     */
+    200: TeachOverviewOut;
+};
+
+export type AiTeachingOverviewResponse = AiTeachingOverviewResponses[keyof AiTeachingOverviewResponses];
+
+export type AiTeachingStartData = {
+    body: TeachLessonIn;
+    path?: never;
+    query?: never;
+    url: '/v1/ai-teaching/sessions';
+};
+
+export type AiTeachingStartErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type AiTeachingStartError = AiTeachingStartErrors[keyof AiTeachingStartErrors];
+
+export type AiTeachingStartResponses = {
+    /**
+     * Successful Response
+     */
+    201: TeachSessionOut;
+};
+
+export type AiTeachingStartResponse = AiTeachingStartResponses[keyof AiTeachingStartResponses];
+
+export type AiTeachingGetData = {
+    body?: never;
+    path: {
+        /**
+         * Session Id
+         */
+        session_id: string;
+    };
+    query?: never;
+    url: '/v1/ai-teaching/sessions/{session_id}';
+};
+
+export type AiTeachingGetErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type AiTeachingGetError = AiTeachingGetErrors[keyof AiTeachingGetErrors];
+
+export type AiTeachingGetResponses = {
+    /**
+     * Successful Response
+     */
+    200: TeachSessionOut;
+};
+
+export type AiTeachingGetResponse = AiTeachingGetResponses[keyof AiTeachingGetResponses];
+
+export type AiTeachingQuestionData = {
+    body?: never;
+    path: {
+        /**
+         * Session Id
+         */
+        session_id: string;
+    };
+    query?: never;
+    url: '/v1/ai-teaching/sessions/{session_id}/question';
+};
+
+export type AiTeachingQuestionErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type AiTeachingQuestionError = AiTeachingQuestionErrors[keyof AiTeachingQuestionErrors];
+
+export type AiTeachingQuestionResponses = {
+    /**
+     * SSE: delta, done, error
+     */
+    200: unknown;
+};
+
+export type AiTeachingAnswerData = {
+    body: TeachAnswerIn;
+    path: {
+        /**
+         * Session Id
+         */
+        session_id: string;
+    };
+    query?: never;
+    url: '/v1/ai-teaching/sessions/{session_id}/answers';
+};
+
+export type AiTeachingAnswerErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type AiTeachingAnswerError = AiTeachingAnswerErrors[keyof AiTeachingAnswerErrors];
+
+export type AiTeachingAnswerResponses = {
+    /**
+     * Successful Response
+     */
+    200: TeachSessionOut;
+};
+
+export type AiTeachingAnswerResponse = AiTeachingAnswerResponses[keyof AiTeachingAnswerResponses];
+
+export type AiTeachingGradeData = {
+    body?: never;
+    path: {
+        /**
+         * Session Id
+         */
+        session_id: string;
+    };
+    query?: never;
+    url: '/v1/ai-teaching/sessions/{session_id}/grade';
+};
+
+export type AiTeachingGradeErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type AiTeachingGradeError = AiTeachingGradeErrors[keyof AiTeachingGradeErrors];
+
+export type AiTeachingGradeResponses = {
+    /**
+     * Successful Response
+     */
+    200: TeachSessionOut;
+};
+
+export type AiTeachingGradeResponse = AiTeachingGradeResponses[keyof AiTeachingGradeResponses];

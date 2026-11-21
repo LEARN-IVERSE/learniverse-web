@@ -49,7 +49,7 @@ function actionsFor(subject: string, lesson: LessonRowOut): Action[] {
       soon: "Chưa mở",
       earned: has("exercise"),
     },
-    { label: "Dạy AI", icon: Bot, soon: "Mở ở K10", earned: has("ai_teaching") },
+    { label: "Dạy AI", icon: Bot, href: `${base}/teach`, soon: "", earned: has("ai_teaching") },
     {
       label: "Ôn tập",
       icon: RefreshCw,

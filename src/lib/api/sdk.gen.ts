@@ -2,7 +2,7 @@
 
 import type { Client, ClientMeta, Options as Options2, RequestResult, TDataShape } from './client';
 import { client } from './client.gen';
-import type { ActivitiesAttemptResultData, ActivitiesAttemptResultErrors, ActivitiesAttemptResultResponses, ActivitiesLessonActivitiesData, ActivitiesLessonActivitiesErrors, ActivitiesLessonActivitiesResponses, ActivitiesReadCompleteData, ActivitiesReadCompleteErrors, ActivitiesReadCompleteResponses, ActivitiesReadStartData, ActivitiesReadStartErrors, ActivitiesReadStartResponses, ActivitiesStartAttemptData, ActivitiesStartAttemptErrors, ActivitiesStartAttemptResponses, ActivitiesSubmitData, ActivitiesSubmitErrors, ActivitiesSubmitResponses, AiCreateConversationData, AiCreateConversationErrors, AiCreateConversationResponses, AiDeleteConversationData, AiDeleteConversationErrors, AiDeleteConversationResponses, AiGetConversationData, AiGetConversationErrors, AiGetConversationResponses, AiGetQuotaData, AiGetQuotaResponses, AiListConversationsData, AiListConversationsResponses, AiSendMessageData, AiSendMessageErrors, AiSendMessageResponses, AuthAdminPingData, AuthAdminPingResponses, AuthMeData, AuthMeResponses, AuthSignInGoogleData, AuthSignInGoogleErrors, AuthSignInGoogleResponses, AuthSignOutData, AuthSignOutResponses, CatalogLessonData, CatalogLessonErrors, CatalogLessonResponses, CatalogSearchLessonsData, CatalogSearchLessonsErrors, CatalogSearchLessonsResponses, CatalogSubjectOutlineData, CatalogSubjectOutlineErrors, CatalogSubjectOutlineResponses, CatalogSubjectsData, CatalogSubjectsResponses, CommunityAddCommentData, CommunityAddCommentErrors, CommunityAddCommentResponses, CommunityCreatePostData, CommunityCreatePostErrors, CommunityCreatePostResponses, CommunityCreateUploadData, CommunityCreateUploadErrors, CommunityCreateUploadResponses, CommunityDeleteCommentData, CommunityDeleteCommentErrors, CommunityDeleteCommentResponses, CommunityDeletePostData, CommunityDeletePostErrors, CommunityDeletePostResponses, CommunityEditCommentData, CommunityEditCommentErrors, CommunityEditCommentResponses, CommunityEditPostData, CommunityEditPostErrors, CommunityEditPostResponses, CommunityGetPostData, CommunityGetPostErrors, CommunityGetPostResponses, CommunityListCommentsData, CommunityListCommentsErrors, CommunityListCommentsResponses, CommunityListPostsData, CommunityListPostsErrors, CommunityListPostsResponses, CommunityMyNotificationsData, CommunityMyNotificationsResponses, CommunityNewPostsData, CommunityNewPostsErrors, CommunityNewPostsResponses, CommunityReadNotificationsData, CommunityReadNotificationsResponses, HealthHealthData, HealthHealthDbData, HealthHealthDbResponses, HealthHealthResponses, HealthHealthStreamData, HealthHealthStreamErrors, HealthHealthStreamResponses, LeaderboardContributionsData, LeaderboardContributionsResponses, LeaderboardStudyTimeData, LeaderboardStudyTimeResponses, ModerationAdminLockUserData, ModerationAdminLockUserErrors, ModerationAdminLockUserResponses, ModerationAdminReportsData, ModerationAdminReportsErrors, ModerationAdminReportsResponses, ModerationAdminResolveData, ModerationAdminResolveErrors, ModerationAdminResolveResponses, ModerationAdminReviewData, ModerationAdminReviewErrors, ModerationAdminReviewResponses, ModerationReportContentData, ModerationReportContentErrors, ModerationReportContentResponses, ProgressMyProgressData, ProgressMyProgressResponses, ProgressTimeHeartbeatData, ProgressTimeHeartbeatErrors, ProgressTimeHeartbeatResponses } from './types.gen';
+import type { ActivitiesAttemptResultData, ActivitiesAttemptResultErrors, ActivitiesAttemptResultResponses, ActivitiesLessonActivitiesData, ActivitiesLessonActivitiesErrors, ActivitiesLessonActivitiesResponses, ActivitiesReadCompleteData, ActivitiesReadCompleteErrors, ActivitiesReadCompleteResponses, ActivitiesReadStartData, ActivitiesReadStartErrors, ActivitiesReadStartResponses, ActivitiesStartAttemptData, ActivitiesStartAttemptErrors, ActivitiesStartAttemptResponses, ActivitiesSubmitData, ActivitiesSubmitErrors, ActivitiesSubmitResponses, AiCreateConversationData, AiCreateConversationErrors, AiCreateConversationResponses, AiDeleteConversationData, AiDeleteConversationErrors, AiDeleteConversationResponses, AiGetConversationData, AiGetConversationErrors, AiGetConversationResponses, AiGetQuotaData, AiGetQuotaResponses, AiListConversationsData, AiListConversationsResponses, AiSendMessageData, AiSendMessageErrors, AiSendMessageResponses, AiTeachingAnswerData, AiTeachingAnswerErrors, AiTeachingAnswerResponses, AiTeachingGetData, AiTeachingGetErrors, AiTeachingGetResponses, AiTeachingGradeData, AiTeachingGradeErrors, AiTeachingGradeResponses, AiTeachingOverviewData, AiTeachingOverviewErrors, AiTeachingOverviewResponses, AiTeachingQuestionData, AiTeachingQuestionErrors, AiTeachingQuestionResponses, AiTeachingStartData, AiTeachingStartErrors, AiTeachingStartResponses, AuthAdminPingData, AuthAdminPingResponses, AuthMeData, AuthMeResponses, AuthSignInGoogleData, AuthSignInGoogleErrors, AuthSignInGoogleResponses, AuthSignOutData, AuthSignOutResponses, CatalogLessonData, CatalogLessonErrors, CatalogLessonResponses, CatalogSearchLessonsData, CatalogSearchLessonsErrors, CatalogSearchLessonsResponses, CatalogSubjectOutlineData, CatalogSubjectOutlineErrors, CatalogSubjectOutlineResponses, CatalogSubjectsData, CatalogSubjectsResponses, CommunityAddCommentData, CommunityAddCommentErrors, CommunityAddCommentResponses, CommunityCreatePostData, CommunityCreatePostErrors, CommunityCreatePostResponses, CommunityCreateUploadData, CommunityCreateUploadErrors, CommunityCreateUploadResponses, CommunityDeleteCommentData, CommunityDeleteCommentErrors, CommunityDeleteCommentResponses, CommunityDeletePostData, CommunityDeletePostErrors, CommunityDeletePostResponses, CommunityEditCommentData, CommunityEditCommentErrors, CommunityEditCommentResponses, CommunityEditPostData, CommunityEditPostErrors, CommunityEditPostResponses, CommunityGetPostData, CommunityGetPostErrors, CommunityGetPostResponses, CommunityListCommentsData, CommunityListCommentsErrors, CommunityListCommentsResponses, CommunityListPostsData, CommunityListPostsErrors, CommunityListPostsResponses, CommunityMyNotificationsData, CommunityMyNotificationsResponses, CommunityNewPostsData, CommunityNewPostsErrors, CommunityNewPostsResponses, CommunityReadNotificationsData, CommunityReadNotificationsResponses, HealthHealthData, HealthHealthDbData, HealthHealthDbResponses, HealthHealthResponses, LeaderboardContributionsData, LeaderboardContributionsResponses, LeaderboardStudyTimeData, LeaderboardStudyTimeResponses, ModerationAdminLockUserData, ModerationAdminLockUserErrors, ModerationAdminLockUserResponses, ModerationAdminReportsData, ModerationAdminReportsErrors, ModerationAdminReportsResponses, ModerationAdminResolveData, ModerationAdminResolveErrors, ModerationAdminResolveResponses, ModerationAdminReviewData, ModerationAdminReviewErrors, ModerationAdminReviewResponses, ModerationReportContentData, ModerationReportContentErrors, ModerationReportContentResponses, ProgressMyProgressData, ProgressMyProgressResponses, ProgressTimeHeartbeatData, ProgressTimeHeartbeatErrors, ProgressTimeHeartbeatResponses } from './types.gen';
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean, TResponse = unknown> = Options2<TData, ThrowOnError, TResponse> & {
     /**
@@ -22,16 +22,6 @@ export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends 
  * Health
  */
 export const healthHealth = <ThrowOnError extends boolean = false>(options?: Options<HealthHealthData, ThrowOnError>): RequestResult<HealthHealthResponses, unknown, ThrowOnError> => (options?.client ?? client).get<HealthHealthResponses, unknown, ThrowOnError>({ url: '/v1/health', ...options });
-
-/**
- * Health Stream
- *
- * Temporary K9 spike: emit `count` SSE events, one per `interval` seconds.
- *
- * Used to check that events arrive one by one through the Next.js proxy and the
- * ngrok tunnel instead of being buffered into a single chunk.
- */
-export const healthHealthStream = <ThrowOnError extends boolean = false>(options?: Options<HealthHealthStreamData, ThrowOnError>): RequestResult<HealthHealthStreamResponses, HealthHealthStreamErrors, ThrowOnError> => (options?.client ?? client).get<HealthHealthStreamResponses, HealthHealthStreamErrors, ThrowOnError>({ url: '/v1/health/stream', ...options });
 
 /**
  * Health Db
@@ -342,3 +332,51 @@ export const aiSendMessage = <ThrowOnError extends boolean = false>(options: Opt
         ...options.headers
     }
 });
+
+/**
+ * Overview
+ */
+export const aiTeachingOverview = <ThrowOnError extends boolean = false>(options: Options<AiTeachingOverviewData, ThrowOnError>): RequestResult<AiTeachingOverviewResponses, AiTeachingOverviewErrors, ThrowOnError> => (options.client ?? client).get<AiTeachingOverviewResponses, AiTeachingOverviewErrors, ThrowOnError>({ url: '/v1/subjects/{subject}/lessons/{code}/ai-teaching', ...options });
+
+/**
+ * Start
+ */
+export const aiTeachingStart = <ThrowOnError extends boolean = false>(options: Options<AiTeachingStartData, ThrowOnError>): RequestResult<AiTeachingStartResponses, AiTeachingStartErrors, ThrowOnError> => (options.client ?? client).post<AiTeachingStartResponses, AiTeachingStartErrors, ThrowOnError>({
+    url: '/v1/ai-teaching/sessions',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+/**
+ * Get
+ */
+export const aiTeachingGet = <ThrowOnError extends boolean = false>(options: Options<AiTeachingGetData, ThrowOnError>): RequestResult<AiTeachingGetResponses, AiTeachingGetErrors, ThrowOnError> => (options.client ?? client).get<AiTeachingGetResponses, AiTeachingGetErrors, ThrowOnError>({ url: '/v1/ai-teaching/sessions/{session_id}', ...options });
+
+/**
+ * Question
+ */
+export const aiTeachingQuestion = <ThrowOnError extends boolean = false>(options: Options<AiTeachingQuestionData, ThrowOnError>): RequestResult<AiTeachingQuestionResponses, AiTeachingQuestionErrors, ThrowOnError> => (options.client ?? client).post<AiTeachingQuestionResponses, AiTeachingQuestionErrors, ThrowOnError>({ url: '/v1/ai-teaching/sessions/{session_id}/question', ...options });
+
+/**
+ * Answer
+ *
+ * Answers 1-4 return the session; the 5th is graded right away (the answer is saved first).
+ */
+export const aiTeachingAnswer = <ThrowOnError extends boolean = false>(options: Options<AiTeachingAnswerData, ThrowOnError>): RequestResult<AiTeachingAnswerResponses, AiTeachingAnswerErrors, ThrowOnError> => (options.client ?? client).post<AiTeachingAnswerResponses, AiTeachingAnswerErrors, ThrowOnError>({
+    url: '/v1/ai-teaching/sessions/{session_id}/answers',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+/**
+ * Grade
+ *
+ * Grade again after a failed attempt (K10-D4); a finished session just returns its result.
+ */
+export const aiTeachingGrade = <ThrowOnError extends boolean = false>(options: Options<AiTeachingGradeData, ThrowOnError>): RequestResult<AiTeachingGradeResponses, AiTeachingGradeErrors, ThrowOnError> => (options.client ?? client).post<AiTeachingGradeResponses, AiTeachingGradeErrors, ThrowOnError>({ url: '/v1/ai-teaching/sessions/{session_id}/grade', ...options });
