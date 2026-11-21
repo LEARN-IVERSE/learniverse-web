@@ -90,5 +90,8 @@ test.describe("sign in with Google (K3)", () => {
     await page.getByRole("link", { name: "Trang quản trị" }).click();
     await expect(page).toHaveURL(/\/admin$/);
     await expect(page.getByRole("heading", { level: 1, name: "Trang quản trị" })).toBeVisible();
+    await expect(
+      page.getByRole("navigation", { name: "Menu quản trị" }).getByRole("link", { name: "Tài khoản" }),
+    ).toBeVisible();
   });
 });

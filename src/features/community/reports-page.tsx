@@ -8,7 +8,7 @@ import { EmptyState } from "@/components/states/empty-state";
 import { ErrorState } from "@/components/states/error-state";
 import { PageSkeleton } from "@/components/states/page-skeleton";
 import {
-  moderationAdminLockUser,
+  adminLockUser,
   moderationAdminReports,
   moderationAdminResolve,
   moderationAdminReview,
@@ -130,7 +130,10 @@ function ReportCard({ report, onChanged }: { report: ReportOut; onChanged: () =>
             disabled={busy}
             onClick={() =>
               void run(() =>
-                moderationAdminLockUser({ path: { user_id: report.target_author_id as string } }),
+                adminLockUser({
+                  path: { user_id: report.target_author_id as string },
+                  body: { reason: "Vi phạm nội quy (từ báo cáo vi phạm)" },
+                }),
               )
             }
             className={cn(btn, "ml-auto text-rose-700 ring-1 ring-rose-200 hover:bg-rose-50")}

@@ -108,7 +108,7 @@ export function AccountMenu() {
             </dl>
           )}
           <div className="p-2">
-            {user.role === "admin" && (
+            {(user.role === "admin" || user.role === "teacher") && (
               <Link
                 href="/admin"
                 onClick={() => setOpen(false)}

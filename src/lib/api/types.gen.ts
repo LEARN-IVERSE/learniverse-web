@@ -46,6 +46,23 @@ export type ActivityStateOut = {
 };
 
 /**
+ * AdminMeOut
+ *
+ * What the signed-in user may open in the admin area (drives the menu).
+ */
+export type AdminMeOut = {
+    role: Role;
+    /**
+     * Permissions
+     */
+    permissions: Array<PermissionOut>;
+    /**
+     * Sections
+     */
+    sections: Array<string>;
+};
+
+/**
  * AnswerIn
  */
 export type AnswerIn = {
@@ -91,6 +108,70 @@ export type AttemptOut = {
  * AttemptStatus
  */
 export type AttemptStatus = 'in_progress' | 'graded' | 'pending_review';
+
+/**
+ * AuditOut
+ */
+export type AuditOut = {
+    /**
+     * Id
+     */
+    id: string;
+    /**
+     * Actor Name
+     */
+    actor_name: string | null;
+    /**
+     * Action
+     */
+    action: string;
+    /**
+     * Target Type
+     */
+    target_type: string;
+    /**
+     * Target Id
+     */
+    target_id: string;
+    /**
+     * Before
+     */
+    before: {
+        [key: string]: unknown;
+    } | null;
+    /**
+     * After
+     */
+    after: {
+        [key: string]: unknown;
+    } | null;
+    /**
+     * Created At
+     */
+    created_at: string;
+};
+
+/**
+ * AuditPageOut
+ */
+export type AuditPageOut = {
+    /**
+     * Items
+     */
+    items: Array<AuditOut>;
+    /**
+     * Total
+     */
+    total: number;
+    /**
+     * Page
+     */
+    page: number;
+    /**
+     * Pages
+     */
+    pages: number;
+};
 
 /**
  * AuthorOut
@@ -501,6 +582,16 @@ export type LessonRowOut = {
 };
 
 /**
+ * LockIn
+ */
+export type LockIn = {
+    /**
+     * Reason
+     */
+    reason: string;
+};
+
+/**
  * MeOut
  */
 export type MeOut = {
@@ -743,6 +834,35 @@ export type PeriodicConfigOut = {
      * Pass Percent
      */
     pass_percent: number;
+};
+
+/**
+ * Permission
+ *
+ * What a teacher may do (K11-D2). Admins implicitly have all of them.
+ */
+export type Permission = 'content' | 'essay_review' | 'moderation';
+
+/**
+ * PermissionIn
+ */
+export type PermissionIn = {
+    permission: Permission;
+    /**
+     * Subject
+     */
+    subject?: string | null;
+};
+
+/**
+ * PermissionOut
+ */
+export type PermissionOut = {
+    permission: Permission;
+    /**
+     * Subject
+     */
+    subject: string | null;
 };
 
 /**
@@ -1124,6 +1244,17 @@ export type ReviewedQuestionOut = {
 export type Role = 'student' | 'teacher' | 'admin';
 
 /**
+ * RoleIn
+ */
+export type RoleIn = {
+    role: Role;
+    /**
+     * Permissions
+     */
+    permissions?: Array<PermissionIn>;
+};
+
+/**
  * SearchHitOut
  */
 export type SearchHitOut = {
@@ -1413,6 +1544,91 @@ export type UploadOut = {
      * Content Type
      */
     content_type: string;
+};
+
+/**
+ * UserAdminOut
+ */
+export type UserAdminOut = {
+    /**
+     * Id
+     */
+    id: string;
+    /**
+     * Name
+     */
+    name: string;
+    /**
+     * Email
+     */
+    email: string;
+    /**
+     * Avatar Initial
+     */
+    avatar_initial: string;
+    /**
+     * Avatar Color
+     */
+    avatar_color: number;
+    role: Role;
+    /**
+     * Is Locked
+     */
+    is_locked: boolean;
+    /**
+     * Lock Reason
+     */
+    lock_reason: string | null;
+    /**
+     * Locked At
+     */
+    locked_at: string | null;
+    /**
+     * Created At
+     */
+    created_at: string;
+    /**
+     * Last Login At
+     */
+    last_login_at: string | null;
+    /**
+     * Stars
+     */
+    stars: number;
+    /**
+     * Points
+     */
+    points: number;
+    /**
+     * Permissions
+     */
+    permissions: Array<PermissionOut>;
+};
+
+/**
+ * UserPageOut
+ */
+export type UserPageOut = {
+    /**
+     * Items
+     */
+    items: Array<UserAdminOut>;
+    /**
+     * Total
+     */
+    total: number;
+    /**
+     * Page
+     */
+    page: number;
+    /**
+     * Pages
+     */
+    pages: number;
+    /**
+     * Page Size
+     */
+    page_size: number;
 };
 
 /**
@@ -2404,36 +2620,6 @@ export type ModerationAdminResolveResponses = {
 
 export type ModerationAdminResolveResponse = ModerationAdminResolveResponses[keyof ModerationAdminResolveResponses];
 
-export type ModerationAdminLockUserData = {
-    body?: never;
-    path: {
-        /**
-         * User Id
-         */
-        user_id: string;
-    };
-    query?: never;
-    url: '/v1/admin/users/{user_id}/lock';
-};
-
-export type ModerationAdminLockUserErrors = {
-    /**
-     * Validation Error
-     */
-    422: HttpValidationError;
-};
-
-export type ModerationAdminLockUserError = ModerationAdminLockUserErrors[keyof ModerationAdminLockUserErrors];
-
-export type ModerationAdminLockUserResponses = {
-    /**
-     * Successful Response
-     */
-    204: void;
-};
-
-export type ModerationAdminLockUserResponse = ModerationAdminLockUserResponses[keyof ModerationAdminLockUserResponses];
-
 export type LeaderboardContributionsData = {
     body?: never;
     path?: never;
@@ -2789,3 +2975,211 @@ export type AiTeachingGradeResponses = {
 };
 
 export type AiTeachingGradeResponse = AiTeachingGradeResponses[keyof AiTeachingGradeResponses];
+
+export type AdminAdminMeData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/v1/admin/me';
+};
+
+export type AdminAdminMeResponses = {
+    /**
+     * Successful Response
+     */
+    200: AdminMeOut;
+};
+
+export type AdminAdminMeResponse = AdminAdminMeResponses[keyof AdminAdminMeResponses];
+
+export type AdminListUsersData = {
+    body?: never;
+    path?: never;
+    query?: {
+        /**
+         * Q
+         */
+        q?: string | null;
+        /**
+         * Role
+         */
+        role?: Role | null;
+        /**
+         * Locked
+         */
+        locked?: boolean | null;
+        /**
+         * Page
+         */
+        page?: number;
+    };
+    url: '/v1/admin/users';
+};
+
+export type AdminListUsersErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type AdminListUsersError = AdminListUsersErrors[keyof AdminListUsersErrors];
+
+export type AdminListUsersResponses = {
+    /**
+     * Successful Response
+     */
+    200: UserPageOut;
+};
+
+export type AdminListUsersResponse = AdminListUsersResponses[keyof AdminListUsersResponses];
+
+export type AdminGetUserData = {
+    body?: never;
+    path: {
+        /**
+         * User Id
+         */
+        user_id: string;
+    };
+    query?: never;
+    url: '/v1/admin/users/{user_id}';
+};
+
+export type AdminGetUserErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type AdminGetUserError = AdminGetUserErrors[keyof AdminGetUserErrors];
+
+export type AdminGetUserResponses = {
+    /**
+     * Successful Response
+     */
+    200: UserAdminOut;
+};
+
+export type AdminGetUserResponse = AdminGetUserResponses[keyof AdminGetUserResponses];
+
+export type AdminLockUserData = {
+    body: LockIn;
+    path: {
+        /**
+         * User Id
+         */
+        user_id: string;
+    };
+    query?: never;
+    url: '/v1/admin/users/{user_id}/lock';
+};
+
+export type AdminLockUserErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type AdminLockUserError = AdminLockUserErrors[keyof AdminLockUserErrors];
+
+export type AdminLockUserResponses = {
+    /**
+     * Successful Response
+     */
+    200: UserAdminOut;
+};
+
+export type AdminLockUserResponse = AdminLockUserResponses[keyof AdminLockUserResponses];
+
+export type AdminUnlockUserData = {
+    body?: never;
+    path: {
+        /**
+         * User Id
+         */
+        user_id: string;
+    };
+    query?: never;
+    url: '/v1/admin/users/{user_id}/unlock';
+};
+
+export type AdminUnlockUserErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type AdminUnlockUserError = AdminUnlockUserErrors[keyof AdminUnlockUserErrors];
+
+export type AdminUnlockUserResponses = {
+    /**
+     * Successful Response
+     */
+    200: UserAdminOut;
+};
+
+export type AdminUnlockUserResponse = AdminUnlockUserResponses[keyof AdminUnlockUserResponses];
+
+export type AdminSetRoleData = {
+    body: RoleIn;
+    path: {
+        /**
+         * User Id
+         */
+        user_id: string;
+    };
+    query?: never;
+    url: '/v1/admin/users/{user_id}/role';
+};
+
+export type AdminSetRoleErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type AdminSetRoleError = AdminSetRoleErrors[keyof AdminSetRoleErrors];
+
+export type AdminSetRoleResponses = {
+    /**
+     * Successful Response
+     */
+    200: UserAdminOut;
+};
+
+export type AdminSetRoleResponse = AdminSetRoleResponses[keyof AdminSetRoleResponses];
+
+export type AdminAuditData = {
+    body?: never;
+    path?: never;
+    query?: {
+        /**
+         * Page
+         */
+        page?: number;
+    };
+    url: '/v1/admin/audit';
+};
+
+export type AdminAuditErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type AdminAuditError = AdminAuditErrors[keyof AdminAuditErrors];
+
+export type AdminAuditResponses = {
+    /**
+     * Successful Response
+     */
+    200: AuditPageOut;
+};
+
+export type AdminAuditResponse = AdminAuditResponses[keyof AdminAuditResponses];
