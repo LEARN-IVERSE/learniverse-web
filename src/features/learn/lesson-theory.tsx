@@ -1,10 +1,12 @@
 "use client";
 
+import { Sparkles } from "lucide-react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 
 import { ErrorState } from "@/components/states/error-state";
 import { PageSkeleton } from "@/components/states/page-skeleton";
+import { askAboutLesson } from "@/features/ai/ask-ai";
 import { catalogLesson } from "@/lib/api-client";
 
 import { MathText } from "./math-text";
@@ -44,7 +46,18 @@ export function LessonTheory() {
         {lesson.label ? `${lesson.label}. ` : ""}
         {lesson.title}
       </h1>
-      <p className="mt-1 text-sm text-muted-foreground">Lý thuyết</p>
+      <div className="mt-1 flex flex-wrap items-center gap-3">
+        <p className="text-sm text-muted-foreground">Lý thuyết</p>
+        <button
+          type="button"
+          onClick={() =>
+            askAboutLesson({ subject: lesson.subject_code, code: lesson.code, title: lesson.title })
+          }
+          className="flex items-center gap-1.5 rounded-full bg-amber-50 px-3 py-1 text-sm font-semibold text-amber-800 ring-1 ring-amber-200 hover:bg-amber-100"
+        >
+          <Sparkles aria-hidden className="size-4" /> Hỏi Sao Nhí về bài này
+        </button>
+      </div>
 
       <div className="mt-6 space-y-5">
         {lesson.sections.map((section, i) => (

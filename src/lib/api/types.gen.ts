@@ -230,6 +230,55 @@ export type ContributionRowOut = {
 };
 
 /**
+ * ConversationDetailOut
+ */
+export type ConversationDetailOut = {
+    /**
+     * Id
+     */
+    id: string;
+    /**
+     * Title
+     */
+    title: string;
+    lesson: LessonBrief | null;
+    /**
+     * Updated At
+     */
+    updated_at: string;
+    /**
+     * Messages
+     */
+    messages: Array<MessageOut>;
+};
+
+/**
+ * ConversationIn
+ */
+export type ConversationIn = {
+    lesson?: LessonRef | null;
+};
+
+/**
+ * ConversationOut
+ */
+export type ConversationOut = {
+    /**
+     * Id
+     */
+    id: string;
+    /**
+     * Title
+     */
+    title: string;
+    lesson: LessonBrief | null;
+    /**
+     * Updated At
+     */
+    updated_at: string;
+};
+
+/**
  * DbHealthOut
  */
 export type DbHealthOut = {
@@ -301,6 +350,38 @@ export type HeartbeatIn = {
 };
 
 /**
+ * ImageOut
+ */
+export type ImageOut = {
+    /**
+     * Id
+     */
+    id: string;
+    /**
+     * Url
+     */
+    url: string;
+};
+
+/**
+ * LessonBrief
+ */
+export type LessonBrief = {
+    /**
+     * Subject Code
+     */
+    subject_code: string;
+    /**
+     * Code
+     */
+    code: string;
+    /**
+     * Title
+     */
+    title: string;
+};
+
+/**
  * LessonKind
  */
 export type LessonKind = 'lesson' | 'practice' | 'periodic';
@@ -338,6 +419,20 @@ export type LessonOut = {
      * Sections
      */
     sections: Array<SectionOut>;
+};
+
+/**
+ * LessonRef
+ */
+export type LessonRef = {
+    /**
+     * Subject
+     */
+    subject: string;
+    /**
+     * Code
+     */
+    code: string;
 };
 
 /**
@@ -428,6 +523,50 @@ export type MediaOut = {
      * Content Type
      */
     content_type: string;
+};
+
+/**
+ * MessageIn
+ */
+export type MessageIn = {
+    /**
+     * Text
+     */
+    text: string;
+    /**
+     * Media Ids
+     */
+    media_ids?: Array<string>;
+};
+
+/**
+ * MessageOut
+ */
+export type MessageOut = {
+    /**
+     * Id
+     */
+    id: string;
+    /**
+     * Role
+     */
+    role: 'user' | 'model';
+    /**
+     * Text
+     */
+    text: string;
+    /**
+     * Status
+     */
+    status: 'complete' | 'incomplete';
+    /**
+     * Images
+     */
+    images: Array<ImageOut>;
+    /**
+     * Created At
+     */
+    created_at: string;
 };
 
 /**
@@ -705,6 +844,28 @@ export type QuestionOut = {
  * QuestionType
  */
 export type QuestionType = 'single_choice' | 'true_false' | 'fill_blank' | 'essay';
+
+/**
+ * QuotaOut
+ */
+export type QuotaOut = {
+    /**
+     * Messages Left
+     */
+    messages_left: number;
+    /**
+     * Images Left
+     */
+    images_left: number;
+    /**
+     * Daily Messages
+     */
+    daily_messages: number;
+    /**
+     * Daily Images
+     */
+    daily_images: number;
+};
 
 /**
  * ReadStatusOut
@@ -1181,6 +1342,38 @@ export type HealthHealthResponses = {
 };
 
 export type HealthHealthResponse = HealthHealthResponses[keyof HealthHealthResponses];
+
+export type HealthHealthStreamData = {
+    body?: never;
+    path?: never;
+    query?: {
+        /**
+         * Count
+         */
+        count?: number;
+        /**
+         * Interval
+         */
+        interval?: number;
+    };
+    url: '/v1/health/stream';
+};
+
+export type HealthHealthStreamErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type HealthHealthStreamError = HealthHealthStreamErrors[keyof HealthHealthStreamErrors];
+
+export type HealthHealthStreamResponses = {
+    /**
+     * Successful Response
+     */
+    200: unknown;
+};
 
 export type HealthHealthDbData = {
     body?: never;
@@ -2174,3 +2367,150 @@ export type LeaderboardStudyTimeResponses = {
 };
 
 export type LeaderboardStudyTimeResponse = LeaderboardStudyTimeResponses[keyof LeaderboardStudyTimeResponses];
+
+export type AiGetQuotaData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/v1/ai/quota';
+};
+
+export type AiGetQuotaResponses = {
+    /**
+     * Successful Response
+     */
+    200: QuotaOut;
+};
+
+export type AiGetQuotaResponse = AiGetQuotaResponses[keyof AiGetQuotaResponses];
+
+export type AiListConversationsData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/v1/ai/conversations';
+};
+
+export type AiListConversationsResponses = {
+    /**
+     * Response Ai-List Conversations
+     *
+     * Successful Response
+     */
+    200: Array<ConversationOut>;
+};
+
+export type AiListConversationsResponse = AiListConversationsResponses[keyof AiListConversationsResponses];
+
+export type AiCreateConversationData = {
+    body: ConversationIn;
+    path?: never;
+    query?: never;
+    url: '/v1/ai/conversations';
+};
+
+export type AiCreateConversationErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type AiCreateConversationError = AiCreateConversationErrors[keyof AiCreateConversationErrors];
+
+export type AiCreateConversationResponses = {
+    /**
+     * Successful Response
+     */
+    201: ConversationOut;
+};
+
+export type AiCreateConversationResponse = AiCreateConversationResponses[keyof AiCreateConversationResponses];
+
+export type AiDeleteConversationData = {
+    body?: never;
+    path: {
+        /**
+         * Conversation Id
+         */
+        conversation_id: string;
+    };
+    query?: never;
+    url: '/v1/ai/conversations/{conversation_id}';
+};
+
+export type AiDeleteConversationErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type AiDeleteConversationError = AiDeleteConversationErrors[keyof AiDeleteConversationErrors];
+
+export type AiDeleteConversationResponses = {
+    /**
+     * Successful Response
+     */
+    204: void;
+};
+
+export type AiDeleteConversationResponse = AiDeleteConversationResponses[keyof AiDeleteConversationResponses];
+
+export type AiGetConversationData = {
+    body?: never;
+    path: {
+        /**
+         * Conversation Id
+         */
+        conversation_id: string;
+    };
+    query?: never;
+    url: '/v1/ai/conversations/{conversation_id}';
+};
+
+export type AiGetConversationErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type AiGetConversationError = AiGetConversationErrors[keyof AiGetConversationErrors];
+
+export type AiGetConversationResponses = {
+    /**
+     * Successful Response
+     */
+    200: ConversationDetailOut;
+};
+
+export type AiGetConversationResponse = AiGetConversationResponses[keyof AiGetConversationResponses];
+
+export type AiSendMessageData = {
+    body: MessageIn;
+    path: {
+        /**
+         * Conversation Id
+         */
+        conversation_id: string;
+    };
+    query?: never;
+    url: '/v1/ai/conversations/{conversation_id}/messages';
+};
+
+export type AiSendMessageErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type AiSendMessageError = AiSendMessageErrors[keyof AiSendMessageErrors];
+
+export type AiSendMessageResponses = {
+    /**
+     * SSE: delta, done, error
+     */
+    200: unknown;
+};
