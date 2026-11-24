@@ -95,6 +95,18 @@ export type AiSettingsIn = {
      */
     grader_model?: string | null;
     /**
+     * Chat Thinking Level
+     */
+    chat_thinking_level?: 'MINIMAL' | 'LOW' | 'MEDIUM' | 'HIGH' | 'XHIGH' | null;
+    /**
+     * Grader Thinking Level
+     */
+    grader_thinking_level?: 'MINIMAL' | 'LOW' | 'MEDIUM' | 'HIGH' | 'XHIGH' | null;
+    /**
+     * Region
+     */
+    region?: 'global' | 'asia-southeast1' | 'asia-northeast1' | 'europe-west2' | 'northamerica-northeast1' | 'us' | 'eu' | null;
+    /**
      * Daily Messages
      */
     daily_messages?: number | null;
@@ -142,6 +154,9 @@ export type AiSettingsOut = {
     key_configured: boolean;
     chat_model: AiFieldOut;
     grader_model: AiFieldOut;
+    chat_thinking_level: AiFieldOut;
+    grader_thinking_level: AiFieldOut;
+    region: AiFieldOut;
     daily_messages: AiFieldOut;
     daily_images: AiFieldOut;
     daily_teach_sessions: AiFieldOut;
