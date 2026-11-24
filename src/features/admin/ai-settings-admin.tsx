@@ -19,13 +19,32 @@ import { errorText } from "./content-labels";
 type Key =
   | "chat_model"
   | "grader_model"
+  | "chat_thinking_level"
+  | "grader_thinking_level"
+  | "region"
   | "daily_messages"
   | "daily_images"
   | "daily_teach_sessions"
   | "price_input_per_m"
   | "price_output_per_m";
 
-const FIELDS: { key: Key; label: string; hint: string; kind: "text" | "int" | "price" }[] = [
+type Field = {
+  key: Key;
+  label: string;
+  hint: string;
+} & (
+  { kind: "text" | "int" | "price" } | { kind: "select"; options: readonly (readonly [string, string])[] }
+);
+
+const THINKING_LEVELS = [
+  ["MINIMAL", "Tối thiểu (MINIMAL)"],
+  ["LOW", "Thấp (LOW)"],
+  ["MEDIUM", "Vừa (MEDIUM)"],
+  ["HIGH", "Cao (HIGH)"],
+  ["XHIGH", "Rất cao (XHIGH)"],
+] as const;
+
+const FIELDS: Field[] = [
   {
     key: "chat_model",
     label: "Model trả lời (trợ lý AI và Dạy AI hỏi)",
@@ -33,10 +52,39 @@ const FIELDS: { key: Key; label: string; hint: string; kind: "text" | "int" | "p
     kind: "text",
   },
   {
+    key: "chat_thinking_level",
+    label: "Mức suy luận của model trả lời",
+    hint: "Dùng khi trợ lý trả lời và khi Dạy AI đặt câu hỏi.",
+    kind: "select",
+    options: THINKING_LEVELS,
+  },
+  {
     key: "grader_model",
     label: "Model chấm Dạy AI",
-    hint: "Để trống = dùng cùng model trả lời",
+    hint: "Để trống để dùng cùng model trả lời.",
     kind: "text",
+  },
+  {
+    key: "grader_thinking_level",
+    label: "Mức suy luận của model chấm",
+    hint: "Chỉnh riêng được cả khi chấm bằng cùng model trả lời.",
+    kind: "select",
+    options: THINKING_LEVELS,
+  },
+  {
+    key: "region",
+    label: "Vùng gọi Gemini",
+    hint: "Chọn Toàn cầu cho Gemini 3.8 Flash hoặc Gemini 4 Hydrogen.",
+    kind: "select",
+    options: [
+      ["global", "Toàn cầu (global)"],
+      ["asia-southeast1", "Singapore (asia-southeast1)"],
+      ["asia-northeast1", "Tokyo (asia-northeast1)"],
+      ["us", "Mỹ (đa vùng)"],
+      ["eu", "Liên minh châu Âu (đa vùng)"],
+      ["europe-west2", "London (europe-west2)"],
+      ["northamerica-northeast1", "Montréal (northamerica-northeast1)"],
+    ],
   },
   { key: "daily_messages", label: "Số tin nhắn mỗi học sinh mỗi ngày", hint: "0 đến 1000", kind: "int" },
   { key: "daily_images", label: "Số ảnh mỗi học sinh mỗi ngày", hint: "0 đến 100", kind: "int" },
@@ -66,7 +114,9 @@ const show = (v: AiFieldOut["value"]) => (v === null || v === undefined ? "" : S
 
 /** What the form starts with: only the values the admin set; the rest stay empty ("use the default"). */
 function fromServer(s: AiSettingsOut): Draft {
-  return Object.fromEntries(FIELDS.map(({ key }) => [key, s[key].custom ? show(s[key].value) : ""])) as Draft;
+  return Object.fromEntries(
+    FIELDS.map(({ key }) => [key, s[key]?.custom ? show(s[key].value) : ""]),
+  ) as Draft;
 }
 
 /** /admin/ai: model, daily allowances, token prices and the AI off switch. The API key is not here (K11c-3). */
@@ -85,12 +135,14 @@ function Form({ initial: first }: { initial: AiSettingsOut }) {
   const [busy, setBusy] = useState(false);
   const [notice, setNotice] = useState<{ ok: boolean; text: string } | null>(null);
 
+  const availableFields = FIELDS.filter(({ key }) => initial[key] !== undefined);
+
   async function save() {
     setBusy(true);
     const body: Record<string, unknown> = { enabled };
-    for (const { key, kind } of FIELDS) {
+    for (const { key, kind } of availableFields) {
       const raw = draft[key].trim();
-      body[key] = raw === "" ? null : kind === "text" ? raw : Number(raw);
+      body[key] = raw === "" ? null : kind === "int" || kind === "price" ? Number(raw) : raw;
     }
     const { data, error } = await adminAiPutAiSettings({ body: body as never });
     setBusy(false);
@@ -144,20 +196,37 @@ function Form({ initial: first }: { initial: AiSettingsOut }) {
           hiện và không sửa ở đây).
         </p>
         <div className="grid gap-4 sm:grid-cols-2">
-          {FIELDS.map(({ key, label, hint, kind }) => (
+          {availableFields.map(({ key, label, hint, ...control }) => (
             <label key={key} className="block text-xs font-semibold text-slate-600">
               {label}
-              <input
-                type={kind === "text" ? "text" : "number"}
-                min={0}
-                step={kind === "price" ? "0.01" : kind === "int" ? "1" : undefined}
-                className={field}
-                value={draft[key]}
-                placeholder={show(initial[key].default) || "(không có)"}
-                onChange={(e) => setDraft({ ...draft, [key]: e.target.value })}
-              />
+              {control.kind === "select" ? (
+                <select
+                  className={field}
+                  value={draft[key]}
+                  onChange={(e) => setDraft({ ...draft, [key]: e.target.value })}
+                >
+                  <option value="">Dùng mặc định máy chủ</option>
+                  {control.options.map(([value, name]) => (
+                    <option key={value} value={value}>
+                      {name}
+                    </option>
+                  ))}
+                </select>
+              ) : (
+                <input
+                  type={control.kind === "text" ? "text" : "number"}
+                  min={0}
+                  step={control.kind === "price" ? "0.01" : control.kind === "int" ? "1" : undefined}
+                  className={field}
+                  value={draft[key]}
+                  placeholder={show(initial[key].default) || "(không có)"}
+                  onChange={(e) => setDraft({ ...draft, [key]: e.target.value })}
+                />
+              )}
               <span className="mt-0.5 block font-normal text-muted-foreground">
-                Mặc định: {show(initial[key].default) || "(không có)"} · {hint}
+                Mặc định:{" "}
+                {show(initial[key].default) || (control.kind === "select" ? "Tự động" : "(không có)")} ·{" "}
+                {hint}
                 {draft[key] !== "" && (
                   <>
                     {" · "}

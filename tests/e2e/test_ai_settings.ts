@@ -13,6 +13,9 @@ const settings = (over: Record<string, unknown> = {}) => ({
   key_configured: true,
   chat_model: field("gemini-3.5-flash-lite", "gemini-3.5-flash-lite"),
   grader_model: field(null, null),
+  chat_thinking_level: field(null, null),
+  grader_thinking_level: field(null, null),
+  region: field(null, null),
   daily_messages: field(30, 30),
   daily_images: field(5, 5),
   daily_teach_sessions: field(3, 3),
@@ -42,6 +45,9 @@ test.describe("AI settings (K11c-3)", () => {
         json: settings({
           enabled: body.enabled,
           daily_messages: field(body.daily_messages ?? 30, 30, body.daily_messages !== null),
+          chat_thinking_level: field(body.chat_thinking_level, null, body.chat_thinking_level !== null),
+          grader_thinking_level: field(body.grader_thinking_level, null, body.grader_thinking_level !== null),
+          region: field(body.region, null, body.region !== null),
           updated_at: "2026-11-22T09:00:00Z",
           updated_by: "Quản Trị",
         }),
@@ -56,6 +62,11 @@ test.describe("AI settings (K11c-3)", () => {
     await expect(messages).toHaveValue(""); // not set: shows the default as a placeholder
     await expect(messages).toHaveAttribute("placeholder", "30");
     await messages.fill("12");
+    const chatThinking = page.getByRole("combobox", { name: /Mức suy luận của model trả lời/ });
+    const graderThinking = page.getByRole("combobox", { name: /Mức suy luận của model chấm/ });
+    await chatThinking.selectOption("LOW");
+    await graderThinking.selectOption("HIGH");
+    await page.getByRole("combobox", { name: /Vùng gọi Gemini/ }).selectOption("global");
     await page.getByRole("button", { name: "Lưu cấu hình" }).click();
     await expect(page.getByRole("status")).toHaveText(
       "Đã lưu. Cấu hình mới có hiệu lực từ lần gọi AI tiếp theo.",
@@ -65,14 +76,27 @@ test.describe("AI settings (K11c-3)", () => {
       daily_messages: 12,
       chat_model: null,
       daily_images: null,
+      chat_thinking_level: "LOW",
+      grader_thinking_level: "HIGH",
+      region: "global",
     });
     await expect(messages).toHaveValue("12");
+    await expect(chatThinking).toHaveValue("LOW");
+    await expect(graderThinking).toHaveValue("HIGH");
+    await expect(page.getByRole("combobox", { name: /Vùng gọi Gemini/ })).toHaveValue("global");
     await expect(page.getByText("bởi Quản Trị")).toBeVisible();
 
-    await page.getByRole("button", { name: "Về mặc định" }).first().click();
+    await chatThinking.selectOption("");
+    await page.getByRole("combobox", { name: /Vùng gọi Gemini/ }).selectOption("");
+    await page.getByRole("button", { name: "Về mặc định" }).last().click();
     await expect(messages).toHaveValue("");
     await page.getByRole("button", { name: "Lưu cấu hình" }).click();
     await expect.poll(() => puts.at(-1)?.daily_messages).toBeNull();
+    expect(puts.at(-1)).toMatchObject({
+      chat_thinking_level: null,
+      grader_thinking_level: "HIGH",
+      region: null,
+    });
   });
 
   test("the off switch is sent, and an env-level off is explained", async ({ page }) => {
