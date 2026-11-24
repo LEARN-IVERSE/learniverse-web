@@ -5,6 +5,8 @@ import { useEffect, useRef, useState } from "react";
 
 import { moderationReportContent, type ReportReason } from "@/lib/api-client";
 
+import { apiErrorMessage } from "@/lib/api-error";
+
 import { errorCode } from "../practice/activity-info";
 
 const REASONS: { value: ReportReason; label: string }[] = [
@@ -48,7 +50,7 @@ export function ReportDialog({
         ? "Bạn đã báo cáo nội dung này rồi. Quản trị viên sẽ xem xét."
         : code === "cannot_report_own"
           ? "Bạn không thể báo cáo nội dung của chính mình."
-          : "Chưa gửi được báo cáo. Bạn thử lại nhé.",
+          : (apiErrorMessage(error) ?? "Chưa gửi được báo cáo. Bạn thử lại nhé."),
     );
   };
 

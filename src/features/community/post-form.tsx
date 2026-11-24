@@ -3,7 +3,8 @@
 import { FileText, ImageIcon, Paperclip, Send, X } from "lucide-react";
 import { useRef, useState } from "react";
 
-import { communityCreatePost, communityCreateUpload, type PostOut } from "@/lib/api-client";
+import { communityCreatePost, communityCreateUpload, type PostOut, type UploadOut } from "@/lib/api-client";
+import { apiErrorMessage } from "@/lib/api-error";
 
 import { errorCode } from "../practice/activity-info";
 import { SafeMarkdown } from "./safe-markdown";
@@ -22,7 +23,7 @@ type Picked = {
   mediaId?: string;
 };
 
-/** Browser-side check; the server re-checks size and the real file type when the post is created. */
+/** Browser-side check; the API counts bytes and checks the real file type before storing the file. */
 export function checkFile(file: File, picked: Pick<Picked, "kind">[]): string | null {
   const kind = IMAGE_TYPES.includes(file.type) ? "image" : file.type === "application/pdf" ? "file" : null;
   if (!kind) return `“${file.name}”: chỉ nhận ảnh JPG, PNG, WebP hoặc tệp PDF.`;
@@ -33,14 +34,22 @@ export function checkFile(file: File, picked: Pick<Picked, "kind">[]): string | 
   return null;
 }
 
-function putWithProgress(url: string, file: File, onProgress: (pct: number) => void): Promise<boolean> {
+function putWithProgress(
+  upload: UploadOut,
+  file: File,
+  onProgress: (pct: number) => void,
+): Promise<string | null> {
   return new Promise((resolve) => {
+    const fallback = `Không tải được “${file.name}”. Bạn thử lại nhé.`;
     const xhr = new XMLHttpRequest();
-    xhr.open("PUT", url);
-    xhr.setRequestHeader("Content-Type", file.type);
+    xhr.open("PUT", upload.upload_url);
+    xhr.responseType = "json";
+    xhr.setRequestHeader("Authorization", `Bearer ${upload.upload_token}`);
+    xhr.setRequestHeader("Content-Type", upload.content_type);
     xhr.upload.onprogress = (e) => e.lengthComputable && onProgress(Math.round((e.loaded / e.total) * 100));
-    xhr.onload = () => resolve(xhr.status >= 200 && xhr.status < 300);
-    xhr.onerror = () => resolve(false);
+    xhr.onload = () =>
+      resolve(xhr.status >= 200 && xhr.status < 300 ? null : (apiErrorMessage(xhr.response) ?? fallback));
+    xhr.onerror = () => resolve(fallback);
     xhr.send(file);
   });
 }
@@ -98,14 +107,14 @@ export function PostForm({
     for (const p of picked) {
       let mediaId = p.mediaId;
       if (!mediaId) {
-        const { data } = await communityCreateUpload({
+        const { data, error } = await communityCreateUpload({
           body: { kind: p.kind, content_type: p.file.type, size: p.file.size, file_name: p.file.name },
         });
-        if (
-          !data ||
-          !(await putWithProgress(data.upload_url, p.file, (pct) => update(p.key, { progress: pct })))
-        ) {
-          setProblem(`Không tải được “${p.file.name}”. Bạn thử lại nhé.`);
+        const problem = data
+          ? await putWithProgress(data, p.file, (pct) => update(p.key, { progress: pct }))
+          : (apiErrorMessage(error) ?? `Không tải được “${p.file.name}”. Bạn thử lại nhé.`);
+        if (problem !== null || !data) {
+          setProblem(problem);
           setSending(false);
           return;
         }
@@ -121,7 +130,8 @@ export function PostForm({
     setProblem(
       code === "media_invalid" || code === "media_not_found"
         ? "Có tệp không hợp lệ hoặc quá lớn. Hãy bỏ tệp đó và thử lại."
-        : "Chưa đăng được bài. Bạn kiểm tra lại tiêu đề (từ 3 ký tự) và nội dung nhé.",
+        : (apiErrorMessage(error) ??
+            "Chưa đăng được bài. Bạn kiểm tra lại tiêu đề (từ 3 ký tự) và nội dung nhé."),
     );
   };
 

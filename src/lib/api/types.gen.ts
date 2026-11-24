@@ -306,6 +306,8 @@ export type BoxOut = {
 
 /**
  * BulkData
+ *
+ * Bulk question creation payload.
  */
 export type BulkData = {
     /**
@@ -316,6 +318,8 @@ export type BulkData = {
 
 /**
  * BulkItem
+ *
+ * One question to create in bulk import.
  */
 export type BulkItem = {
     /**
@@ -332,6 +336,8 @@ export type ChangeAction = 'lesson.create' | 'lesson.update' | 'lesson.delete' |
 
 /**
  * ChangeIn
+ *
+ * Incoming change request payload (create/update/delete lesson or question, bulk import, move).
  */
 export type ChangeIn = {
     action: ChangeAction;
@@ -359,6 +365,8 @@ export type ChangeIn = {
 
 /**
  * ChangeOut
+ *
+ * Public representation of a content change request.
  */
 export type ChangeOut = {
     /**
@@ -427,6 +435,8 @@ export type ChangeOut = {
 
 /**
  * ChangePageOut
+ *
+ * Paginated change request list.
  */
 export type ChangePageOut = {
     /**
@@ -621,6 +631,8 @@ export type CommunityResultOut = {
 
 /**
  * ContentLessonOut
+ *
+ * Lesson summary for content tree with question counts and pending changes.
  */
 export type ContentLessonOut = {
     /**
@@ -665,6 +677,8 @@ export type ContentLessonOut = {
 
 /**
  * ContentQuestionOut
+ *
+ * Question summary for content editor.
  */
 export type ContentQuestionOut = {
     /**
@@ -684,6 +698,8 @@ export type ContentQuestionOut = {
 
 /**
  * ContentUnitOut
+ *
+ * Unit with its lessons for content tree.
  */
 export type ContentUnitOut = {
     /**
@@ -807,6 +823,8 @@ export type DbHealthOut = {
 
 /**
  * EditableSubjectOut
+ *
+ * Subject user can edit (has CONTENT permission).
  */
 export type EditableSubjectOut = {
     /**
@@ -1016,6 +1034,8 @@ export type GradeIn = {
 
 /**
  * GradeOut
+ *
+ * Final grade and feedback for a teaching session.
  */
 export type GradeOut = {
     /**
@@ -1160,6 +1180,8 @@ export type LessonData = {
 
 /**
  * LessonEditOut
+ *
+ * Full lesson data for editing with all questions.
  */
 export type LessonEditOut = {
     /**
@@ -1793,6 +1815,8 @@ export type PostPageOut = {
 
 /**
  * QuestionData
+ *
+ * Editable fields of a question for content management.
  */
 export type QuestionData = {
     activity: Activity;
@@ -1897,6 +1921,8 @@ export type ReadStatusOut = {
 
 /**
  * RejectIn
+ *
+ * Rejection note for change request.
  */
 export type RejectIn = {
     /**
@@ -2287,6 +2313,8 @@ export type SubjectOut = {
 
 /**
  * SubjectTreeOut
+ *
+ * Subject tree with units and lessons for content management.
  */
 export type SubjectTreeOut = {
     /**
@@ -2333,6 +2361,8 @@ export type TargetType = 'post' | 'comment';
 
 /**
  * TeachAnswerIn
+ *
+ * Learner's answer to AI student question.
  */
 export type TeachAnswerIn = {
     /**
@@ -2343,6 +2373,8 @@ export type TeachAnswerIn = {
 
 /**
  * TeachLessonIn
+ *
+ * Request to start teaching a lesson.
  */
 export type TeachLessonIn = {
     /**
@@ -2357,6 +2389,8 @@ export type TeachLessonIn = {
 
 /**
  * TeachOverviewOut
+ *
+ * Teaching overview for a lesson (latest session, star status, quota).
  */
 export type TeachOverviewOut = {
     session: TeachSessionOut | null;
@@ -2380,6 +2414,8 @@ export type TeachOverviewOut = {
 
 /**
  * TeachSessionOut
+ *
+ * Full teaching session with turns and optional result.
  */
 export type TeachSessionOut = {
     /**
@@ -2453,6 +2489,8 @@ export type TimeRowOut = {
 
 /**
  * TurnOut
+ *
+ * One teaching turn (AI question + optional learner answer).
  */
 export type TurnOut = {
     /**
@@ -2518,6 +2556,10 @@ export type UploadOut = {
      * Upload Url
      */
     upload_url: string;
+    /**
+     * Upload Token
+     */
+    upload_token: string;
     /**
      * Content Type
      */
@@ -3203,6 +3245,36 @@ export type CommunityCreateUploadResponses = {
 };
 
 export type CommunityCreateUploadResponse = CommunityCreateUploadResponses[keyof CommunityCreateUploadResponses];
+
+export type CommunityPutUploadData = {
+    body?: never;
+    path: {
+        /**
+         * Media Id
+         */
+        media_id: string;
+    };
+    query?: never;
+    url: '/v1/media/uploads/{media_id}';
+};
+
+export type CommunityPutUploadErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type CommunityPutUploadError = CommunityPutUploadErrors[keyof CommunityPutUploadErrors];
+
+export type CommunityPutUploadResponses = {
+    /**
+     * Successful Response
+     */
+    204: void;
+};
+
+export type CommunityPutUploadResponse = CommunityPutUploadResponses[keyof CommunityPutUploadResponses];
 
 export type CommunityListPostsData = {
     body?: never;

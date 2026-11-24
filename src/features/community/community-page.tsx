@@ -20,6 +20,7 @@ import { PostCard } from "./post-card";
 import { PostForm } from "./post-form";
 
 const NEW_POSTS_POLL_MS = 60_000;
+const INITIAL_FEED_IMAGES = 10;
 
 function BoxTab({
   active,
@@ -101,6 +102,16 @@ export function CommunityPage() {
       },
     });
   });
+
+  const initialImages = new Set(
+    state.status === "ready"
+      ? state.data.items
+          .flatMap((post) => post.media)
+          .filter((media) => media.kind === "image")
+          .slice(0, INITIAL_FEED_IMAGES)
+          .map((media) => media.id)
+      : [],
+  );
 
   // New posts never jump into the list being read: count them and let the learner reload (K7-D5).
   useVisibleInterval(() => {
@@ -258,7 +269,7 @@ export function CommunityPage() {
           <>
             <div className="space-y-4" aria-label="Danh sách bài đăng">
               {state.data.items.map((post) => (
-                <PostCard key={post.id} post={post} />
+                <PostCard key={post.id} post={post} initialImages={initialImages} />
               ))}
             </div>
             <Pagination page={state.data.page} pages={state.data.pages} onPage={setPage} />

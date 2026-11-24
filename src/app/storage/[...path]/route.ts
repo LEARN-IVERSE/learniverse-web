@@ -1,13 +1,13 @@
 // Same-origin window onto the object storage, for when the app is shared on the internet and browsers
 // cannot reach localhost:8333. It is not an open proxy:
-//  - only GET / HEAD / PUT, and only inside <bucket>/uploads/;
+//  - only GET / HEAD, and only inside <bucket>/uploads/;
 //  - the storage still checks the presigned signature, which covers the internal host and path, so the
 //    request is sent to the storage's own address (a plain Next.js rewrite would keep the public Host
 //    header and the signature would no longer match).
 const STORAGE_URL = process.env.STORAGE_URL ?? "http://localhost:8333";
 const BUCKET = process.env.S3_BUCKET ?? "learniverse";
 
-const FORWARD_REQUEST = ["content-type", "content-length", "range", "if-none-match", "if-match"];
+const FORWARD_REQUEST = ["range", "if-none-match", "if-match"];
 const FORWARD_RESPONSE = [
   "content-type",
   "content-length",
@@ -28,15 +28,11 @@ async function proxy(request: Request, context: { params: Promise<{ path: string
     const value = request.headers.get(name);
     if (value) headers.set(name, value);
   }
-  const hasBody = request.method === "PUT";
   const upstream = await fetch(target, {
     method: request.method,
     headers,
-    body: hasBody ? request.body : undefined,
-    // Streams the upload instead of buffering it (needed whenever a request body is a stream).
-    ...(hasBody ? { duplex: "half" } : {}),
     redirect: "manual",
-  } as RequestInit);
+  });
 
   const out = new Headers();
   for (const name of FORWARD_RESPONSE) {
@@ -49,4 +45,4 @@ async function proxy(request: Request, context: { params: Promise<{ path: string
   });
 }
 
-export { proxy as GET, proxy as HEAD, proxy as PUT };
+export { proxy as GET, proxy as HEAD };

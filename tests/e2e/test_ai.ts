@@ -121,10 +121,18 @@ test.describe("AI assistant (K9)", () => {
     const ai = await mockAiApi(page);
     await page.route("**/api/v1/media/uploads", (route) =>
       route.fulfill({
-        json: { id: "media-1", upload_url: "http://localhost:3100/fake-put", content_type: "image/png" },
+        json: {
+          id: "media-1",
+          upload_url: "/fake-put",
+          content_type: "image/png",
+          upload_token: "ai-upload-token",
+        },
       }),
     );
-    await page.route("**/fake-put", (route) => route.fulfill({ status: 200 }));
+    await page.route("**/fake-put", (route) => {
+      expect(route.request().headers().authorization).toBe("Bearer ai-upload-token");
+      return route.fulfill({ status: 204 });
+    });
     await page.goto("/courses");
     const panel = await openChat(page);
     await panel

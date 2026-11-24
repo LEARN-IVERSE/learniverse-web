@@ -139,7 +139,8 @@ export async function mockCommunityApi(
         const id = `media-${s.calls.length}`;
         return json({
           id,
-          upload_url: `http://localhost:8333/mock/${id}`,
+          upload_url: `/fake-community-put/${id}`,
+          upload_token: "test-upload-token",
           content_type: body().content_type,
         });
       }

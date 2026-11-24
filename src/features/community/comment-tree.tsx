@@ -9,6 +9,7 @@ import {
   communityDeleteComment,
   communityEditComment,
 } from "@/lib/api-client";
+import { apiErrorMessage } from "@/lib/api-error";
 import { cn } from "@/lib/utils";
 
 import { UserAvatar } from "../auth/user-avatar";
@@ -41,22 +42,22 @@ function CommentForm({
   placeholder: string;
   initial?: string;
   submitLabel: string;
-  onSubmit: (body: string) => Promise<boolean>;
+  onSubmit: (body: string) => Promise<boolean | string>;
   onCancel?: () => void;
 }) {
   const [body, setBody] = useState(initial);
   const [busy, setBusy] = useState(false);
-  const [failed, setFailed] = useState(false);
+  const [problem, setProblem] = useState<string | null>(null);
   return (
     <form
       onSubmit={async (e) => {
         e.preventDefault();
         setBusy(true);
-        setFailed(false);
-        const ok = await onSubmit(body.trim());
+        setProblem(null);
+        const result = await onSubmit(body.trim());
         setBusy(false);
-        if (ok) setBody("");
-        else setFailed(true);
+        if (result === true) setBody("");
+        else setProblem(typeof result === "string" ? result : "Chưa gửi được. Bạn thử lại nhé.");
       }}
       className="space-y-2"
     >
@@ -72,9 +73,9 @@ function CommentForm({
           className="w-full rounded-2xl bg-white p-3 text-sm ring-1 ring-slate-300 outline-none focus:ring-2 focus:ring-blue-400"
         />
       </label>
-      {failed && (
+      {problem && (
         <p role="alert" className="text-sm text-rose-600">
-          Chưa gửi được. Bạn thử lại nhé.
+          {problem}
         </p>
       )}
       <div className="flex gap-2">
@@ -220,15 +221,14 @@ function CommentItem({
                   submitLabel="Gửi trả lời"
                   onCancel={() => setMode("view")}
                   onSubmit={async (body) => {
-                    const { data } = await communityAddComment({
+                    const { data, error } = await communityAddComment({
                       path: { post_id: postId },
                       body: { body, parent_id: node.id },
                     });
-                    if (data) {
-                      setMode("view");
-                      onChanged();
-                    }
-                    return Boolean(data);
+                    if (!data) return apiErrorMessage(error) ?? false;
+                    setMode("view");
+                    onChanged();
+                    return true;
                   }}
                 />
               </div>
@@ -278,9 +278,10 @@ export function CommentTree({
         placeholder="Viết bình luận để giúp bạn..."
         submitLabel="Gửi bình luận"
         onSubmit={async (body) => {
-          const { data } = await communityAddComment({ path: { post_id: postId }, body: { body } });
-          if (data) onChanged();
-          return Boolean(data);
+          const { data, error } = await communityAddComment({ path: { post_id: postId }, body: { body } });
+          if (!data) return apiErrorMessage(error) ?? false;
+          onChanged();
+          return true;
         }}
       />
       {tree.length === 0 ? (

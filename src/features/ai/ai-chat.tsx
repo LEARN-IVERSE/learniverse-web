@@ -15,6 +15,8 @@ import {
   type QuotaOut,
 } from "@/lib/api-client";
 
+import { apiErrorMessage } from "@/lib/api-error";
+
 import type { LessonAsk } from "./ask-ai";
 import { readSse } from "./sse";
 
@@ -42,17 +44,24 @@ type Picked = { key: string; file: File; preview: string };
 let nextKey = 0;
 const localId = () => `local-${++nextKey}`;
 
-async function uploadImage(file: File): Promise<string | null> {
-  const { data } = await communityCreateUpload({
-    body: { kind: "image", content_type: file.type, size: file.size, file_name: file.name },
-  });
-  if (!data) return null;
-  const put = await fetch(data.upload_url, {
-    method: "PUT",
-    body: file,
-    headers: { "Content-Type": file.type },
-  });
-  return put.ok ? data.id : null;
+async function uploadImage(file: File): Promise<{ id: string } | { error: string }> {
+  const fallback = `Không tải được ảnh “${file.name}”. Bạn thử lại nhé.`;
+  try {
+    const { data, error } = await communityCreateUpload({
+      body: { kind: "image", content_type: file.type, size: file.size, file_name: file.name },
+    });
+    if (!data) return { error: apiErrorMessage(error) ?? fallback };
+    const put = await fetch(data.upload_url, {
+      method: "PUT",
+      body: file,
+      credentials: "omit",
+      headers: { "Content-Type": data.content_type, Authorization: `Bearer ${data.upload_token}` },
+    });
+    if (put.ok) return { id: data.id };
+    return { error: apiErrorMessage(await put.json().catch(() => null)) ?? fallback };
+  } catch {
+    return { error: fallback };
+  }
 }
 
 async function errorMessage(res: Response): Promise<string> {
@@ -174,13 +183,13 @@ export function AiChat({
 
     const mediaIds: string[] = [];
     for (const p of images) {
-      const mediaId = await uploadImage(p.file);
-      if (!mediaId) {
-        setNotice(`Không tải được ảnh “${p.file.name}”. Bạn thử lại nhé.`);
+      const uploaded = await uploadImage(p.file);
+      if ("error" in uploaded) {
+        setNotice(uploaded.error);
         setBusy(false);
         return;
       }
-      mediaIds.push(mediaId);
+      mediaIds.push(uploaded.id);
     }
 
     const controller = new AbortController();

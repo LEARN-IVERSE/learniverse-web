@@ -88,7 +88,10 @@ test.describe("community (K7)", () => {
   });
 
   test("a post is written, checked in the browser and published", async ({ page }) => {
-    await page.route("http://localhost:8333/**", (route) => route.fulfill({ status: 200, body: "" }));
+    await page.route("**/fake-community-put/**", (route) => {
+      expect(route.request().headers().authorization).toBe("Bearer test-upload-token");
+      return route.fulfill({ status: 204 });
+    });
     const state = await mockCommunityApi(page, { posts: [] });
     await page.goto("/community");
     await page.getByRole("button", { name: /bạn đang thắc mắc/ }).click();
@@ -112,6 +115,26 @@ test.describe("community (K7)", () => {
     ).toBeVisible();
     expect(state.calls).toContain("POST /media/uploads");
     expect(state.calls).toContain("POST /posts");
+  });
+
+  test("a throttled post preserves the draft and shows the wait time", async ({ page }) => {
+    await mockCommunityApi(page, { posts: [] });
+    await page.route("**/api/v1/posts", (route) =>
+      route.request().method() === "POST"
+        ? route.fulfill({
+            status: 429,
+            headers: { "Retry-After": "30" },
+            json: { error: { code: "request_rate_limited", message: "Hãy thử lại sau 30 giây." } },
+          })
+        : route.fallback(),
+    );
+    await page.goto("/community");
+    await page.getByRole("button", { name: /bạn đang thắc mắc/ }).click();
+    await page.getByLabel("Tiêu đề").fill("Một câu hỏi đang viết");
+    await page.getByLabel("Nội dung", { exact: true }).fill("Phần nội dung sẽ được giữ lại.");
+    await page.getByRole("button", { name: "Đăng bài", exact: true }).last().click();
+    await expect(page.getByRole("alert").filter({ hasText: "Hãy thử lại sau 30 giây." })).toBeVisible();
+    await expect(page.getByLabel("Tiêu đề")).toHaveValue("Một câu hỏi đang viết");
   });
 
   test("user text cannot inject HTML or script links", async ({ page }) => {

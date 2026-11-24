@@ -2,7 +2,7 @@
 
 import { FileText, Flag, MessageCircle } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import type { MediaOut, PostOut } from "@/lib/api-client";
 
@@ -12,7 +12,50 @@ import { ReportDialog } from "./report-dialog";
 import { SafeMarkdown } from "./safe-markdown";
 import { timeAgo } from "./time-ago";
 
-export function MediaGallery({ media }: { media: MediaOut[] }) {
+function GalleryImage({ media, eager }: { media: MediaOut; eager: boolean }) {
+  const image = useRef<HTMLImageElement>(null);
+
+  useEffect(() => {
+    const target = image.current;
+    if (!target || eager) return;
+    if (!("IntersectionObserver" in window)) {
+      target.src = media.url;
+      return;
+    }
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry?.isIntersecting) return;
+        target.src = media.url;
+        observer.disconnect();
+      },
+      { rootMargin: "240px" },
+    );
+    observer.observe(target);
+    return () => observer.disconnect();
+  }, [eager, media.url]);
+
+  // Use signed storage URLs directly. Images outside the feed's initial batch load near the viewport.
+  /* eslint-disable @next/next/no-img-element */
+  return (
+    <img
+      ref={image}
+      src={eager ? media.url : undefined}
+      alt={media.file_name}
+      loading={eager ? "eager" : "lazy"}
+      decoding="async"
+      className="h-48 w-full object-cover"
+    />
+  );
+  /* eslint-enable @next/next/no-img-element */
+}
+
+export function MediaGallery({
+  media,
+  initialImages,
+}: {
+  media: MediaOut[];
+  initialImages?: ReadonlySet<string>;
+}) {
   const images = media.filter((m) => m.kind === "image");
   const files = media.filter((m) => m.kind === "file");
   return (
@@ -22,9 +65,7 @@ export function MediaGallery({ media }: { media: MediaOut[] }) {
           {images.map((m) => (
             <li key={m.id} className="overflow-hidden rounded-2xl ring-1 ring-black/5">
               <a href={m.url} target="_blank" rel="noopener noreferrer" aria-label={`Mở ảnh ${m.file_name}`}>
-                {/* Signed storage URLs expire, so next/image optimisation is not used here. */}
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={m.url} alt={m.file_name} loading="lazy" className="h-48 w-full object-cover" />
+                <GalleryImage media={m} eager={initialImages?.has(m.id) ?? false} />
               </a>
             </li>
           ))}
@@ -51,7 +92,7 @@ export function MediaGallery({ media }: { media: MediaOut[] }) {
 }
 
 /** One post in the feed: author, time, Box, excerpt, pictures, comment count and a report button. */
-export function PostCard({ post }: { post: PostOut }) {
+export function PostCard({ post, initialImages }: { post: PostOut; initialImages: ReadonlySet<string> }) {
   const box = boxOf(post.box.code);
   const [reporting, setReporting] = useState(false);
   return (
@@ -89,7 +130,7 @@ export function PostCard({ post }: { post: PostOut }) {
         </Link>
       </h2>
       <SafeMarkdown md={post.body_md} className="mt-1 line-clamp-4 text-sm text-slate-600" />
-      <MediaGallery media={post.media} />
+      <MediaGallery media={post.media} initialImages={initialImages} />
       <footer className="mt-4 flex items-center gap-3">
         <span className="inline-flex items-center gap-1.5 text-sm text-muted-foreground">
           <MessageCircle aria-hidden className="size-4" />
