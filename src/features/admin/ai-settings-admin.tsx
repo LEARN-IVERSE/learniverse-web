@@ -1,7 +1,8 @@
 "use client";
 
 import { Power } from "lucide-react";
-import { useState } from "react";
+import { Slider } from "radix-ui";
+import { useId, useState } from "react";
 
 import { ErrorState } from "@/components/states/error-state";
 import { Button } from "@/components/ui/button";
@@ -31,12 +32,14 @@ type Key =
 type Field = {
   key: Key;
   label: string;
-  hint: string;
+  hint?: string;
 } & (
-  { kind: "text" | "int" | "price" } | { kind: "select"; options: readonly (readonly [string, string])[] }
+  | { kind: "text" | "int" | "price" | "thinking" }
+  | { kind: "select"; options: readonly (readonly [string, string])[] }
 );
 
 const THINKING_LEVELS = [
+  ["", "Mặc định máy chủ"],
   ["MINIMAL", "Tối thiểu (MINIMAL)"],
   ["LOW", "Thấp (LOW)"],
   ["MEDIUM", "Vừa (MEDIUM)"],
@@ -48,15 +51,13 @@ const FIELDS: Field[] = [
   {
     key: "chat_model",
     label: "Model trả lời (trợ lý AI và Dạy AI hỏi)",
-    hint: "Ví dụ gemini-3.5-flash-lite",
     kind: "text",
   },
   {
     key: "chat_thinking_level",
     label: "Mức suy luận của model trả lời",
     hint: "Dùng khi trợ lý trả lời và khi Dạy AI đặt câu hỏi.",
-    kind: "select",
-    options: THINKING_LEVELS,
+    kind: "thinking",
   },
   {
     key: "grader_model",
@@ -68,8 +69,7 @@ const FIELDS: Field[] = [
     key: "grader_thinking_level",
     label: "Mức suy luận của model chấm",
     hint: "Chỉnh riêng được cả khi chấm bằng cùng model trả lời.",
-    kind: "select",
-    options: THINKING_LEVELS,
+    kind: "thinking",
   },
   {
     key: "region",
@@ -127,6 +127,54 @@ export function AiSettingsAdmin() {
   return <Form initial={data.data} />;
 }
 
+function ThinkingSlider({
+  label,
+  hintId,
+  value,
+  onChange,
+}: {
+  label: string;
+  hintId?: string;
+  value: string;
+  onChange: (value: string) => void;
+}) {
+  const position = Math.max(
+    THINKING_LEVELS.findIndex(([level]) => level === value),
+    0,
+  );
+  const [, levelLabel] = THINKING_LEVELS[position];
+
+  return (
+    <div>
+      <div className="flex flex-wrap items-center justify-between gap-x-2 gap-y-1">
+        <span className="text-xs font-semibold text-slate-600">{label}</span>
+        <span
+          aria-hidden="true"
+          className="rounded-full bg-blue-50 px-2.5 py-1 text-xs font-semibold text-blue-700"
+        >
+          {levelLabel}
+        </span>
+      </div>
+      <Slider.Root
+        className="relative flex h-9 w-full touch-none items-center select-none"
+        max={THINKING_LEVELS.length - 1}
+        value={[position]}
+        onValueChange={([next]) => onChange(THINKING_LEVELS[next][0])}
+      >
+        <Slider.Track className="relative h-2.5 grow rounded-full bg-slate-200">
+          <Slider.Range className="absolute h-full rounded-full bg-blue-500" />
+        </Slider.Track>
+        <Slider.Thumb
+          aria-label={label}
+          aria-describedby={hintId}
+          aria-valuetext={levelLabel}
+          className="block size-5 cursor-grab rounded-full border-2 border-blue-600 bg-white shadow-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500 active:cursor-grabbing"
+        />
+      </Slider.Root>
+    </div>
+  );
+}
+
 function Form({ initial: first }: { initial: AiSettingsOut }) {
   // The server answers a save with the new settings, so the form keeps its own copy (and its message).
   const [initial, setInitial] = useState(first);
@@ -135,6 +183,7 @@ function Form({ initial: first }: { initial: AiSettingsOut }) {
   const [busy, setBusy] = useState(false);
   const [notice, setNotice] = useState<{ ok: boolean; text: string } | null>(null);
 
+  const fieldPrefix = useId();
   const availableFields = FIELDS.filter(({ key }) => initial[key] !== undefined);
 
   async function save() {
@@ -188,22 +237,28 @@ function Form({ initial: first }: { initial: AiSettingsOut }) {
         </label>
       </section>
 
-      <section className="space-y-4 rounded-[1.5rem] bg-white p-5 ring-1 ring-slate-100">
-        <p className="text-sm text-muted-foreground">
-          Để trống một ô nghĩa là dùng giá trị mặc định của máy chủ (ghi bên dưới ô). Nhà cung cấp:{" "}
-          <b>{initial.provider}</b> · Khóa API:{" "}
-          <b>{initial.key_configured ? "đã cấu hình" : "chưa cấu hình"}</b> (khóa chỉ nằm trong máy chủ, không
-          hiện và không sửa ở đây).
-        </p>
-        <div className="grid gap-4 sm:grid-cols-2">
-          {availableFields.map(({ key, label, hint, ...control }) => (
-            <label key={key} className="block text-xs font-semibold text-slate-600">
-              {label}
-              {control.kind === "select" ? (
+      <section className="grid gap-x-5 gap-y-4 rounded-[1.5rem] bg-white p-5 ring-1 ring-slate-100 sm:grid-cols-2">
+        {availableFields.map(({ key, label, hint, ...control }) => {
+          const id = fieldPrefix + "-" + key;
+          const hintId = hint ? id + "-hint" : undefined;
+          const onChange = (value: string) => setDraft({ ...draft, [key]: value });
+
+          return (
+            <div key={key} className="min-w-0 space-y-1">
+              {control.kind !== "thinking" && (
+                <label htmlFor={id} className="block text-xs font-semibold text-slate-600">
+                  {label}
+                </label>
+              )}
+              {control.kind === "thinking" ? (
+                <ThinkingSlider label={label} hintId={hintId} value={draft[key]} onChange={onChange} />
+              ) : control.kind === "select" ? (
                 <select
+                  id={id}
+                  aria-describedby={hintId}
                   className={field}
                   value={draft[key]}
-                  onChange={(e) => setDraft({ ...draft, [key]: e.target.value })}
+                  onChange={(e) => onChange(e.target.value)}
                 >
                   <option value="">Dùng mặc định máy chủ</option>
                   {control.options.map(([value, name]) => (
@@ -214,35 +269,34 @@ function Form({ initial: first }: { initial: AiSettingsOut }) {
                 </select>
               ) : (
                 <input
+                  id={id}
+                  aria-describedby={hintId}
                   type={control.kind === "text" ? "text" : "number"}
                   min={0}
                   step={control.kind === "price" ? "0.01" : control.kind === "int" ? "1" : undefined}
                   className={field}
                   value={draft[key]}
                   placeholder={show(initial[key].default) || "(không có)"}
-                  onChange={(e) => setDraft({ ...draft, [key]: e.target.value })}
+                  onChange={(e) => onChange(e.target.value)}
                 />
               )}
-              <span className="mt-0.5 block font-normal text-muted-foreground">
-                Mặc định:{" "}
-                {show(initial[key].default) || (control.kind === "select" ? "Tự động" : "(không có)")} ·{" "}
-                {hint}
-                {draft[key] !== "" && (
-                  <>
-                    {" · "}
+              {(hint || draft[key] !== "") && (
+                <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1 text-xs text-muted-foreground">
+                  {hint && <p id={hintId}>{hint}</p>}
+                  {draft[key] !== "" && (
                     <button
                       type="button"
                       className="font-semibold text-blue-700 underline"
-                      onClick={() => setDraft({ ...draft, [key]: "" })}
+                      onClick={() => onChange("")}
                     >
                       Về mặc định
                     </button>
-                  </>
-                )}
-              </span>
-            </label>
-          ))}
-        </div>
+                  )}
+                </div>
+              )}
+            </div>
+          );
+        })}
       </section>
 
       {notice && (

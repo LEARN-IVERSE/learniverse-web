@@ -54,18 +54,23 @@ test.describe("AI settings (K11c-3)", () => {
       });
     });
     await page.goto("/admin/ai");
-    await expect(page.getByText("Khóa API: đã cấu hình")).toBeVisible();
-    await expect(page.getByText("không hiện và không sửa ở đây")).toBeVisible();
-    await expect(page.locator("input[type=password]")).toHaveCount(0);
+    const form = page.getByRole("form", { name: "Cấu hình AI" });
+    await expect(form.getByText(/Nhà cung cấp|Khóa API|Mặc định:|Ví dụ gemini/)).toHaveCount(0);
+    await expect(form.getByText("Để trống để dùng cùng model trả lời.")).toBeVisible();
+    await expect(form.getByText("0 đến 1000", { exact: true })).toBeVisible();
+    await expect(form.locator("input[type=password]")).toHaveCount(0);
 
     const messages = page.getByLabel("Số tin nhắn mỗi học sinh mỗi ngày");
     await expect(messages).toHaveValue(""); // not set: shows the default as a placeholder
     await expect(messages).toHaveAttribute("placeholder", "30");
     await messages.fill("12");
-    const chatThinking = page.getByRole("combobox", { name: /Mức suy luận của model trả lời/ });
-    const graderThinking = page.getByRole("combobox", { name: /Mức suy luận của model chấm/ });
-    await chatThinking.selectOption("LOW");
-    await graderThinking.selectOption("HIGH");
+    const chatThinking = page.getByRole("slider", { name: "Mức suy luận của model trả lời" });
+    const graderThinking = page.getByRole("slider", { name: "Mức suy luận của model chấm" });
+    await expect(chatThinking).toHaveAttribute("aria-valuetext", "Mặc định máy chủ");
+    await chatThinking.press("ArrowRight");
+    await chatThinking.press("ArrowRight");
+    await graderThinking.press("End");
+    await graderThinking.press("ArrowLeft");
     await page.getByRole("combobox", { name: /Vùng gọi Gemini/ }).selectOption("global");
     await page.getByRole("button", { name: "Lưu cấu hình" }).click();
     await expect(page.getByRole("status")).toHaveText(
@@ -81,12 +86,15 @@ test.describe("AI settings (K11c-3)", () => {
       region: "global",
     });
     await expect(messages).toHaveValue("12");
-    await expect(chatThinking).toHaveValue("LOW");
-    await expect(graderThinking).toHaveValue("HIGH");
+    await expect(chatThinking).toHaveAttribute("aria-valuetext", "Thấp (LOW)");
+    await expect(form.getByText("Thấp (LOW)", { exact: true })).toBeVisible();
+    await expect(graderThinking).toHaveAttribute("aria-valuetext", "Cao (HIGH)");
+    await expect(form.getByText("Cao (HIGH)", { exact: true })).toBeVisible();
     await expect(page.getByRole("combobox", { name: /Vùng gọi Gemini/ })).toHaveValue("global");
     await expect(page.getByText("bởi Quản Trị")).toBeVisible();
 
-    await chatThinking.selectOption("");
+    await chatThinking.press("Home");
+    await expect(chatThinking).toHaveAttribute("aria-valuetext", "Mặc định máy chủ");
     await page.getByRole("combobox", { name: /Vùng gọi Gemini/ }).selectOption("");
     await page.getByRole("button", { name: "Về mặc định" }).last().click();
     await expect(messages).toHaveValue("");
