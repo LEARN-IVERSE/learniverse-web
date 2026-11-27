@@ -257,41 +257,48 @@ export function LessonForm({
     >
       <div className="grid gap-3 rounded-[1.5rem] bg-white p-4 ring-1 ring-slate-100 sm:grid-cols-2">
         {creating && (
-          <>
-            <label className="text-xs font-semibold text-slate-600">
-              Mã bài (chữ thường, không dấu, ví dụ <code>lesson-7</code>)
-              <input
-                required
-                pattern="[a-z0-9]+(-[a-z0-9]+)*"
-                className={field}
-                value={d.code ?? ""}
-                onChange={(e) => set({ code: e.target.value })}
-              />
-            </label>
-            <label className="text-xs font-semibold text-slate-600">
-              Loại mục
-              <select
-                className={field}
-                value={d.kind}
-                onChange={(e) => {
-                  const kind = e.target.value as LessonData["kind"];
-                  set({
-                    kind,
-                    periodic:
-                      kind === "periodic"
-                        ? { question_count: 20, time_limit_minutes: 45, pass_percent: 50 }
-                        : null,
-                  });
-                }}
-              >
-                {Object.entries(KIND_LABEL).map(([k, v]) => (
-                  <option key={k} value={k}>
-                    {v}
-                  </option>
-                ))}
-              </select>
-            </label>
-          </>
+          <label className="text-xs font-semibold text-slate-600">
+            Mã bài (chữ thường, không dấu, ví dụ <code>lesson-7</code>)
+            <input
+              required
+              pattern="[a-z0-9]+(-[a-z0-9]+)*"
+              className={field}
+              value={d.code ?? ""}
+              onChange={(e) => set({ code: e.target.value })}
+            />
+          </label>
+        )}
+        <label className="text-xs font-semibold text-slate-600">
+          Loại mục
+          <select
+            className={field}
+            value={d.kind}
+            onChange={(e) => {
+              const kind = e.target.value as LessonData["kind"];
+              set({
+                kind,
+                periodic:
+                  kind === "periodic"
+                    ? (initial.periodic ?? { question_count: 20, time_limit_minutes: 45, pass_percent: 50 })
+                    : null,
+              });
+            }}
+          >
+            {Object.entries(KIND_LABEL).map(([k, v]) => (
+              <option key={k} value={k}>
+                {v}
+              </option>
+            ))}
+          </select>
+        </label>
+        {!creating && d.kind !== initial.kind && (
+          <p
+            role="note"
+            className="rounded-xl bg-amber-50 px-3 py-2 text-xs text-amber-900 ring-1 ring-amber-200 sm:col-span-2"
+          >
+            Đổi loại mục: học sinh sẽ thấy hoạt động của loại mới. Câu hỏi của loại cũ được giữ nguyên nhưng
+            tạm không dùng; đổi lại loại cũ thì dùng lại được. Sao và kết quả cũ của học sinh vẫn giữ.
+          </p>
         )}
         <label className="text-xs font-semibold text-slate-600">
           Nhãn (ví dụ “Bài 1”, “Unit 1”)

@@ -16,8 +16,9 @@ import { cn } from "@/lib/utils";
 
 import { ACTIVITY_LABEL, KIND_LABEL, STATUS_LABEL, STATUS_STYLE } from "./content-labels";
 import { type Notice, NoticeBar, useSubmit } from "./lesson-editor";
+import { AddUnitForm, UnitTitle } from "./unit-controls";
 
-/** /admin/content: subject -> chapter -> lesson tree with status, question counts and moves (K11b). */
+/** /admin/content: subject -> group -> lesson tree with status, question counts and moves (K11b); admins also manage groups. */
 export function ContentAdmin({ isAdmin }: { isAdmin: boolean }) {
   const [subjects, retry] = useApi("admin:content:subjects", () => adminContentEditableSubjects());
   const [picked, setPicked] = useState<string | null>(null);
@@ -76,6 +77,10 @@ function SubjectTree({ code, isAdmin }: { code: string; isAdmin: boolean }) {
       </div>
     );
   const units = tree.data.units;
+  const unitDone = (n: Notice) => {
+    setNotice(n);
+    if (n?.ok) retry();
+  };
   const move = (lesson: ContentLessonOut, unit_code: string, index: number) =>
     void send(
       {
@@ -95,12 +100,20 @@ function SubjectTree({ code, isAdmin }: { code: string; isAdmin: boolean }) {
         >
           <FileUp aria-hidden className="size-4" /> Nạp câu hỏi hàng loạt
         </Link>
+        {isAdmin && <AddUnitForm subject={code} units={units} onDone={unitDone} />}
       </div>
       <NoticeBar notice={notice} />
-      {units.map((u) => (
+      {units.map((u, n) => (
         <section key={u.code} className="rounded-[1.5rem] bg-white p-4 ring-1 ring-slate-100">
           <header className="mb-2 flex flex-wrap items-center gap-2">
-            <h2 className="font-heading text-lg font-bold text-slate-900">{u.title}</h2>
+            <UnitTitle
+              subject={code}
+              unit={u}
+              index={n}
+              count={units.length}
+              isAdmin={isAdmin}
+              onDone={unitDone}
+            />
             <Link
               href={`/admin/content/new?subject=${code}&unit=${u.code}`}
               className="ml-auto inline-flex items-center gap-1 rounded-full bg-blue-50 px-3 py-1 text-sm font-semibold text-blue-700 hover:bg-blue-100"
@@ -108,6 +121,11 @@ function SubjectTree({ code, isAdmin }: { code: string; isAdmin: boolean }) {
               <Plus aria-hidden className="size-4" /> Thêm bài
             </Link>
           </header>
+          {u.lessons.length === 0 && (
+            <p className="px-2 py-2 text-sm text-muted-foreground">
+              Nhóm chưa có bài. Học sinh chỉ thấy nhóm khi có bài.
+            </p>
+          )}
           <ul className="divide-y divide-slate-100">
             {u.lessons.map((l, i) => (
               <LessonRow
@@ -211,13 +229,13 @@ function LessonRow({
       </Link>
       {units.length > 1 && (
         <select
-          aria-label={`Chuyển ${name} sang chương`}
+          aria-label={`Chuyển ${name} sang nhóm`}
           disabled={busy}
           value=""
           onChange={(e) => e.target.value && onMove(e.target.value, Number.MAX_SAFE_INTEGER)}
           className="w-28 shrink-0 rounded-lg bg-white px-1 py-1 text-xs ring-1 ring-slate-200"
         >
-          <option value="">Chuyển chương…</option>
+          <option value="">Chuyển nhóm…</option>
           {units
             .filter((u) => u.code !== unit.code)
             .map((u) => (
