@@ -1161,7 +1161,10 @@ export type LessonBrief = {
 /**
  * LessonData
  *
- * Editable fields of a lesson. `code`, `unit_code` and `kind` are only used when creating.
+ * Editable fields of a lesson. `code` and `unit_code` are only used when creating.
+ *
+ * `kind` may change on an existing lesson. Questions of activities the new kind does not use are
+ * kept untouched (and unused), so changing the kind back brings them back.
  */
 export type LessonData = {
     /**
@@ -1569,7 +1572,7 @@ export type OutlineOut = {
     /**
      * Units
      */
-    units: Array<UnitOut>;
+    units: Array<AppModulesCatalogSchemasUnitOut>;
 };
 
 /**
@@ -2523,21 +2526,43 @@ export type TurnOut = {
 };
 
 /**
- * UnitOut
+ * UnitIn
+ *
+ * A new group: its title and the group it goes after (None puts it first).
  */
-export type UnitOut = {
-    /**
-     * Code
-     */
-    code: string;
+export type UnitIn = {
     /**
      * Title
      */
     title: string;
     /**
-     * Lessons
+     * After
      */
-    lessons: Array<LessonRowOut>;
+    after?: string | null;
+};
+
+/**
+ * UnitMoveIn
+ *
+ * Move a group one place up or down.
+ */
+export type UnitMoveIn = {
+    /**
+     * Direction
+     */
+    direction: 'up' | 'down';
+};
+
+/**
+ * UnitRenameIn
+ *
+ * New title for a group.
+ */
+export type UnitRenameIn = {
+    /**
+     * Title
+     */
+    title: string;
 };
 
 /**
@@ -2706,6 +2731,40 @@ export type WeekDayOut = {
      * Learned
      */
     learned: boolean;
+};
+
+/**
+ * UnitOut
+ *
+ * A group after a change.
+ */
+export type AppModulesAdminUnitsUnitOut = {
+    /**
+     * Code
+     */
+    code: string;
+    /**
+     * Title
+     */
+    title: string;
+};
+
+/**
+ * UnitOut
+ */
+export type AppModulesCatalogSchemasUnitOut = {
+    /**
+     * Code
+     */
+    code: string;
+    /**
+     * Title
+     */
+    title: string;
+    /**
+     * Lessons
+     */
+    lessons: Array<LessonRowOut>;
 };
 
 export type HealthHealthData = {
@@ -4555,6 +4614,138 @@ export type AdminContentLessonForEditResponses = {
 };
 
 export type AdminContentLessonForEditResponse = AdminContentLessonForEditResponses[keyof AdminContentLessonForEditResponses];
+
+export type AdminContentCreateUnitData = {
+    body: UnitIn;
+    path: {
+        /**
+         * Code
+         */
+        code: string;
+    };
+    query?: never;
+    url: '/v1/admin/content/subjects/{code}/units';
+};
+
+export type AdminContentCreateUnitErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type AdminContentCreateUnitError = AdminContentCreateUnitErrors[keyof AdminContentCreateUnitErrors];
+
+export type AdminContentCreateUnitResponses = {
+    /**
+     * Successful Response
+     */
+    201: AppModulesAdminUnitsUnitOut;
+};
+
+export type AdminContentCreateUnitResponse = AdminContentCreateUnitResponses[keyof AdminContentCreateUnitResponses];
+
+export type AdminContentDeleteUnitData = {
+    body?: never;
+    path: {
+        /**
+         * Code
+         */
+        code: string;
+        /**
+         * Unit Code
+         */
+        unit_code: string;
+    };
+    query?: never;
+    url: '/v1/admin/content/subjects/{code}/units/{unit_code}';
+};
+
+export type AdminContentDeleteUnitErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type AdminContentDeleteUnitError = AdminContentDeleteUnitErrors[keyof AdminContentDeleteUnitErrors];
+
+export type AdminContentDeleteUnitResponses = {
+    /**
+     * Successful Response
+     */
+    204: void;
+};
+
+export type AdminContentDeleteUnitResponse = AdminContentDeleteUnitResponses[keyof AdminContentDeleteUnitResponses];
+
+export type AdminContentRenameUnitData = {
+    body: UnitRenameIn;
+    path: {
+        /**
+         * Code
+         */
+        code: string;
+        /**
+         * Unit Code
+         */
+        unit_code: string;
+    };
+    query?: never;
+    url: '/v1/admin/content/subjects/{code}/units/{unit_code}';
+};
+
+export type AdminContentRenameUnitErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type AdminContentRenameUnitError = AdminContentRenameUnitErrors[keyof AdminContentRenameUnitErrors];
+
+export type AdminContentRenameUnitResponses = {
+    /**
+     * Successful Response
+     */
+    200: AppModulesAdminUnitsUnitOut;
+};
+
+export type AdminContentRenameUnitResponse = AdminContentRenameUnitResponses[keyof AdminContentRenameUnitResponses];
+
+export type AdminContentMoveUnitData = {
+    body: UnitMoveIn;
+    path: {
+        /**
+         * Code
+         */
+        code: string;
+        /**
+         * Unit Code
+         */
+        unit_code: string;
+    };
+    query?: never;
+    url: '/v1/admin/content/subjects/{code}/units/{unit_code}/move';
+};
+
+export type AdminContentMoveUnitErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type AdminContentMoveUnitError = AdminContentMoveUnitErrors[keyof AdminContentMoveUnitErrors];
+
+export type AdminContentMoveUnitResponses = {
+    /**
+     * Successful Response
+     */
+    200: AppModulesAdminUnitsUnitOut;
+};
+
+export type AdminContentMoveUnitResponse = AdminContentMoveUnitResponses[keyof AdminContentMoveUnitResponses];
 
 export type AdminContentImportTemplateData = {
     body?: never;

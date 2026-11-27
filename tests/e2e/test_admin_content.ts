@@ -332,7 +332,7 @@ test.describe("content management (K11b)", () => {
     const sent = await mockContentApi(page, ADMIN);
     await page.goto("/admin/content");
     await expect(page.getByRole("button", { name: /Đưa Bài 1: .* lên/ })).toBeDisabled();
-    await page.getByLabel(/Chuyển Bài 1: .* sang chương/).selectOption("chapter-2");
+    await page.getByLabel(/Chuyển Bài 1: .* sang nhóm/).selectOption("chapter-2");
     await expect(page.getByRole("status")).toHaveText("Đã chuyển bài.");
     expect(sent.at(-1)?.body).toMatchObject({
       action: "lesson.move",
